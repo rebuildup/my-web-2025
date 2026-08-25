@@ -102,8 +102,9 @@ export class PathGenerator {
 		options: PathGenerationOptions = {},
 	): GeneratedPath {
 		const basePath = this.generatePath(contentId, contentType, options);
+		const existingPathSet = new Set(existingPaths);
 
-		if (!existingPaths.includes(basePath.absolutePath)) {
+		if (!existingPathSet.has(basePath.absolutePath)) {
 			return basePath;
 		}
 
@@ -115,7 +116,7 @@ export class PathGenerator {
 			const uniqueId = `${contentId}-${counter}`;
 			uniquePath = this.generatePath(uniqueId, contentType, options);
 			counter++;
-		} while (existingPaths.includes(uniquePath.absolutePath) && counter < 1000);
+		} while (existingPathSet.has(uniquePath.absolutePath) && counter < 1000);
 
 		if (counter >= 1000) {
 			throw new Error("Could not generate unique path after 1000 attempts");
@@ -271,7 +272,16 @@ export class PathGenerator {
 	 * Generate backup file path
 	 */
 	generateBackupPath(originalPath: string): string {
-		const parsed = path.parse(originalPath);
+		const safeBase = path.resolve(this.basePath);
+		const resolvedOriginal = path.resolve(safeBase, originalPath);
+		const normalizedOriginal = path.normalize(resolvedOriginal);
+		if (
+			!normalizedOriginal.startsWith(safeBase) ||
+			normalizedOriginal.includes("..")
+		) {
+			throw new Error("Invalid path: outside of allowed directory");
+		}
+		const parsed = path.parse(normalizedOriginal);
 		const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 		const backupName = `${parsed.name}.backup.${timestamp}${parsed.ext}`;
 		return path.join(parsed.dir, backupName);

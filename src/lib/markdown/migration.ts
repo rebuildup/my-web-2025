@@ -426,6 +426,7 @@ export class ContentMigrationService {
 
 		try {
 			const contentFiles = await this.getContentFiles();
+			const itemIdSet = new Set(itemIds);
 
 			for (const fileName of contentFiles) {
 				const filePath = path.join(this.dataPath, fileName);
@@ -436,7 +437,7 @@ export class ContentMigrationService {
 
 				for (const item of items) {
 					if (
-						itemIds.includes(item.id) &&
+						itemIdSet.has(item.id) &&
 						item.markdownMigrated &&
 						item.markdownPath
 					) {

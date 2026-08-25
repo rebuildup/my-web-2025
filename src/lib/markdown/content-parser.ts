@@ -999,14 +999,15 @@ export class ContentParser implements ContentParserService {
 					"class",
 					"loading",
 				];
-				const htmlAttrs = allowedAttrs
-					.map((name) => {
-						const value =
-							name === "loading" ? attrs.get(name) || "lazy" : attrs.get(name);
-						return value ? `${name}="${this.escapeAttribute(value)}"` : "";
-					})
-					.filter(Boolean)
-					.join(" ");
+				const htmlAttrParts: string[] = [];
+				for (const name of allowedAttrs) {
+					const value =
+						name === "loading" ? attrs.get(name) || "lazy" : attrs.get(name);
+					if (value) {
+						htmlAttrParts.push(`${name}="${this.escapeAttribute(value)}"`);
+					}
+				}
+				const htmlAttrs = htmlAttrParts.join(" ");
 
 				return `<img ${htmlAttrs} />`;
 			})

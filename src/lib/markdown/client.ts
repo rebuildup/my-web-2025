@@ -59,37 +59,3 @@ const _DEFAULT_MARKDOWN_CONFIG: MarkdownSystemConfig = {
 	maxFileSize: 1024 * 1024, // 1MB
 	backupOnUpdate: false,
 };
-
-// Client-safe error types
-export class MarkdownFileError extends Error {
-	constructor(
-		message: string,
-		public code: string,
-		public details?: Record<string, unknown>,
-	) {
-		super(message);
-		this.name = "MarkdownFileError";
-	}
-}
-
-export class MarkdownDirectoryError extends Error {
-	constructor(
-		message: string,
-		public code: string,
-		public details?: Record<string, unknown>,
-	) {
-		super(message);
-		this.name = "MarkdownDirectoryError";
-	}
-}
-
-export class MarkdownPathError extends Error {
-	constructor(
-		message: string,
-		public code: string,
-		public details?: Record<string, unknown>,
-	) {
-		super(message);
-		this.name = "MarkdownPathError";
-	}
-}
