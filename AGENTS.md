@@ -62,7 +62,7 @@ canonical な Skill は `.agents/skills/` に置き、`.claude/skills/` と同�
 
 - `add-content` … `data/contents/content-{id}.db` への追加 / 編集. `/api/admin/content` 経由が唯一の正.
 - `react-doctor` … React コード変更後の health check と `/doctor` フルトリアージ.
-- `sync-external-tool` … `src/app/tools/<name>/` への git-subtree pull / 追加. `merge=ours` ブリッジ保護.
+- `sync-submodule` … `git submodule update --remote` workflow for `external/<name>/`. Bridges submodule workflow with bridge-file protection.
 - `verify-and-commit` … canonical 検証ゲートの実行順序と commit メッセージ規約(本 init で追加).
 - `sync-cms-entries` … legacy JSON / markdown / media を Rust CMS へ取り込む import scripts のランナー(本 init で追加).
 - `deploy-check` … `.github/workflows/deploy.yml#verification` と同じ gate を fresh checkout でローカル実行. SIGILL 132 の吸収条件も明記(本 init で追加).
@@ -113,7 +113,7 @@ disjoint file ownership を割り当て、各 subagent の完了作業は自分�
 
 ## 13. Fresh-clone 再現性
 
-このドキュメント, `.claude/`, `package.json`, `bun.lock`, `tsconfig.json`, `biome.json`, `jest.config.js`, `.github/workflows/`, `docs/`, `scripts/` があれば fresh clone から `bun install --frozen-lockfile && bun run build && bun run test` が green になる状態が ideal. global な npm / pip / 隠れた dotenv への暗黙依存は持たない.
+このドキュメント, `.claude/`, `.gitmodules`, `package.json`, `bun.lock`, `tsconfig.json`, `biome.json`, `jest.config.js`, `.github/workflows/`, `docs/`, `scripts/`, および `external/<name>/` の submodule checkout があれば, fresh clone から `git submodule update --init --recursive && bun install --frozen-lockfile && bun --bun scripts/install-tools.ts && bun run build && bun run test` が green になる状態が ideal. global な npm / pip / 隠れた dotenv への暗黙依存は持たない.
 
 ## 14. 既知の quality debt (監査 2026-08 で確認)
 
@@ -122,7 +122,8 @@ disjoint file ownership を割り当て、各 subagent の完了作業は自分�
 - **Bun バージョン散らばり**: `package.json` = 1.3.10 / `ci.yml` & `deploy.yml` = 1.3.14 / `claude.yml` = 1.3.10. CI と本リポジトリで意図せず揃っていない. 統一する場合は SIGILL との同時解消を ADR に残す.
 - **`@appletosolutions/reactbits` の transpilePackages hack**: workspace 依存が `@chakra-ui/react` を正しく解決できないため `next.config.ts` の `transpilePackages` で吸収. 上流修正が入るまで維持.
 - **Knip ルール緩和 (`knip.jsonc`)**: files / exports / types / nsExports / nsTypes を off. 一時的な dead code ノイズ回避. 残った false positive は個別 ignore で対応.
-- **`src/app/tools/ProtoType/`** は Vite 製 sub-project. 自身の `package.json` / `tsconfig.app.json` / `biome.json` を持ち、root の lint / type-check から除外されている. `.gitattributes` の `merge=ours` で bridge 保護. 詳細は `.claude/agents/tool-bridge-auditor` の指示.
+- **`src/app/tools/ProtoType/`** は Vite 製 sub-project. 自身の `package.json` / `tsconfig.app.json` / `biome.json` を持ち、root の lint / type-check から除外されている. `.gitattributes` の `merge=ours` で bridge 保護. 詳細は `.claude/agents/tool-bridge-auditor` の指示. (Phase 1 で `external/ProtoType/` submodule 化される予定. Phase 1 cleanup までこの bullet を維持.)
+- **`scripts/install-tools.ts` と Bun workspaces の相互作用** (Phase 0 導入, 2026-08): workspace と submodule の組合せは Bun のドキュメントで薄く, hoisting の挙動に edge case があれば個別対応する. Phase 1 (ProtoType) で最初の実 tool submodule を投入して挙動を確定する.
 - **Biome overrides**: 9 コンポーネントのみ `noArrayIndexKey` を `error`. 過剰検知回避と要件精度の tradeoff. 解消したら overrides を外す.
 
 ---
