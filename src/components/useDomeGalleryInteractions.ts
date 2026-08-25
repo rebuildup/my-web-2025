@@ -360,6 +360,9 @@ export function useDomeGalleryInteractions(
 		const scrim = scrimRef.current;
 		if (!scrim) return;
 
+		const controller = new AbortController();
+		const { signal } = controller;
+
 		const close = () => {
 			if (performance.now() - openStartedAtRef.current < 250) return;
 			const el = focusedElRef.current;
@@ -486,18 +489,18 @@ export function useDomeGalleryInteractions(
 
 			animatingOverlay.addEventListener("transitionend", cleanup, {
 				once: true,
+				signal,
 			});
 		};
 
-		scrim.addEventListener("click", close);
+		scrim.addEventListener("click", close, { signal });
 		const onKey = (e: KeyboardEvent) => {
 			if (e.key === "Escape") close();
 		};
-		window.addEventListener("keydown", onKey);
+		window.addEventListener("keydown", onKey, { signal });
 
 		return () => {
-			scrim.removeEventListener("click", close);
-			window.removeEventListener("keydown", onKey);
+			controller.abort();
 		};
 	}, [enlargeTransitionMs, openedImageBorderRadius, grayscale]);
 
