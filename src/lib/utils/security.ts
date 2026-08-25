@@ -317,19 +317,40 @@ export const securityUtils = {
 	},
 
 	/**
+	 * Constant-time string comparison to avoid timing side channels.
+	 */
+	constantTimeEqual: (a: string, b: string): boolean => {
+		if (a.length !== b.length) return false;
+		let result = 0;
+		for (let i = 0; i < a.length; i++) {
+			result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+		}
+		return result === 0;
+	},
+
+	/**
 	 * Verify JWT token (mock implementation)
 	 */
-	verifyJWT: (
+	verifyJWT: async (
 		token: string,
 		secret: string,
-	): Record<string, unknown> | null => {
+	): Promise<Record<string, unknown> | null> => {
 		try {
 			const [encodedHeader, encodedPayload, signature] = token.split(".");
-			const expectedSignature = btoa(
+			if (!encodedHeader || !encodedPayload || !signature) return null;
+
+			const expectedBytes = new TextEncoder().encode(
 				`${encodedHeader}.${encodedPayload}.${secret}`,
 			);
+			const hashBuffer = await crypto.subtle.digest("SHA-256", expectedBytes);
+			const expectedSignature = btoa(
+				String.fromCharCode(...new Uint8Array(hashBuffer)),
+			)
+				.replace(/=+$/, "")
+				.replace(/\+/g, "-")
+				.replace(/\//g, "_");
 
-			if (signature !== expectedSignature) {
+			if (!securityUtils.constantTimeEqual(signature, expectedSignature)) {
 				return null;
 			}
 

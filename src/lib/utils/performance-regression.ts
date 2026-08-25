@@ -35,7 +35,7 @@ export class PerformanceRegressionDetector {
 		if (typeof window === "undefined") return;
 
 		try {
-			const stored = localStorage.getItem("performance-baseline");
+			const stored = localStorage.getItem("performance-baseline:v1");
 			if (stored) {
 				this.baseline = JSON.parse(stored);
 			} else {
@@ -62,7 +62,7 @@ export class PerformanceRegressionDetector {
 
 		try {
 			localStorage.setItem(
-				"performance-baseline",
+				"performance-baseline:v1",
 				JSON.stringify(this.baseline),
 			);
 		} catch (error) {
@@ -275,7 +275,7 @@ export class PerformanceRegressionDetector {
 	public resetBaseline(): void {
 		if (typeof window === "undefined") return;
 
-		localStorage.removeItem("performance-baseline");
+		localStorage.removeItem("performance-baseline:v1");
 		this.baseline = null;
 		this.loadBaseline();
 	}

@@ -74,9 +74,11 @@ export interface AuditLog {
 export async function getSiteStatistics(): Promise<SiteStatistics> {
 	try {
 		// Load content data
-		const contentStats = await getContentStatistics();
-		const fileStats = await getFileStatistics();
-		const performanceStats = await getPerformanceStatistics();
+		const [contentStats, fileStats, performanceStats] = await Promise.all([
+			getContentStatistics(),
+			getFileStatistics(),
+			getPerformanceStatistics(),
+		]);
 		const systemStats = getSystemStatistics();
 
 		return {
@@ -554,14 +556,16 @@ export async function createBackup(): Promise<string> {
 		const backupPublicDir = path.join(backupPath, "public");
 
 		const assetDirs = ["images", "videos", "downloads"];
-		for (const dir of assetDirs) {
-			const srcDir = path.join(publicDir, dir);
-			const destDir = path.join(backupPublicDir, dir);
+		await Promise.all(
+			assetDirs.map(async (dir) => {
+				const srcDir = path.join(publicDir, dir);
+				const destDir = path.join(backupPublicDir, dir);
 
-			if (fs.existsSync(srcDir)) {
-				await copyDirectory(srcDir, destDir);
-			}
-		}
+				if (fs.existsSync(srcDir)) {
+					await copyDirectory(srcDir, destDir);
+				}
+			}),
+		);
 
 		// Create backup manifest
 		const manifest = {
@@ -594,14 +598,16 @@ async function copyDirectory(src: string, dest: string): Promise<void> {
 
 	const entries = fs.readdirSync(src, { withFileTypes: true });
 
-	for (const entry of entries) {
-		const srcPath = path.join(src, entry.name);
-		const destPath = path.join(dest, entry.name);
+	await Promise.all(
+		entries.map(async (entry) => {
+			const srcPath = path.join(src, entry.name);
+			const destPath = path.join(dest, entry.name);
 
-		if (entry.isDirectory()) {
-			await copyDirectory(srcPath, destPath);
-		} else {
-			fs.copyFileSync(srcPath, destPath);
-		}
-	}
+			if (entry.isDirectory()) {
+				await copyDirectory(srcPath, destPath);
+			} else {
+				fs.copyFileSync(srcPath, destPath);
+			}
+		}),
+	);
 }

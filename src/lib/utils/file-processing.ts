@@ -78,8 +78,10 @@ export async function initializeFFmpeg(): Promise<FFmpeg> {
 	}
 
 	console.log("Initializing FFmpeg...");
-	const { FFmpeg } = await import("@ffmpeg/ffmpeg");
-	const { toBlobURL } = await import("@ffmpeg/util");
+	const [{ FFmpeg }, { toBlobURL }] = await Promise.all([
+		import("@ffmpeg/ffmpeg"),
+		import("@ffmpeg/util"),
+	]);
 	ffmpegInstance = new FFmpeg();
 
 	// Load FFmpeg with CDN URLs
@@ -87,13 +89,11 @@ export async function initializeFFmpeg(): Promise<FFmpeg> {
 
 	try {
 		console.log("Loading FFmpeg core files from CDN...");
-		await ffmpegInstance.load({
-			coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-			wasmURL: await toBlobURL(
-				`${baseURL}/ffmpeg-core.wasm`,
-				"application/wasm",
-			),
-		});
+		const [coreURL, wasmURL] = await Promise.all([
+			toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+			toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+		]);
+		await ffmpegInstance.load({ coreURL, wasmURL });
 
 		isFFmpegLoaded = true;
 		console.log("FFmpeg loaded successfully");
@@ -161,14 +161,22 @@ export function getImageDimensions(
 	return new Promise((resolve, reject) => {
 		const img = new Image();
 		const url = URL.createObjectURL(file);
+		let settled = false;
+
+		const cleanup = () => {
+			if (!settled) {
+				settled = true;
+				URL.revokeObjectURL(url);
+			}
+		};
 
 		img.onload = () => {
-			URL.revokeObjectURL(url);
+			cleanup();
 			resolve({ width: img.width, height: img.height });
 		};
 
 		img.onerror = () => {
-			URL.revokeObjectURL(url);
+			cleanup();
 			reject(new Error("Failed to load image"));
 		};
 
@@ -360,6 +368,16 @@ export async function compressFileIfNeeded(
 		const img = new Image();
 
 		return new Promise((resolve, reject) => {
+			const url = URL.createObjectURL(file);
+			let settled = false;
+
+			const cleanup = () => {
+				if (!settled) {
+					settled = true;
+					URL.revokeObjectURL(url);
+				}
+			};
+
 			img.onload = () => {
 				// Calculate new dimensions to reduce file size
 				const compressionRatio = Math.sqrt(maxSize / file.size);
@@ -377,6 +395,7 @@ export async function compressFileIfNeeded(
 
 				canvas.toBlob(
 					(blob) => {
+						cleanup();
 						if (blob) {
 							const compressedFile = new File(
 								[blob],
@@ -402,10 +421,11 @@ export async function compressFileIfNeeded(
 			};
 
 			img.onerror = () => {
+				cleanup();
 				reject(new Error("Failed to load image for compression"));
 			};
 
-			img.src = URL.createObjectURL(file);
+			img.src = url;
 		});
 	} catch (error) {
 		console.error("Canvas compression failed:", error);

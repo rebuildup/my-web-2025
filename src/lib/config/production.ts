@@ -118,7 +118,7 @@ export function getProductionConfig(): ProductionConfig {
 						"https://www.google-analytics.com",
 						"https://region1.google-analytics.com",
 						"https://analytics.google.com",
-						process.env.SENTRY_DSN
+						process.env.SENTRY_DSN && URL.canParse(process.env.SENTRY_DSN)
 							? new URL(process.env.SENTRY_DSN).origin
 							: "",
 					].filter(Boolean),

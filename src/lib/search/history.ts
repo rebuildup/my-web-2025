@@ -3,7 +3,7 @@
  * Implements client-side search history and recent searches
  */
 
-const SEARCH_HISTORY_KEY = "samuido_search_history";
+const SEARCH_HISTORY_KEY = "samuido_search_history:v1";
 const MAX_HISTORY_ITEMS = 10;
 
 export interface SearchHistoryItem {

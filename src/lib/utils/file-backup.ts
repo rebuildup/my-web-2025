@@ -80,10 +80,12 @@ export async function createFileBackup(
 ): Promise<FileVersion> {
 	await ensureBackupDirectory();
 
-	const manifest = await loadManifest();
+	const [manifest, fileStats, hash] = await Promise.all([
+		loadManifest(),
+		fs.stat(filePath),
+		calculateFileHash(filePath),
+	]);
 	const timestamp = new Date().toISOString();
-	const fileStats = await fs.stat(filePath);
-	const hash = await calculateFileHash(filePath);
 
 	// Generate backup filename
 	const originalName = path.basename(filePath);
@@ -117,19 +119,22 @@ export async function createFileBackup(
 	);
 	if (fileVersions.length > 10) {
 		const oldVersions = fileVersions.slice(0, -10);
-		for (const oldVersion of oldVersions) {
-			try {
-				await fs.unlink(oldVersion.backupPath);
-				manifest.totalSize -= oldVersion.size;
-			} catch (error) {
-				console.warn(
-					`Failed to delete old backup: ${oldVersion.backupPath}`,
-					error,
-				);
-			}
-		}
+		await Promise.all(
+			oldVersions.map(async (oldVersion) => {
+				try {
+					await fs.unlink(oldVersion.backupPath);
+					manifest.totalSize -= oldVersion.size;
+				} catch (error) {
+					console.warn(
+						`Failed to delete old backup: ${oldVersion.backupPath}`,
+						error,
+					);
+				}
+			}),
+		);
+		const oldVersionIds = new Set(oldVersions.map((v) => v.id));
 		manifest.versions = manifest.versions.filter(
-			(v) => v.originalPath !== filePath || !oldVersions.includes(v),
+			(v) => v.originalPath !== filePath || !oldVersionIds.has(v.id),
 		);
 	}
 
@@ -230,10 +235,12 @@ async function _cleanupOldBackups(
 	// Group versions by file
 	const versionsByFile = new Map<string, FileVersion[]>();
 	for (const version of manifest.versions) {
-		if (!versionsByFile.has(version.originalPath)) {
-			versionsByFile.set(version.originalPath, []);
+		const existing = versionsByFile.get(version.originalPath);
+		if (existing) {
+			existing.push(version);
+		} else {
+			versionsByFile.set(version.originalPath, [version]);
 		}
-		versionsByFile.get(version.originalPath)?.push(version);
 	}
 
 	const versionsToDelete: FileVersion[] = [];
@@ -261,8 +268,9 @@ async function _cleanupOldBackups(
 	// If still over size limit, delete oldest versions
 	let currentSize = manifest.totalSize;
 	if (currentSize > maxSize) {
+		const toDeleteSet = new Set(versionsToDelete);
 		const allVersions = manifest.versions
-			.filter((v) => !versionsToDelete.includes(v))
+			.filter((v) => !toDeleteSet.has(v))
 			.sort(
 				(a, b) =>
 					new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
@@ -274,24 +282,27 @@ async function _cleanupOldBackups(
 			// Don't delete if it would leave a file with less than minimum versions
 			const fileVersions = versionsByFile.get(version.originalPath) || [];
 			const remainingVersions = fileVersions.filter(
-				(v) => !versionsToDelete.includes(v) && v !== version,
+				(v) => !toDeleteSet.has(v) && v !== version,
 			);
 
 			if (remainingVersions.length >= keepMinimum) {
 				versionsToDelete.push(version);
+				toDeleteSet.add(version);
 				currentSize -= version.size;
 			}
 		}
 	}
 
 	// Delete selected versions
-	for (const version of versionsToDelete) {
-		try {
-			await deleteBackupVersion(version.id);
-		} catch (error) {
-			console.warn(`Failed to delete backup version ${version.id}:`, error);
-		}
-	}
+	await Promise.all(
+		versionsToDelete.map(async (version) => {
+			try {
+				await deleteBackupVersion(version.id);
+			} catch (error) {
+				console.warn(`Failed to delete backup version ${version.id}:`, error);
+			}
+		}),
+	);
 }
 
 /**
@@ -340,16 +351,23 @@ async function _exportBackupData(): Promise<{
 	const manifest = await loadManifest();
 	const files: Array<{ path: string; data: Buffer }> = [];
 
-	for (const version of manifest.versions) {
-		try {
-			const data = await fs.readFile(version.backupPath);
-			files.push({
-				path: version.backupPath,
-				data,
-			});
-		} catch (error) {
-			console.warn(`Failed to read backup file: ${version.backupPath}`, error);
-		}
+	const readResults = await Promise.all(
+		manifest.versions.map(async (version) => {
+			try {
+				const data = await fs.readFile(version.backupPath);
+				return { path: version.backupPath, data };
+			} catch (error) {
+				console.warn(
+					`Failed to read backup file: ${version.backupPath}`,
+					error,
+				);
+				return null;
+			}
+		}),
+	);
+
+	for (const entry of readResults) {
+		if (entry) files.push(entry);
 	}
 
 	return { manifest, files };
