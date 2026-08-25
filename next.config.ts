@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
 			"date-fns",
 		],
 	},
+	transpilePackages: ["@appletosolutions/reactbits", "external/ui/src"],
 	typescript: {
 		ignoreBuildErrors: true,
 	},

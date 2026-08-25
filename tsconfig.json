@@ -22,7 +22,9 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@rebuildup/my-web-tools-ui": ["./external/ui/src/index.ts"],
+			"@rebuildup/my-web-tools-ui/*": ["./external/ui/src/*"]
 		}
 	},
 	"watchOptions": {

@@ -73,6 +73,7 @@
 			"public/**/*",
 			"next.config.ts",
 			"!!node_modules",
+			"!!external",
 			"!!.next",
 			"!!coverage",
 			"!!biome-report.json",

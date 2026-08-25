@@ -1,5 +1,6 @@
 {
   "$schema": "https://knip.dev/schema.json",
+  "ignore": ["external/**"],
   "ignoreDependencies": [
     "chrome-launcher",
     "lighthouse",
