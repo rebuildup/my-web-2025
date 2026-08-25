@@ -101,6 +101,8 @@ export function ContentFormThumbnail({
 					>
 						<iframe
 							src={youTubeEmbedUrl}
+							title="YouTube embed preview"
+							sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
 							style={{
 								position: "absolute",
 								top: 0,

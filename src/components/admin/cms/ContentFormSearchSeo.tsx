@@ -1,7 +1,27 @@
+import Image from "next/image";
 import { contentFormStyles as s } from "./ContentForm.styles";
 import type { ContentFormSectionProps } from "./ContentForm.types";
 import { resolveOgImageUrl } from "./ContentForm.utils";
 import { ContentFormInputField } from "./ContentFormInputField";
+
+const ogPreviewWrapperStyle: React.CSSProperties = {
+	marginTop: 6,
+	position: "relative",
+	width: "100%",
+	maxWidth: 480,
+	aspectRatio: "1200 / 630",
+	background: "#f3f4f6",
+	border: "1px solid #e5e7eb",
+	overflow: "hidden",
+};
+
+const ogPreviewImageStyle: React.CSSProperties = {
+	position: "absolute",
+	inset: 0,
+	width: "100%",
+	height: "100%",
+	objectFit: "cover",
+};
 
 export function ContentFormSearchSeo({
 	formData,
@@ -18,28 +38,14 @@ export function ContentFormSearchSeo({
 				</div>
 				{ogImageUrl ? (
 					<>
-						<div
-							style={{
-								marginTop: 6,
-								position: "relative",
-								width: "100%",
-								maxWidth: 480,
-								aspectRatio: "1200 / 630",
-								background: "#f3f4f6",
-								border: "1px solid #e5e7eb",
-								overflow: "hidden",
-							}}
-						>
-							<img
+						<div style={ogPreviewWrapperStyle}>
+							<Image
 								src={ogImageUrl}
-								alt="OG image preview"
-								style={{
-									position: "absolute",
-									inset: 0,
-									width: "100%",
-									height: "100%",
-									objectFit: "cover",
-								}}
+								alt="Open Graph preview"
+								unoptimized
+								width={1200}
+								height={630}
+								style={ogPreviewImageStyle}
 							/>
 						</div>
 						<div style={{ ...s.helper, wordBreak: "break-all" }}>

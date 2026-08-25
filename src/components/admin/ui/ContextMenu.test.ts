@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { MenuItemDescriptor } from "./ContextMenu";
-import { computeMenuRect, nextIndex } from "./ContextMenu";
+import { computeMenuRect, nextIndex } from "./context-menu-utils";
 
 describe("computeMenuRect", () => {
 	test("opens below the anchor when there is room", () => {

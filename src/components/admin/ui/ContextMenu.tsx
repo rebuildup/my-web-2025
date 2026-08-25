@@ -9,68 +9,17 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { computeMenuRect, type MenuItemDescriptor } from "./context-menu-utils";
 import { adminColor, adminRadius, adminShadow } from "./tokens";
 import { useClickAway } from "./useClickAway";
 
-export type MenuItemDescriptor = {
-	disabled?: boolean;
-	divider?: boolean;
-};
+export type { MenuItemDescriptor } from "./context-menu-utils";
 
 export type ContextMenuItem = MenuItemDescriptor & {
 	key: string;
 	label: ReactNode;
 	onSelect?: () => void;
 };
-
-export function computeMenuRect(
-	anchor: { top: number; bottom: number; left: number; height: number } | null,
-	menu: { width: number; height: number },
-	viewport: { width: number; height: number },
-	gap = 4,
-	edge = 8,
-): { top: number; left: number } {
-	if (!anchor) return { top: 0, left: 0 };
-	const below = anchor.bottom + gap;
-	const flips = below + menu.height > viewport.height;
-	const top = flips ? Math.max(edge, anchor.top - menu.height - gap) : below;
-	const idealLeft = anchor.left;
-	const maxLeft = Math.max(edge, viewport.width - menu.width - edge);
-	const left = Math.min(Math.max(edge, idealLeft), maxLeft);
-	return { top, left };
-}
-
-export function nextIndex(
-	current: number,
-	items: MenuItemDescriptor[],
-	dir: 1 | -1 | "home" | "end",
-): number {
-	if (items.length === 0) return -1;
-	const enabled = (i: number) => !items[i]?.disabled && !items[i]?.divider;
-	if (dir === "home") {
-		for (let i = 0; i < items.length; i++) if (enabled(i)) return i;
-		return -1;
-	}
-	if (dir === "end") {
-		for (let i = items.length - 1; i >= 0; i--) if (enabled(i)) return i;
-		return -1;
-	}
-	const startFrom =
-		current < 0 ? (dir === 1 ? 0 : items.length - 1) : current + dir;
-	const search = (from: number): number => {
-		let i = from;
-		while (i >= 0 && i < items.length) {
-			if (enabled(i)) return i;
-			i += dir;
-		}
-		return -1;
-	};
-	const primary = search(startFrom);
-	if (primary >= 0) return primary;
-	const wrapFrom = dir === 1 ? 0 : items.length - 1;
-	if (wrapFrom === startFrom) return current >= 0 ? current : -1;
-	return search(wrapFrom);
-}
 
 export interface ContextMenuProps {
 	open: boolean;
@@ -127,6 +76,7 @@ const dividerStyle: CSSProperties = {
 	height: 1,
 	background: adminColor.border,
 	margin: "4px 6px",
+	border: 0,
 };
 
 const dividerHeaderStyle: CSSProperties = {
@@ -140,6 +90,13 @@ const dividerHeaderStyle: CSSProperties = {
 	cursor: "default",
 };
 
+function getViewportSize() {
+	if (typeof window === "undefined") {
+		return { width: 1280, height: 800 };
+	}
+	return { width: window.innerWidth, height: window.innerHeight };
+}
+
 export function ContextMenu({
 	open,
 	anchorRect,
@@ -151,31 +108,27 @@ export function ContextMenu({
 	const ref = useRef<HTMLDivElement | null>(null);
 	const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
+
+	const measuredRef = useRef<{ width: number; height: number } | null>(null);
 	const [measured, setMeasured] = useState<{
 		width: number;
 		height: number;
 	} | null>(null);
 
 	useEffect(() => {
-		if (!open) {
-			setFocusIndex(-1);
-			setMeasured(null);
-		}
-	}, [open]);
-
-	useEffect(() => {
 		if (!open) return;
 		const node = ref.current;
 		if (!node) return;
 		const rect = node.getBoundingClientRect();
-		setMeasured({ width: rect.width, height: rect.height });
+		const next = { width: rect.width, height: rect.height };
+		if (
+			measuredRef.current?.width !== next.width ||
+			measuredRef.current?.height !== next.height
+		) {
+			measuredRef.current = next;
+			setMeasured(next);
+		}
 	}, [open, items.length]);
-
-	useEffect(() => {
-		if (!open || focusIndex < 0) return;
-		const el = itemRefs.current[focusIndex];
-		if (el && !el.disabled) el.focus();
-	}, [focusIndex, open]);
 
 	const handleKeyDown = useCallback(
 		(event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -222,14 +175,21 @@ export function ContextMenu({
 		[focusIndex, items, onClose],
 	);
 
+	const setItemRef = (el: HTMLButtonElement | null, idx: number) => {
+		itemRefs.current[idx] = el;
+	};
+
+	useEffect(() => {
+		if (!open || focusIndex < 0) return;
+		const el = itemRefs.current[focusIndex];
+		if (el && !el.disabled) el.focus();
+	}, [focusIndex, open]);
+
 	useClickAway(ref, open, onClose);
 
 	if (!open) return null;
 
-	const viewport =
-		typeof window === "undefined"
-			? { width: 1280, height: 800 }
-			: { width: window.innerWidth, height: window.innerHeight };
+	const viewport = getViewportSize();
 	const position = computeMenuRect(
 		anchorRect
 			? {
@@ -264,11 +224,8 @@ export function ContextMenu({
 						item.label === null ||
 						item.label === false);
 				if (isPureDivider) {
-					return <div key={item.key} role="separator" style={dividerStyle} />;
+					return <hr key={item.key} style={dividerStyle} />;
 				}
-				const setItemRef = (el: HTMLButtonElement | null) => {
-					itemRefs.current[idx] = el;
-				};
 				const handleClick = () => {
 					if (item.disabled || item.divider) return;
 					item.onSelect?.();
@@ -286,7 +243,7 @@ export function ContextMenu({
 				return (
 					<button
 						key={item.key}
-						ref={setItemRef}
+						ref={(el) => setItemRef(el, idx)}
 						type="button"
 						role="menuitem"
 						disabled={!!item.disabled || !!item.divider}
