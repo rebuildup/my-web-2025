@@ -1,6 +1,6 @@
 # プロジェクト不変条件 (canonical agent contract)
 
-このプロジェクトは Next.js 16 + React 19 + TypeScript 7 を App Router で運用する samuido 個人サイト(yusuke-kim.com 公開, GitHub Pages ではなく GCP VM + nginx 静的エクスポート)である. AI エージェントが作業するときの canonical な不変条件をここに集約する. 詳細手順は Skill / docs/ / ADR 側へ委譲する.
+このプロジェクトは Next.js 16 + React 19 + TypeScript 7 を App Router で運用する samuido 個人サイト(yusuke-kim.com 公開, Cloudflare Pages (Static Assets) + Workers + Containers (lite) + R2 で運用 (詳細は ADR-0014))である. AI エージェントが作業するときの canonical な不変条件をここに集約する. 詳細手順は Skill / docs/ / ADR 側へ委譲する.
 
 ## 1. プロジェクト境界
 
@@ -87,7 +87,10 @@ review agent:
 ## 9. セキュリティ / 秘密情報
 
 - `.env*` は git ignore. 例外は `.env*.example` のみ.
-- `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_CMS_API_BASE_URL`, `NEXT_PUBLIC_CDN_URL`, `SENTRY_DSN`, `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `GCP_SSH_KEY`, `GCP_HOST`, `GCP_USER`, `X_BEARER_TOKEN` は GitHub Secrets. local 値を持つなら `.env.development` / `.env.production` のみ.
+- Cloudflare Workers Secrets (`wrangler secret put <NAME>`): `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `X_BEARER_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
+- Cloudflare Pages Environment Variables (build-time): `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_CMS_API_BASE_URL`.
+- `SENTRY_DSN` は Cloudflare Workers Secrets (Container env) に注入.
+- `.env*` ファイルは git ignore. 例外は `.env*.example` のみ.
 - HTML / Markdown は `dompurify` または `isomorphic-dompurify` 経由が既定. 生 HTML を React へ直接渡さない.
 - CSP / HSTS / X-Frame-Options はリバースプロキシ側で付与(本リポジトリ範囲外).
 - 個人情報: 収集しない設計. 問い合わせはメール + メッセージのみで永続化しない.
@@ -125,6 +128,8 @@ disjoint file ownership を割り当て、各 subagent の完了作業は自分�
 - **`src/app/tools/ProtoType/`** は Vite 製 sub-project. 自身の `package.json` / `tsconfig.app.json` / `biome.json` を持ち、root の lint / type-check から除外されている. `.gitattributes` の `merge=ours` で bridge 保護. 詳細は `.claude/agents/tool-bridge-auditor` の指示. (Phase 1 で `external/ProtoType/` submodule 化される予定. Phase 1 cleanup までこの bullet を維持.)
 - **`scripts/install-tools.ts` と Bun workspaces の相互作用** (Phase 0 導入, 2026-08): workspace と submodule の組合せは Bun のドキュメントで薄く, hoisting の挙動に edge case があれば個別対応する. Phase 1 (ProtoType) で最初の実 tool submodule を投入して挙動を確定する.
 - **Biome overrides**: 9 コンポーネントのみ `noArrayIndexKey` を `error`. 過剰検知回避と要件精度の tradeoff. 解消したら overrides を外す.
+- **Cloudflare Containers β依存**: 2026-08 時点で β 機能. SLA と価格改定のアナウンスを Phase A で再確認.
+- **R2 hydrate 整合性**: Container 起動時に per-content DB を R2 からローカルへ hydrate するが, 起動直後の同時起動やスリープ中の整合性にレースリスクあり. `max_instances = 1` で構造的に防止. `PRAGMA integrity_check` を boot で実行.
 
 ---
 
