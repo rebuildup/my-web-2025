@@ -60,7 +60,9 @@ const STEPS: Step[] = [
 
 function run(s: Step): void {
 	console.log(`\n=== ${s.name} ===`);
-	const r = spawnSync(s.cmd[0]!, s.cmd.slice(1), {
+	const [cmd, ...args] = s.cmd;
+	if (!cmd) throw new Error(`Step "${s.name}" has no command`);
+	const r = spawnSync(cmd, args, {
 		cwd: s.cwd ?? process.cwd(),
 		stdio: "inherit",
 		env: process.env,
@@ -75,4 +77,6 @@ for (const s of STEPS) run(s);
 
 console.log("\n=== build-cloudflare complete ===");
 console.log("Artifact: ./out/  (Static Assets)");
-console.log("Artifact: ./apps/cms-api/target/release/cms-api  (Container binary)");
+console.log(
+	"Artifact: ./apps/cms-api/target/release/cms-api  (Container binary)",
+);

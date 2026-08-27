@@ -22,7 +22,8 @@ async fn build_r2_client() -> Result<aws_sdk_s3::Client> {
         env::var("R2_SECRET_ACCESS_KEY").context("R2_SECRET_ACCESS_KEY must be set")?;
     let endpoint = env::var("R2_ENDPOINT")
         .unwrap_or_else(|_| "https://<account>.r2.cloudflarestorage.com".to_string());
-    let creds = aws_credential_types::Credentials::new(access_key, secret_key, None, None, "r2-static");
+    let creds =
+        aws_credential_types::Credentials::new(access_key, secret_key, None, None, "r2-static");
     let cfg = aws_config::defaults(BehaviorVersion::latest())
         .endpoint_url(&endpoint)
         .region("auto")
@@ -153,7 +154,9 @@ async fn main() {
             let _ = tokio::signal::ctrl_c().await;
             tracing::info!("Ctrl+C received");
         }
-        if let Err(e) = sync::shutdown(&r2_shutdown, &cfg_shutdown, &mut sync::SyncState::new()).await {
+        if let Err(e) =
+            sync::shutdown(&r2_shutdown, &cfg_shutdown, &mut sync::SyncState::new()).await
+        {
             tracing::error!(error = %e, "shutdown write-back failed");
         }
         std::process::exit(0);

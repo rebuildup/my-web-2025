@@ -91,11 +91,7 @@ pub async fn hydrate(client: &S3Client, config: &R2Config) -> Result<()> {
     Ok(())
 }
 
-pub async fn write_back(
-    client: &S3Client,
-    config: &R2Config,
-    state: &mut SyncState,
-) -> Result<()> {
+pub async fn write_back(client: &S3Client, config: &R2Config, state: &mut SyncState) -> Result<()> {
     let mut entries = walk_dir(&config.local_dir).await?;
     let mut uploaded = 0usize;
     for entry in entries.drain(..) {
@@ -119,9 +115,9 @@ pub async fn write_back(
             continue;
         }
 
-        let bytes = fs::read(&entry).await.with_context(|| {
-            format!("read local {entry:?} for upload")
-        })?;
+        let bytes = fs::read(&entry)
+            .await
+            .with_context(|| format!("read local {entry:?} for upload"))?;
         client
             .put_object()
             .bucket(&config.bucket)
@@ -142,11 +138,7 @@ pub async fn write_back(
     Ok(())
 }
 
-pub async fn shutdown(
-    client: &S3Client,
-    config: &R2Config,
-    state: &mut SyncState,
-) -> Result<()> {
+pub async fn shutdown(client: &S3Client, config: &R2Config, state: &mut SyncState) -> Result<()> {
     warn!("R2 sync: graceful shutdown, flushing");
     write_back(client, config, state).await
 }

@@ -26,10 +26,7 @@ fn r2_config_uses_local_dir() {
 
 #[tokio::test]
 async fn hydrate_creates_local_dir_when_missing() {
-    let tmp = std::env::temp_dir().join(format!(
-        "cms-sync-hydrate-{}",
-        std::process::id()
-    ));
+    let tmp = std::env::temp_dir().join(format!("cms-sync-hydrate-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&tmp);
 
     let cfg = R2Config {
@@ -53,10 +50,7 @@ fn sync_state_starts_empty() {
 
 #[tokio::test]
 async fn write_back_detects_modified_file() {
-    let tmp = std::env::temp_dir().join(format!(
-        "cms-sync-writeback-{}",
-        std::process::id()
-    ));
+    let tmp = std::env::temp_dir().join(format!("cms-sync-writeback-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&tmp);
     tokio::fs::create_dir_all(&tmp).await.unwrap();
 

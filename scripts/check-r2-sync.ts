@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+
 /**
  * Compare local `data/contents/*.db` against R2 bucket `cms-data/contents/`.
  *
@@ -10,9 +11,9 @@
  * from the R2_ENDPOINT env var, e.g. https://<account>.r2.cloudflarestorage.com.
  */
 
+import { spawnSync } from "node:child_process";
 import { readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { spawnSync } from "node:child_process";
 
 const R2_BUCKET = process.env.R2_BUCKET ?? "cms-data";
 const LOCAL_DIR = join(process.cwd(), "data", "contents");
