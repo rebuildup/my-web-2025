@@ -87,7 +87,10 @@ review agent:
 ## 9. セキュリティ / 秘密情報
 
 - `.env*` は git ignore. 例外は `.env*.example` のみ.
+- 2026-08 時点でプロダクション deploy は GCP server + nginx + PM2 のみ. Cloudflare Workers / Pages / Container は preview 用途で運用していたものを整理済み (`docs/cloudflare-migration.md` を参照).
+- `.env.production` は GCP server 上のみで実値を保持. リポジトリには `.env.production.example` のみ commit. 旧 Cloudflare Workers Secrets (`wrangler secret put`) の項目 (`RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `X_BEARER_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`) は不要.
 - `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_CMS_API_BASE_URL`, `NEXT_PUBLIC_CDN_URL`, `SENTRY_DSN`, `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `GCP_SSH_KEY`, `GCP_HOST`, `GCP_USER`, `X_BEARER_TOKEN` は GitHub Secrets. local 値を持つなら `.env.development` / `.env.production` のみ.
+- `.env*` ファイルは git ignore. 例外は `.env*.example` のみ.
 - HTML / Markdown は `dompurify` または `isomorphic-dompurify` 経由が既定. 生 HTML を React へ直接渡さない.
 - CSP / HSTS / X-Frame-Options はリバースプロキシ側で付与(本リポジトリ範囲外).
 - 個人情報: 収集しない設計. 問い合わせはメール + メッセージのみで永続化しない.
@@ -125,6 +128,7 @@ disjoint file ownership を割り当て、各 subagent の完了作業は自分�
 - **`src/app/tools/ProtoType/`** は Vite 製 sub-project. 自身の `package.json` / `tsconfig.app.json` / `biome.json` を持ち、root の lint / type-check から除外されている. `.gitattributes` の `merge=ours` で bridge 保護. 詳細は `.claude/agents/tool-bridge-auditor` の指示. (Phase 1 で `external/ProtoType/` submodule 化される予定. Phase 1 cleanup までこの bullet を維持.)
 - **`scripts/install-tools.ts` と Bun workspaces の相互作用** (Phase 0 導入, 2026-08): workspace と submodule の組合せは Bun のドキュメントで薄く, hoisting の挙動に edge case があれば個別対応する. Phase 1 (ProtoType) で最初の実 tool submodule を投入して挙動を確定する.
 - **Biome overrides**: 9 コンポーネントのみ `noArrayIndexKey` を `error`. 過剰検知回避と要件精度の tradeoff. 解消したら overrides を外す.
+- **apps/cms-api/src/main.rs の `/api/*` エイリアス**: 旧 Cloudflare Worker (`/api/*` を Container に forwarding) 向けに追加した dead route. Cloudflare Container preview 整理に伴い reachable な経路がなくなったが cms-api からは削除していない. 静的 export 側は `/api/cms/*` を nginx 経由で叩くので機能影響なし. 完全撤去する場合は Rust 側の alias nest 6 件と `/api/health` を削除して `cargo test` 緑を確認.
 
 ---
 

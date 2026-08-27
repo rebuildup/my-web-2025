@@ -73,4 +73,22 @@ describe("normalizeMarkdownUrls", () => {
 		const out = normalizeMarkdownUrls(input);
 		expect(out).toBe(input);
 	});
+
+	test("rewrites worker-routed /api/media to canonical /api/cms/media", () => {
+		const input =
+			'<Image src="http://127.0.0.1:3001/api/media?contentId=seishun&id=media_x&raw=1" alt="x"></Image>';
+		const out = normalizeMarkdownUrls(input);
+		expect(out).toBe(
+			'<Image src="/api/cms/media?contentId=seishun&id=media_x&raw=1" alt="x"></Image>',
+		);
+	});
+
+	test("handles https with worker-routed /api/media", () => {
+		const input =
+			'<Image src="https://localhost:3010/api/media?contentId=foo&id=m&raw=1"></Image>';
+		const out = normalizeMarkdownUrls(input);
+		expect(out).toBe(
+			'<Image src="/api/cms/media?contentId=foo&id=m&raw=1"></Image>',
+		);
+	});
 });

@@ -85,3 +85,5 @@ apps/cms-api/Cargo.lock
 # data/contents/*.db, and exceeds GitHub's 100MB per-file limit once media
 # blobs are synced.
 apps/cms-api/data/db/
+
+.tmp/

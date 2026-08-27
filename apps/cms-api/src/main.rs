@@ -114,6 +114,23 @@ async fn main() {
         // `/api/content/*` working through the Rust backend.
         .nest("/api/content", content_compat::router(pool.clone()))
         .route("/health", axum::routing::get(health))
+        // Browser-facing `/api/*` aliases for the canonical CMS routes.
+        // Historical context: previously proxied via the Cloudflare Worker
+        // (`workers/router/src/index.ts` `cachedProxy`, removed 2026-08 when
+        // the Cloudflare Container preview was rolled back). Production now
+        // serves static export from the GCP server and nginx routes `/api/cms/*`
+        // to the Rust API directly — these `/api/*` aliases are no longer
+        // reachable from a public path. Kept in place as harmless dead routes
+        // so any local script that still constructs an `/api/entries` URL
+        // (e.g. older CMS tooling) keeps working. Remove with caution; see
+        // AGENTS.md §14 known-quality-debt note.
+        .nest("/api/entries", entries::router(pool.clone()))
+        .nest("/api/markdown", markdown::router(pool.clone()))
+        .nest("/api/media", media_route::router(cms_api_content_data_dir()))
+        .nest("/api/tags", tags::router(pool.clone()))
+        .nest("/api/search", search::router(pool.clone()))
+        .nest("/api/preview", preview::router(pool.clone()))
+        .route("/api/health", axum::routing::get(health))
         .route("/api/github/activity", axum::routing::get(dummy_json))
         .route("/api/youtube/activity", axum::routing::get(dummy_json))
         .route(
@@ -142,7 +159,7 @@ async fn main() {
 }
 
 async fn health() -> &'static str {
-    "OK"
+    "OK-v4"
 }
 
 async fn dummy_json() -> axum::Json<serde_json::Value> {

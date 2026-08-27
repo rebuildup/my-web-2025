@@ -14,6 +14,7 @@ import {
 	fetchCmsContentById,
 	fetchMarkdownPageBySlug,
 } from "@/lib/cms-api/server-data";
+import { normalizeMarkdownUrls } from "@/lib/markdown/url-normalizer";
 import { portfolioDataManager } from "@/lib/portfolio/data-manager";
 import { PortfolioSEOMetadataGenerator } from "@/lib/portfolio/seo-metadata-generator";
 import type { MarkdownContentItem } from "@/types/content";
@@ -54,18 +55,17 @@ function isRenderableImageUrl(value: string | undefined): value is string {
 	}
 }
 
-// Normalize URLs in markdown content (replace localhost:3010 with relative paths)
-function normalizeMarkdownUrls(content: string): string {
-	if (!content) return content;
-	// Replace http://localhost:3010 and https://localhost:3010 with relative paths
-	// Handle both markdown format and HTML img tags
-	return content
-		.replace(/https?:\/\/localhost:3010(\/api\/cms\/media[^\s"')]*)/g, "$1")
-		.replace(
-			/(<img[^>]*src=["'])https?:\/\/localhost:3010(\/api\/cms\/media[^"']*)(["'])/gi,
-			"$1$2$3",
-		);
-}
+// Normalize URLs in markdown content via the shared helper in
+// `src/lib/markdown/url-normalizer.ts`. That helper handles every dev-host
+// shape (127.0.0.1 / localhost / 0.0.0.0) and every CMS-API path shape
+// (/media, /api/media, /api/cms/media) so static export never carries a
+// reference to a local-only host.
+//
+// The previous inlined copy only matched `localhost:3010/api/cms/media`,
+// which silently let `http://127.0.0.1:3001/media?contentId=…` through —
+// those URLs then triggered Mixed Content in the browser because the
+// static page is served over HTTPS but the embedded request targets a raw
+// IP host. See `src/lib/markdown/url-normalizer.bun.test.ts` for coverage.
 
 async function loadMarkdownDetail(
 	slug: string,
