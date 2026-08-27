@@ -7,13 +7,17 @@
  *   2. Run `bun install --frozen-lockfile`.
  *   3. Run `bun --bun scripts/install-tools.ts` (tool submodule deps).
  *   4. Run `bun scripts/check-env.js` (env validation).
- *   5. Run `bun --bun next build` (static export → out/).
+ *   5. Run `bun next build` (static export → out/).
  *   6. Run `bun scripts/copy-content-data.js` (DB copy for build-time).
- *   7. Run `cargo build --release --manifest-path apps/cms-api/Cargo.toml`.
- *      (Cloudflare Containers wraps this via the Dockerfile in Task 14.)
  *
  * Exits non-zero on any failure. Intended to be set as the Pages build command
  * in Cloudflare Dashboard → Settings → Builds → Build command.
+ *
+ * Note: Rust build is intentionally NOT part of this script. Cloudflare
+ * Pages ships Bun + Node, not a Rust toolchain. The cms-api Container image
+ * is built by Cloudflare Containers at Workers deploy time using the
+ * Dockerfile in apps/cms-api/Dockerfile. Rust validation is covered by the
+ * local canonical gate (cargo check / clippy / test).
  */
 
 import { spawnSync } from "node:child_process";
@@ -48,17 +52,6 @@ const STEPS: Step[] = [
 		name: "copy content data",
 		cmd: ["bun", "scripts/copy-content-data.js"],
 	},
-	{
-		name: "cargo release build",
-		cmd: [
-			"cargo",
-			"build",
-			"--release",
-			"--locked",
-			"--manifest-path",
-			"apps/cms-api/Cargo.toml",
-		],
-	},
 ];
 
 function run(s: Step): void {
@@ -79,7 +72,7 @@ function run(s: Step): void {
 for (const s of STEPS) run(s);
 
 console.log("\n=== build-cloudflare complete ===");
-console.log("Artifact: ./out/  (Static Assets)");
+console.log("Artifact: ./out/  (Static Assets for Cloudflare Pages)");
 console.log(
-	"Artifact: ./apps/cms-api/target/release/cms-api  (Container binary)",
+	"Note: Container image is built by Cloudflare Containers at Workers deploy time",
 );
