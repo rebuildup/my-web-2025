@@ -4,10 +4,6 @@
 //! While running, every 30 seconds the module diff-uploads modified files
 //! back to R2. Graceful shutdown performs a final flush.
 
-// Phase B scaffold: bodies land in Task 11/12, callers in Task 13.
-// The `dead_code` allowance is removed once `main.rs` references these symbols.
-#![allow(dead_code, unused_variables)]
-
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;

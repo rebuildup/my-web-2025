@@ -7,8 +7,30 @@ mod db;
 mod routes;
 mod sync;
 
+use anyhow::{Context, Result};
 use db::create_pool;
 use routes::{content_compat, entries, markdown, media as media_route, og, preview, search, tags};
+
+/// Build an S3 client targeting Cloudflare R2 from the standard secret env
+/// vars (`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`). The
+/// endpoint defaults to the placeholder pattern documented in `.env.example`;
+/// production must set the real account-specific URL.
+async fn build_r2_client() -> Result<aws_sdk_s3::Client> {
+    use aws_config::BehaviorVersion;
+    let access_key = env::var("R2_ACCESS_KEY_ID").context("R2_ACCESS_KEY_ID must be set")?;
+    let secret_key =
+        env::var("R2_SECRET_ACCESS_KEY").context("R2_SECRET_ACCESS_KEY must be set")?;
+    let endpoint = env::var("R2_ENDPOINT")
+        .unwrap_or_else(|_| "https://<account>.r2.cloudflarestorage.com".to_string());
+    let creds = aws_credential_types::Credentials::new(access_key, secret_key, None, None, "r2-static");
+    let cfg = aws_config::defaults(BehaviorVersion::latest())
+        .endpoint_url(&endpoint)
+        .region("auto")
+        .credentials_provider(creds)
+        .load()
+        .await;
+    Ok(aws_sdk_s3::Client::new(&cfg))
+}
 
 fn cms_api_host() -> String {
     env::var("CMS_API_HOST").unwrap_or_else(|_| "127.0.0.1".to_string())
@@ -78,6 +100,64 @@ async fn main() {
     let host = cms_api_host();
     let port = cms_api_port();
     let bind_address = format!("{}:{}", host, port);
+
+    // Build the R2 (S3-compatible) client and hydrate the per-content SQLite
+    // directory from the bucket before serving any traffic. The boot fails
+    // hard if hydration errors — Cloudflare Containers restart on crash, so a
+    // transient R2 outage will retry hydrate without serving stale state.
+    let r2 = build_r2_client().await.expect("build R2 client");
+    let sync_cfg = sync::R2Config {
+        bucket: env::var("R2_BUCKET").unwrap_or_else(|_| "cms-data".to_string()),
+        local_dir: cms_api_data_dir(),
+    };
+
+    if let Err(e) = sync::hydrate(&r2, &sync_cfg).await {
+        tracing::error!(error = %e, "R2 hydrate failed; exiting");
+        std::process::exit(1);
+    }
+
+    // Periodic write-back (30s). The lite Container sleeps after 5 min of idle;
+    // `max_instances = 1` guarantees no concurrent writers, so a fresh
+    // `SyncState` per tick is safe — shutdown() captures the final flush.
+    let r2_bg = r2.clone();
+    let cfg_bg = sync_cfg.clone();
+    tokio::spawn(async move {
+        let mut ticker = tokio::time::interval(std::time::Duration::from_secs(30));
+        ticker.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
+        loop {
+            ticker.tick().await;
+            let mut state = sync::SyncState::new();
+            if let Err(e) = sync::write_back(&r2_bg, &cfg_bg, &mut state).await {
+                tracing::warn!(error = %e, "R2 write-back tick failed");
+            }
+        }
+    });
+
+    // Graceful shutdown: flush write-back on SIGTERM (Linux Container) or
+    // Ctrl+C (Windows dev). On Linux Container, `Container.max_instances = 1`
+    // means SIGTERM is the only signal we get during a rolling deploy.
+    let r2_shutdown = r2.clone();
+    let cfg_shutdown = sync_cfg.clone();
+    tokio::spawn(async move {
+        #[cfg(unix)]
+        {
+            use tokio::signal::unix::{signal, SignalKind};
+            let mut sigterm = signal(SignalKind::terminate()).expect("install SIGTERM");
+            tokio::select! {
+                _ = sigterm.recv() => tracing::info!("SIGTERM received"),
+                _ = tokio::signal::ctrl_c() => tracing::info!("SIGINT received"),
+            }
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = tokio::signal::ctrl_c().await;
+            tracing::info!("Ctrl+C received");
+        }
+        if let Err(e) = sync::shutdown(&r2_shutdown, &cfg_shutdown, &mut sync::SyncState::new()).await {
+            tracing::error!(error = %e, "shutdown write-back failed");
+        }
+        std::process::exit(0);
+    });
 
     let pool = create_pool(&database_url)
         .await
