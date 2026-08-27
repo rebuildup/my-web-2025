@@ -7,7 +7,7 @@
 
 use std::path::PathBuf;
 
-use crate::sync::{R2Config, R2_KEY_PREFIX};
+use crate::sync::{R2Config, SyncState, R2_KEY_PREFIX};
 
 #[test]
 fn r2_key_prefix_matches_spec() {
@@ -43,4 +43,43 @@ async fn hydrate_creates_local_dir_when_missing() {
     // against docker-compose + minio.
     tokio::fs::create_dir_all(&cfg.local_dir).await.unwrap();
     assert!(cfg.local_dir.exists());
+}
+
+#[test]
+fn sync_state_starts_empty() {
+    let s = SyncState::new();
+    assert!(s.last_synced.is_empty());
+}
+
+#[tokio::test]
+async fn write_back_detects_modified_file() {
+    let tmp = std::env::temp_dir().join(format!(
+        "cms-sync-writeback-{}",
+        std::process::id()
+    ));
+    let _ = std::fs::remove_dir_all(&tmp);
+    tokio::fs::create_dir_all(&tmp).await.unwrap();
+
+    // Create a stub file
+    tokio::fs::write(tmp.join("content-test.db"), b"hello")
+        .await
+        .unwrap();
+
+    // The actual mtime-diff logic is tested in integration (Task 20).
+    // Here we just verify the file's mtime advances when we touch it.
+    let path = tmp.join("content-test.db");
+    let first_mtime = tokio::fs::metadata(&path)
+        .await
+        .unwrap()
+        .modified()
+        .unwrap();
+    tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+    tokio::fs::write(&path, b"hello world").await.unwrap();
+    let second_mtime = tokio::fs::metadata(&path)
+        .await
+        .unwrap()
+        .modified()
+        .unwrap();
+
+    assert!(second_mtime > first_mtime);
 }

@@ -96,21 +96,63 @@ pub async fn hydrate(client: &S3Client, config: &R2Config) -> Result<()> {
 }
 
 pub async fn write_back(
-    _client: &S3Client,
-    _config: &R2Config,
-    _state: &mut SyncState,
+    client: &S3Client,
+    config: &R2Config,
+    state: &mut SyncState,
 ) -> Result<()> {
-    // Implementation in Task 12.
+    let mut entries = walk_dir(&config.local_dir).await?;
+    let mut uploaded = 0usize;
+    for entry in entries.drain(..) {
+        let rel = entry
+            .strip_prefix(&config.local_dir)
+            .unwrap_or(&entry)
+            .to_string_lossy()
+            .replace('\\', "/");
+        let key = format!("{R2_KEY_PREFIX}{rel}");
+
+        let local_mtime = fs::metadata(&entry)
+            .await
+            .ok()
+            .and_then(|m| m.modified().ok());
+        let needs_upload = match (local_mtime, state.last_synced.get(&key)) {
+            (Some(mt), Some(prev)) => mt > *prev,
+            (Some(_), None) => true,
+            _ => false,
+        };
+        if !needs_upload {
+            continue;
+        }
+
+        let bytes = fs::read(&entry).await.with_context(|| {
+            format!("read local {entry:?} for upload")
+        })?;
+        client
+            .put_object()
+            .bucket(&config.bucket)
+            .key(&key)
+            .body(bytes.into())
+            .send()
+            .await
+            .with_context(|| format!("put_object {key}"))?;
+
+        if let Some(mt) = local_mtime {
+            state.last_synced.insert(key, mt);
+        }
+        uploaded += 1;
+    }
+    if uploaded > 0 {
+        info!(uploaded, "R2 write-back complete");
+    }
     Ok(())
 }
 
 pub async fn shutdown(
-    _client: &S3Client,
-    _config: &R2Config,
-    _state: &mut SyncState,
+    client: &S3Client,
+    config: &R2Config,
+    state: &mut SyncState,
 ) -> Result<()> {
     warn!("R2 sync: graceful shutdown, flushing");
-    write_back(_client, _config, _state).await
+    write_back(client, config, state).await
 }
 
 /// Recursively collect regular files under `dir`. Used by `write_back` to
