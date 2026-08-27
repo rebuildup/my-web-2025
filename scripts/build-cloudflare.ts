@@ -39,7 +39,10 @@ const STEPS: Step[] = [
 	},
 	{
 		name: "next build",
-		cmd: ["bun", "--bun", "next", "build"],
+		// Drop `--bun` on Cloudflare's Linux env: Bun's CJS wrapper is incompatible
+		// with Next.js 16 Turbopack runtime ("Expected CommonJS module to have a
+		// function wrapper"). Falling back to Node 22 keeps page-data workers stable.
+		cmd: ["bun", "next", "build"],
 	},
 	{
 		name: "copy content data",
