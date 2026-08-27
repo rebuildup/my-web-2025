@@ -90,7 +90,6 @@ review agent:
 - 2026-08 時点でプロダクション deploy は GCP server + nginx + PM2 のみ. Cloudflare Workers / Pages / Container は preview 用途で運用していたものを整理済み (`docs/cloudflare-migration.md` を参照).
 - `.env.production` は GCP server 上のみで実値を保持. リポジトリには `.env.production.example` のみ commit. 旧 Cloudflare Workers Secrets (`wrangler secret put`) の項目 (`RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `X_BEARER_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`) は不要.
 - `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_CMS_API_BASE_URL`, `NEXT_PUBLIC_CDN_URL`, `SENTRY_DSN`, `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `GCP_SSH_KEY`, `GCP_HOST`, `GCP_USER`, `X_BEARER_TOKEN` は GitHub Secrets. local 値を持つなら `.env.development` / `.env.production` のみ.
-- `.env*` ファイルは git ignore. 例外は `.env*.example` のみ.
 - HTML / Markdown は `dompurify` または `isomorphic-dompurify` 経由が既定. 生 HTML を React へ直接渡さない.
 - CSP / HSTS / X-Frame-Options はリバースプロキシ側で付与(本リポジトリ範囲外).
 - 個人情報: 収集しない設計. 問い合わせはメール + メッセージのみで永続化しない.

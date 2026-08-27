@@ -126,7 +126,10 @@ async fn main() {
         // AGENTS.md §14 known-quality-debt note.
         .nest("/api/entries", entries::router(pool.clone()))
         .nest("/api/markdown", markdown::router(pool.clone()))
-        .nest("/api/media", media_route::router(cms_api_content_data_dir()))
+        .nest(
+            "/api/media",
+            media_route::router(cms_api_content_data_dir()),
+        )
         .nest("/api/tags", tags::router(pool.clone()))
         .nest("/api/search", search::router(pool.clone()))
         .nest("/api/preview", preview::router(pool.clone()))
