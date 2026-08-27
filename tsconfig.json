@@ -59,6 +59,7 @@
 		"src/test-utils/**/*",
 		"src/app/admin/**/*",
 		"scripts/**/*",
+		"workers/**/*",
 		"src/app/tools/ProtoType/**/*"
 	]
 }
