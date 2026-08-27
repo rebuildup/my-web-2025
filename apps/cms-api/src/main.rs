@@ -5,6 +5,7 @@ use tracing_subscriber::fmt::format::FmtSpan;
 
 mod db;
 mod routes;
+mod sync;
 
 use db::create_pool;
 use routes::{content_compat, entries, markdown, media as media_route, og, preview, search, tags};
