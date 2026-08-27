@@ -39,6 +39,7 @@ Cloudflare アカウント/契約/R2 バケット/Pages 接続は人間の Dashb
 | 18 | `scripts/check-r2-sync.ts` (`--snapshot` / `--verify` against R2) | `3aeef7c2` |
 | 19 | `docker-compose.minio.yml` (minio + minio-init, `cms-data-test` バケット自動作成) | `ba564dca` |
 | 20 | `tests/integration/sync.test.ts` — `INTEGRATION=1` opt-in smoke (bun:test) | `437216d5` |
+| 補 | `scripts/dump-cms-index.ts` + `content-db-manager.ts` JSON fast-path — SSG が Node 22 で `bun:sqlite` を読めない問題を、ビルド前に `node_modules/.cache/cms-build/*.json` に materialize して解決 | `7bf26501` |
 
 ### Phase B: Validation Gate — green
 
@@ -56,6 +57,7 @@ Cloudflare アカウント/契約/R2 バケット/Pages 接続は人間の Dashb
 | `cargo clippy --manifest-path apps/cms-api/Cargo.toml --all-targets -- -D warnings` | ✅ 0 warning |
 | `cargo test --manifest-path apps/cms-api/Cargo.toml --all-targets` | ✅ 19 pass |
 | `bun run build` (check-env → next build → copy-content-data) | ✅ 71 content DB 配布, .next 生成 |
+| `bun scripts/dump-cms-index.ts && CMS_INDEX_JSON=... CMS_MARKDOWN_JSON=... bun next build` | ✅ 69 portfolio slugs + 69 blog slugs が SSG でレンダリングされる |
 
 ## 2. 残作業 — ユーザー手動 (Phase A 後半 + Phase C + Phase D)
 

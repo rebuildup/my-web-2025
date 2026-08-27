@@ -49,10 +49,12 @@ const STEPS: Step[] = [
 	},
 	{
 		name: "dump cms index",
-		// Materialise data/contents/*.db → .next/cms-index.json &
-		// .next/markdown-pages.json via bun:sqlite. next build runs under
-		// Node 22 (no bun:sqlite) and consumes the JSON through the
-		// CMS_INDEX_JSON / CMS_MARKDOWN_JSON env vars below.
+		// Materialise data/contents/*.db → node_modules/.cache/cms-build/*.json
+		// via bun:sqlite (Bun runtime only). next build runs under Node 22
+		// (no bun:sqlite) and consumes the JSON through the
+		// CMS_INDEX_JSON / CMS_MARKDOWN_JSON env vars below. `.cache/`
+		// sits under `node_modules/` so Next.js' `.next/` wipe never
+		// touches it and `node_modules/` is gitignored.
 		cmd: ["bun", "scripts/dump-cms-index.ts"],
 	},
 	{
