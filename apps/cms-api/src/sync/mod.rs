@@ -45,7 +45,53 @@ pub async fn hydrate(client: &S3Client, config: &R2Config) -> Result<()> {
         local_dir = ?config.local_dir,
         "R2 hydrate start"
     );
-    // Implementation in Task 11.
+
+    let mut continuation: Option<String> = None;
+    loop {
+        let mut req = client
+            .list_objects_v2()
+            .bucket(&config.bucket)
+            .prefix(R2_KEY_PREFIX);
+        if let Some(token) = continuation.as_ref() {
+            req = req.continuation_token(token);
+        }
+        let resp = req.send().await.context("list R2 contents/")?;
+
+        for obj in resp.contents() {
+            let key = match obj.key() {
+                Some(k) => k,
+                None => continue,
+            };
+            let rel = match key.strip_prefix(R2_KEY_PREFIX) {
+                Some(r) => r,
+                None => continue,
+            };
+            let local_path = config.local_dir.join(rel);
+            if let Some(parent) = local_path.parent() {
+                fs::create_dir_all(parent).await?;
+            }
+            let body = client
+                .get_object()
+                .bucket(&config.bucket)
+                .key(key)
+                .send()
+                .await
+                .with_context(|| format!("get_object {key}"))?
+                .body
+                .collect()
+                .await
+                .context("collect body")?;
+            fs::write(&local_path, body.into_bytes())
+                .await
+                .with_context(|| format!("write {local_path:?}"))?;
+        }
+
+        continuation = resp.next_continuation_token().map(|s| s.to_string());
+        if continuation.is_none() {
+            break;
+        }
+    }
+    info!("R2 hydrate complete");
     Ok(())
 }
 
@@ -86,3 +132,7 @@ pub(crate) async fn walk_dir(dir: &Path) -> Result<Vec<PathBuf>> {
     }
     Ok(out)
 }
+
+#[cfg(test)]
+#[path = "mod_test.rs"]
+mod tests;
