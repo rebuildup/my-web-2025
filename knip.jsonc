@@ -4,14 +4,12 @@
   "ignoreDependencies": [
     "chrome-launcher",
     "lighthouse",
-    "pixi-filters",
     "@testing-library/react",
     "@types/youtube",
     "baseline-browser-mapping",
     "jsdom",
     "playwright",
-    "tsx",
-    "isomorphic-dompurify"
+    "tsx"
   ],
   "ignoreBinaries": ["wslc"],
   "treatConfigHintsAsErrors": true,
