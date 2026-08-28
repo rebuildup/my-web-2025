@@ -1,3 +1,6 @@
 [submodule "external/ui"]
 	path = external/ui
 	url = https://github.com/rebuildup/my-web-tools-ui.git
+[submodule "external/prototype"]
+	path = external/prototype
+	url = https://github.com/rebuildup/tool-prototype.git
