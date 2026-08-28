@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
 		"external/code-type-p5/src",
 		"external/fillgen/src",
 		"external/qr-generator/src",
+		"external/pomodoro/src",
+		"external/history-quiz/src",
+		"external/pi-game/src",
 	],
 	typescript: {
 		ignoreBuildErrors: true,

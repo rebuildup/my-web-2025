@@ -32,3 +32,12 @@
 [submodule "external/qr-generator"]
 	path = external/qr-generator
 	url = https://github.com/rebuildup/tool-qr-generator.git
+[submodule "external/pomodoro"]
+	path = external/pomodoro
+	url = https://github.com/rebuildup/tool-pomodoro.git
+[submodule "external/history-quiz"]
+	path = external/history-quiz
+	url = https://github.com/rebuildup/tool-history-quiz.git
+[submodule "external/pi-game"]
+	path = external/pi-game
+	url = https://github.com/rebuildup/tool-pi-game.git
