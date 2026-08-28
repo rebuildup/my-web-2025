@@ -4,6 +4,7 @@
 [submodule "external/prototype"]
 	path = external/prototype
 	url = https://github.com/rebuildup/tool-prototype.git
+	branch = main
 [submodule "external/text-counter"]
 	path = external/text-counter
 	url = https://github.com/rebuildup/tool-text-counter.git
@@ -23,24 +24,32 @@
 [submodule "external/business-mail-block"]
 	path = external/business-mail-block
 	url = https://github.com/rebuildup/tool-business-mail-block.git
+	branch = main
 [submodule "external/code-type-p5"]
 	path = external/code-type-p5
 	url = https://github.com/rebuildup/tool-code-type-p5.git
+	branch = main
 [submodule "external/fillgen"]
 	path = external/fillgen
 	url = https://github.com/rebuildup/tool-fillgen.git
+	branch = main
 [submodule "external/qr-generator"]
 	path = external/qr-generator
 	url = https://github.com/rebuildup/tool-qr-generator.git
+	branch = main
 [submodule "external/pomodoro"]
 	path = external/pomodoro
 	url = https://github.com/rebuildup/tool-pomodoro.git
+	branch = main
 [submodule "external/history-quiz"]
 	path = external/history-quiz
 	url = https://github.com/rebuildup/tool-history-quiz.git
+	branch = main
 [submodule "external/pi-game"]
 	path = external/pi-game
 	url = https://github.com/rebuildup/tool-pi-game.git
+	branch = main
 [submodule "external/ae-expression"]
 	path = external/ae-expression
 	url = https://github.com/rebuildup/tool-ae-expression.git
+	branch = main
