@@ -35,7 +35,15 @@ const nextConfig: NextConfig = {
 		ignoreBuildErrors: true,
 	},
 	serverExternalPackages: ["bun:sqlite"],
-	turbopack: {},
+	turbopack: {
+		// Treat .wav as a static asset so external submodule imports
+		// (e.g. external/prototype/src/assets/SE/*.wav) resolve to a URL
+		// instead of failing with "Unknown module type". The webpack
+		// rule below mirrors this for non-Turbopack paths.
+		rules: {
+			"*.wav": { type: "asset" },
+		},
+	},
 	// Note: turbopack does not support moduleIds/chunkIds
 	// Environment variables
 	env: {
