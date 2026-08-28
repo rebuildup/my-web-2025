@@ -24,7 +24,8 @@
 		"wslc:logs": "wslc logs my-web-2025-dev",
 		"wslc:stop": "wslc stop my-web-2025-dev",
 		"wslc:remove": "wslc remove my-web-2025-dev",
-		"doctor": "bunx react-doctor@latest"
+		"doctor": "bunx react-doctor@latest",
+		"check:tool-isolation": "bun --bun scripts/check-tool-isolation.ts"
 	},
 	"trustedDependencies": [
 		"msw",

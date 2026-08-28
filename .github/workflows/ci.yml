@@ -39,6 +39,9 @@ jobs:
       - name: Biome Linter
         run: bun run lint
 
+      - name: Tool isolation guard
+        run: bun run check:tool-isolation
+
       - name: Knip Analysis
         run: bun x knip
 
