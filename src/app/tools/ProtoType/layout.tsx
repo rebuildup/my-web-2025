@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import "./src/index.css";
-import "./src/styles/001_tab.css";
-import "./src/styles/002_header.css";
-import "./src/styles/004_game.css";
-import "./src/styles/007_setting.css";
-import "./src/styles/009_webglPopup.css";
-import "./src/styles/010_colorpalette.css";
-import "./src/styles/011_rankingtable.css";
-import "./src/styles/012_footer.css";
-import "./src/styles/013_BGAnim.css";
-import "./src/styles/014_animation-setting.css";
-import "./src/styles/015_RankingLoad.css";
+import "../../../../external/prototype/src/index.css";
+import "../../../../external/prototype/src/styles/001_tab.css";
+import "../../../../external/prototype/src/styles/002_header.css";
+import "../../../../external/prototype/src/styles/004_game.css";
+import "../../../../external/prototype/src/styles/007_setting.css";
+import "../../../../external/prototype/src/styles/009_webglPopup.css";
+import "../../../../external/prototype/src/styles/010_colorpalette.css";
+import "../../../../external/prototype/src/styles/011_rankingtable.css";
+import "../../../../external/prototype/src/styles/012_footer.css";
+import "../../../../external/prototype/src/styles/013_BGAnim.css";
+import "../../../../external/prototype/src/styles/014_animation-setting.css";
+import "../../../../external/prototype/src/styles/015_RankingLoad.css";
 
 export const metadata: Metadata = {
 	title: "ProtoType - samuido | タイピングゲーム",

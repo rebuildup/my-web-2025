@@ -33,7 +33,7 @@ function installOne(name: string): boolean {
 		return true;
 	}
 	console.log(`[install-tools] bun install in ${name}`);
-	const result = spawnSync("bun", ["install"], {
+	const result = spawnSync("bun", ["install", "--ignore-scripts"], {
 		cwd: dir,
 		stdio: "inherit",
 		env: process.env,
