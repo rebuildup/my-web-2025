@@ -133,7 +133,7 @@
       },
     },
     "external/pomodoro": {
-      "name": "tool-pomodoro",
+      "name": "@rebuildup/tool-pomodoro",
       "version": "0.1.0",
       "dependencies": {
         "lucide-react": "^1.28.0",
@@ -765,6 +765,8 @@
     "@rebuildup/tool-history-quiz": ["@rebuildup/tool-history-quiz@workspace:external/history-quiz"],
 
     "@rebuildup/tool-pi-game": ["@rebuildup/tool-pi-game@workspace:external/pi-game"],
+
+    "@rebuildup/tool-pomodoro": ["@rebuildup/tool-pomodoro@workspace:external/pomodoro"],
 
     "@rebuildup/tool-qr-generator": ["@rebuildup/tool-qr-generator@workspace:external/qr-generator"],
 
@@ -1939,8 +1941,6 @@
     "tldts-icann": ["tldts-icann@7.4.9", "", { "dependencies": { "tldts-core": "^7.4.9" } }, "sha512-q6gyxCkcFPu5OZd2hi2quysxCG3ejIi53EACesbCEZHhH7FO3HnliqwO5zUs0TV6dA54SxhCrTGAc4ugl7rTiw=="],
 
     "tmpl": ["tmpl@1.0.5", "", {}, "sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw=="],
-
-    "tool-pomodoro": ["tool-pomodoro@workspace:external/pomodoro"],
 
     "totalist": ["totalist@3.0.1", "", {}, "sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ=="],
 
