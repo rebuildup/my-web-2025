@@ -3,7 +3,7 @@
 	url = https://github.com/rebuildup/my-web-tools-ui.git
 [submodule "external/prototype"]
 	path = external/prototype
-	url = https://github.com/rebuildup/tool-prototype.git
+	url = https://github.com/rebuildup/ProtoType.git
 	branch = main
 [submodule "external/text-counter"]
 	path = external/text-counter
