@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
 		"external/color-palette/src",
 		"external/sequential-png-preview/src",
 		"external/svg2tsx/src",
+		"external/business-mail-block/src",
+		"external/code-type-p5/src",
+		"external/fillgen/src",
+		"external/qr-generator/src",
 	],
 	typescript: {
 		ignoreBuildErrors: true,

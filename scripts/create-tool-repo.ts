@@ -77,37 +77,36 @@ const readme = `# rebuildup/${REPO_NAME}\n\nStandalone ${TOOL} tool. See my-web-
 // Minimal package.json: React 19 + UI workspace link. Tool-specific deps are
 // added during Phase 2-N batch source moves; this scaffold is intentionally
 // bare so the helper stays single-purpose.
-const packageJson =
-	JSON.stringify(
-		{
-			name: `tool-${TOOL}`,
-			private: true,
-			version: "0.1.0",
-			type: "module",
-			scripts: {
-				dev: "vite",
-				build: "tsc -b && vite build",
-				typecheck: "tsc -b",
-				lint: "biome check .",
-				test: "bun run lint && bun run build",
-				format: "biome format . --write",
-				preview: "vite preview",
-			},
-			dependencies: {
-				"@rebuildup/my-web-tools-ui": "link:../../ui/src",
-				react: "^19.2.8",
-				"react-dom": "^19.2.8",
-			},
-			devDependencies: {
-				"@biomejs/biome": "^1.9.0",
-				"@vitejs/plugin-react": "^4.3.4",
-				typescript: "~5.6.2",
-				vite: "^6.0.5",
-			},
+const packageJson = `${JSON.stringify(
+	{
+		name: `tool-${TOOL}`,
+		private: true,
+		version: "0.1.0",
+		type: "module",
+		scripts: {
+			dev: "vite",
+			build: "tsc -b && vite build",
+			typecheck: "tsc -b",
+			lint: "biome check .",
+			test: "bun run lint && bun run build",
+			format: "biome format . --write",
+			preview: "vite preview",
 		},
-		null,
-		"\t",
-	) + "\n";
+		dependencies: {
+			"@rebuildup/my-web-tools-ui": "link:../../ui/src",
+			react: "^19.2.8",
+			"react-dom": "^19.2.8",
+		},
+		devDependencies: {
+			"@biomejs/biome": "^1.9.0",
+			"@vitejs/plugin-react": "^4.3.4",
+			typescript: "~5.6.2",
+			vite: "^6.0.5",
+		},
+	},
+	null,
+	"\t",
+)}\n`;
 // Standard Vite-scaffold gitignore. Prevents the Batch A near-miss of
 // accidentally committing node_modules inside a tool repo.
 const gitignore = "node_modules/\n.next/\ndist/\n.vscode/\n*.log\n";

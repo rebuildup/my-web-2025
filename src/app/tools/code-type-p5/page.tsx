@@ -2,10 +2,10 @@
 
 import dynamic from "next/dynamic";
 
-const CodeTypeP5App = dynamic(() => import("./components/CodeTypeP5App"), {
+const App = dynamic(() => import("../../../../external/code-type-p5/src"), {
 	ssr: false,
 });
 
 export default function CodeTypeP5Page() {
-	return <CodeTypeP5App />;
+	return <App />;
 }

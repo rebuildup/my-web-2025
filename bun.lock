@@ -7,7 +7,6 @@
       "dependencies": {
         "@ffmpeg/ffmpeg": "^0.12.15",
         "@ffmpeg/util": "^0.12.2",
-        "@hello-pangea/dnd": "^18.0.1",
         "@next/bundle-analyzer": "^16.3.0",
         "@radix-ui/react-slot": "^1.3.3",
         "@use-gesture/react": "^10.3.1",
@@ -20,13 +19,11 @@
         "framer-motion": "^12.43.0",
         "fuse.js": "^7.5.0",
         "isomorphic-dompurify": "^3.21.0",
-        "jszip": "^3.10.1",
         "lucide-react": "^1.28.0",
         "marked": "^18.0.9",
         "motion": "^12.43.0",
         "nanoid": "^6.0.1",
         "next": "^16.3.0",
-        "p5": "^2.3.2",
         "pixi-filters": "^6.1.5",
         "prismjs": "^1.30.0",
         "qrcode": "^1.5.4",
@@ -48,7 +45,6 @@
         "@testing-library/react": "^16.3.2",
         "@types/jest": "^30.0.0",
         "@types/node": "^26.1.2",
-        "@types/p5": "^1.7.7",
         "@types/qrcode": "^1.5.6",
         "@types/react": "^19.2.18",
         "@types/react-dom": "^19.2.4",
@@ -65,8 +61,47 @@
         "tsx": "^4.23.8",
       },
     },
+    "external/business-mail-block": {
+      "name": "@rebuildup/tool-business-mail-block",
+      "version": "0.1.0",
+      "dependencies": {
+        "@hello-pangea/dnd": "^18.0.1",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
+    "external/code-type-p5": {
+      "name": "@rebuildup/tool-code-type-p5",
+      "version": "0.1.0",
+      "dependencies": {
+        "jszip": "^3.10.1",
+        "p5": "^2.3.2",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "devDependencies": {
+        "@types/p5": "^1.7.7",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
     "external/color-palette": {
       "name": "@rebuildup/tool-color-palette",
+      "version": "0.1.0",
+      "dependencies": {
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
+    "external/fillgen": {
+      "name": "@rebuildup/tool-fillgen",
       "version": "0.1.0",
       "dependencies": {
         "react": "^19.2.8",
@@ -107,6 +142,22 @@
         "@vitejs/plugin-react": "^4.3.4",
         "typescript": "~5.6.2",
         "vite": "^6.0.5",
+      },
+    },
+    "external/qr-generator": {
+      "name": "@rebuildup/tool-qr-generator",
+      "version": "0.1.0",
+      "dependencies": {
+        "qrcode": "^1.5.4",
+        "qrcode.react": "^4.2.0",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "devDependencies": {
+        "@types/qrcode": "^1.5.6",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
       },
     },
     "external/sequential-png-preview": {
@@ -670,7 +721,15 @@
 
     "@rebuildup/my-web-tools-ui": ["@rebuildup/my-web-tools-ui@workspace:external/ui"],
 
+    "@rebuildup/tool-business-mail-block": ["@rebuildup/tool-business-mail-block@workspace:external/business-mail-block"],
+
+    "@rebuildup/tool-code-type-p5": ["@rebuildup/tool-code-type-p5@workspace:external/code-type-p5"],
+
     "@rebuildup/tool-color-palette": ["@rebuildup/tool-color-palette@workspace:external/color-palette"],
+
+    "@rebuildup/tool-fillgen": ["@rebuildup/tool-fillgen@workspace:external/fillgen"],
+
+    "@rebuildup/tool-qr-generator": ["@rebuildup/tool-qr-generator@workspace:external/qr-generator"],
 
     "@rebuildup/tool-sequential-png-preview": ["@rebuildup/tool-sequential-png-preview@workspace:external/sequential-png-preview"],
 

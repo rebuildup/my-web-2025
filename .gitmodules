@@ -20,3 +20,15 @@
 	path = external/svg2tsx
 	url = https://github.com/rebuildup/tool-svg2tsx.git
 	branch = main
+[submodule "external/business-mail-block"]
+	path = external/business-mail-block
+	url = https://github.com/rebuildup/tool-business-mail-block.git
+[submodule "external/code-type-p5"]
+	path = external/code-type-p5
+	url = https://github.com/rebuildup/tool-code-type-p5.git
+[submodule "external/fillgen"]
+	path = external/fillgen
+	url = https://github.com/rebuildup/tool-fillgen.git
+[submodule "external/qr-generator"]
+	path = external/qr-generator
+	url = https://github.com/rebuildup/tool-qr-generator.git
