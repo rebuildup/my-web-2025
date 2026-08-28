@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
 		"external/pomodoro/src",
 		"external/history-quiz/src",
 		"external/pi-game/src",
+		"external/ae-expression/src",
 	],
 	typescript: {
 		ignoreBuildErrors: true,
