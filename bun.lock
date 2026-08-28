@@ -20,7 +20,6 @@
         "framer-motion": "^12.43.0",
         "fuse.js": "^7.5.0",
         "isomorphic-dompurify": "^3.21.0",
-        "js-tiktoken": "^1.0.21",
         "jszip": "^3.10.1",
         "lucide-react": "^1.28.0",
         "marked": "^18.0.9",
@@ -66,6 +65,17 @@
         "tsx": "^4.23.8",
       },
     },
+    "external/color-palette": {
+      "name": "@rebuildup/tool-color-palette",
+      "version": "0.1.0",
+      "dependencies": {
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
     "external/prototype": {
       "name": "prototype",
       "version": "0.0.0",
@@ -97,6 +107,40 @@
         "@vitejs/plugin-react": "^4.3.4",
         "typescript": "~5.6.2",
         "vite": "^6.0.5",
+      },
+    },
+    "external/sequential-png-preview": {
+      "name": "@rebuildup/tool-sequential-png-preview",
+      "version": "0.1.0",
+      "dependencies": {
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
+    "external/svg2tsx": {
+      "name": "@rebuildup/tool-svg2tsx",
+      "version": "0.1.0",
+      "dependencies": {
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
+    "external/text-counter": {
+      "name": "@rebuildup/tool-text-counter",
+      "version": "0.1.0",
+      "dependencies": {
+        "js-tiktoken": "^1.0.21",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
       },
     },
     "external/ui": {
@@ -625,6 +669,14 @@
     "@radix-ui/react-slot": ["@radix-ui/react-slot@1.3.3", "", { "dependencies": { "@radix-ui/react-compose-refs": "1.1.5" }, "peerDependencies": { "@types/react": "*", "react": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc" }, "optionalPeers": ["@types/react"] }, "sha512-qx7oqnYbxnK9kYI9m317qmFmEgo6ywqWvbTogdj7cL9p3/yx4M48p7Rnw5z3H890cL/ow/EeWJsuTykeZVXP5Q=="],
 
     "@rebuildup/my-web-tools-ui": ["@rebuildup/my-web-tools-ui@workspace:external/ui"],
+
+    "@rebuildup/tool-color-palette": ["@rebuildup/tool-color-palette@workspace:external/color-palette"],
+
+    "@rebuildup/tool-sequential-png-preview": ["@rebuildup/tool-sequential-png-preview@workspace:external/sequential-png-preview"],
+
+    "@rebuildup/tool-svg2tsx": ["@rebuildup/tool-svg2tsx@workspace:external/svg2tsx"],
+
+    "@rebuildup/tool-text-counter": ["@rebuildup/tool-text-counter@workspace:external/text-counter"],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-beta.27", "", {}, "sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA=="],
 

@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
 		"@appletosolutions/reactbits",
 		"external/ui/src",
 		"external/prototype/src",
+		"external/text-counter/src",
+		"external/color-palette/src",
+		"external/sequential-png-preview/src",
+		"external/svg2tsx/src",
 	],
 	typescript: {
 		ignoreBuildErrors: true,

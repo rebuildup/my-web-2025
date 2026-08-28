@@ -1,61 +1,11 @@
-import type { Metadata } from "next";
-import TextCounterTool from "./components/TextCounterTool";
+"use client";
 
-export const metadata: Metadata = {
-	title: "Text Counter - samuido | 文字数カウンター",
-	description:
-		"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
-	keywords: [
-		"文字数カウンター",
-		"テキスト統計",
-		"文字数",
-		"単語数",
-		"行数",
-		"文字種別",
-	],
-	robots: "index, follow",
-	openGraph: {
-		title: "Text Counter - samuido | 文字数カウンター",
-		description:
-			"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
-		type: "website",
-		url: "https://yusuke-kim.com/tools/text-counter",
-		siteName: "samuido",
-		locale: "ja_JP",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Text Counter - samuido | 文字数カウンター",
-		description:
-			"テキストの文字数を詳細にカウント.総文字数、単語数、行数、文字種別など豊富な統計情報を提供.",
-		creator: "@361do_sleep",
-	},
+import dynamic from "next/dynamic";
 
-	alternates: {
-		canonical: "https://yusuke-kim.com/tools/text-counter",
-	},
-};
-
-const _jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "WebApplication",
-	name: "Text Counter",
-	description: "テキストの文字数を詳細にカウントするツール",
-	url: "https://yusuke-kim.com/tools/text-counter",
-	applicationCategory: "UtilityApplication",
-	operatingSystem: "Web Browser",
-	author: {
-		"@type": "Person",
-		name: "木村友亮",
-		alternateName: "samuido",
-	},
-	offers: {
-		"@type": "Offer",
-		price: "0",
-		priceCurrency: "JPY",
-	},
-};
+const App = dynamic(() => import("../../../../external/text-counter/src"), {
+	ssr: false,
+});
 
 export default function TextCounterPage() {
-	return <TextCounterTool />;
+	return <App />;
 }
