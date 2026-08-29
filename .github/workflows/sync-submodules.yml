@@ -35,11 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout parent (with submodules)
+      - name: Checkout parent (no submodules)
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          submodules: recursive
+          submodules: false
 
       - name: Setup git identity
         run: |
@@ -107,24 +107,26 @@ jobs:
           set -euo pipefail
           branch="chore/sync-submodules-$(date -u +%Y%m%dT%H%M%SZ)"
           git checkout -b "$branch"
-          # Only update the specific drifted paths from the drift step,
-          # not all submodules at once. Submodules whose .gitmodules
-          # branch differs from their real default branch (e.g. pi-game
-          # uses develop, not main) would otherwise fail with
-          # 'Unable to find refs/remotes/origin/<branch> revision'.
+          # For each drifted submodule, fetch the new commit into the
+          # parent's object database (so the gitlink is reachable) and
+          # rewrite the gitlink in the parent's index. We deliberately
+          # do NOT touch each submodule's working tree — that path was
+          # fragile (force-pushed upstream → unrelated histories, wrong
+          # branch in .gitmodules → missing remote ref).
           while IFS='|' read -r p b a; do
             [ -z "$p" ] && continue
-            echo "::group::bumping $p"
-            git submodule update --remote --remote-branch="$(git config -f .gitmodules "submodule.$p.branch")" -- "$p"
+            url=$(git config -f .gitmodules "submodule.$p.url")
+            echo "::group::bumping $p ($b -> $a)"
+            git fetch --filter=blob:none --depth=1 "$url" "$a"
+            git update-index --add --cacheinfo 160000,"$a","$p"
             echo "::endgroup::"
           done < /tmp/drift.txt
-          if git diff --cached --quiet && git diff --quiet; then
-            echo "::warning::no changes after submodule update, aborting (rolling back branch)"
+          if git diff --cached --quiet; then
+            echo "::warning::no changes after gitlink update, aborting (rolling back branch)"
             git checkout main
             git branch -D "$branch"
             exit 0
           fi
-          git add external/
           {
             echo "chore(submodule): sync gitlinks to origin/main tip"
             echo ""
