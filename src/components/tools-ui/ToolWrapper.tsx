@@ -1,0 +1,240 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAccessibility } from "@/hooks/useAccessibility";
+import PerformanceOptimizer from "./PerformanceOptimizer";
+
+interface ToolWrapperProps {
+	children: React.ReactNode;
+	toolName: string;
+	description: string;
+	category: string;
+	showPerformanceInfo?: boolean;
+	enableOptimizations?: boolean;
+}
+
+export default function ToolWrapper({
+	children,
+	toolName,
+	description,
+	category,
+	showPerformanceInfo = false,
+	enableOptimizations = true,
+}: ToolWrapperProps) {
+	const [showAccessibilityInfo, setShowAccessibilityInfo] = useState(false);
+	const { containerRef, state, announce, runAccessibilityChecks } =
+		useAccessibility();
+
+	// Track tool usage
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			const payload = JSON.stringify({
+				id: `tool-${toolName.toLowerCase().replace(/\s+/g, "-")}`,
+			});
+			try {
+				if (typeof navigator !== "undefined" && "sendBeacon" in navigator) {
+					navigator.sendBeacon(
+						"/api/stats/view",
+						new Blob([payload], { type: "application/json" }),
+					);
+				}
+			} catch (error) {
+				console.error("Error tracking tool usage:", error);
+			}
+		}, 3000);
+		return () => clearTimeout(timer);
+	}, [toolName]);
+
+	// Announce tool loading
+	useEffect(() => {
+		announce(
+			`${toolName}ツールが読み込まれました.キーボードショートカットが利用可能です.`,
+		);
+	}, [toolName, announce]);
+
+	// Enhanced accessibility shortcuts handler
+	useEffect(() => {
+		const handleKeyPress = (event: KeyboardEvent) => {
+			// Only handle shortcuts when not in input fields
+			if (
+				event.target instanceof HTMLInputElement ||
+				event.target instanceof HTMLTextAreaElement ||
+				event.target instanceof HTMLSelectElement
+			) {
+				return;
+			}
+
+			// Handle accessibility info toggle
+			if (event.key === "?" && event.shiftKey) {
+				event.preventDefault();
+				setShowAccessibilityInfo(!showAccessibilityInfo);
+				announce(
+					showAccessibilityInfo
+						? "アクセシビリティ情報を非表示にしました"
+						: "アクセシビリティ情報を表示しました",
+				);
+				return;
+			}
+
+			// Handle accessibility check
+			if (event.key.toLowerCase() === "a" && event.ctrlKey) {
+				event.preventDefault();
+				const issues = runAccessibilityChecks();
+				announce(
+					`アクセシビリティチェック完了.${issues.length}個の問題が見つかりました.`,
+				);
+				return;
+			}
+
+			// Global shortcuts
+			if (event.key === "Escape") {
+				// Focus back to main content
+				const mainContent = document.querySelector("main");
+				if (mainContent) {
+					(mainContent as HTMLElement).focus();
+					announce("メインコンテンツにフォーカスを移動しました");
+				}
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyPress);
+		return () => document.removeEventListener("keydown", handleKeyPress);
+	}, [showAccessibilityInfo, announce, runAccessibilityChecks]);
+
+	return (
+		<div className="min-h-dvh scrollbar-auto-stable">
+			<main className="py-10" tabIndex={-1} ref={containerRef}>
+				<div className="mx-auto w-full max-w-6xl space-y-10 px-4 sm:px-6 lg:px-8">
+					{/* Header */}
+					<header className="space-y-6">
+						<div className="space-y-4">
+							<h1 className="neue-haas-grotesk-display text-4xl sm:text-5xl lg:text-6xl">
+								{toolName}
+							</h1>
+							<p className="noto-sans-jp-light text-sm leading-loose max-w-2xl">
+								{description}
+							</p>
+
+							<div className="flex flex-wrap gap-4 items-center">
+								<span className="noto-sans-jp-light rounded-full px-3 py-1 text-[0.75rem] ">
+									{category}
+								</span>
+								<span className="noto-sans-jp-light text-xs">
+									オフライン対応・アクセシビリティ準拠
+								</span>
+							</div>
+						</div>
+					</header>
+
+					{/* Accessibility Information Panel */}
+					{showAccessibilityInfo && (
+						<section
+							aria-labelledby="accessibility-info-heading"
+							className="rounded-2xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] p-6"
+						>
+							<h2
+								id="accessibility-info-heading"
+								className="neue-haas-grotesk-display text-lg mb-4 "
+							>
+								アクセシビリティ情報
+							</h2>
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div className="space-y-2">
+									<h3 className="neue-haas-grotesk-display ">現在の設定</h3>
+									<ul className="noto-sans-jp-light text-sm space-y-1">
+										<li>
+											• モーション設定:{" "}
+											{state.prefersReducedMotion ? "軽減" : "通常"}
+										</li>
+										<li>
+											• テキストスケール: {Math.round(state.textScaling * 100)}%
+										</li>
+										<li>
+											• ハイコントラスト:{" "}
+											{state.highContrastMode ? "有効" : "無効"}
+										</li>
+										<li>
+											• キーボード使用:{" "}
+											{state.keyboardNavigation ? "検出" : "未検出"}
+										</li>
+									</ul>
+								</div>
+								<div className="space-y-2">
+									<h3 className="neue-haas-grotesk-display ">対応機能</h3>
+									<ul className="noto-sans-jp-light text-sm space-y-1">
+										<li>• スクリーンリーダー対応</li>
+										<li>• キーボードナビゲーション</li>
+										<li>• WCAG 2.1 AA準拠</li>
+										<li>• 色覚多様性対応</li>
+										<li>• タッチターゲット最適化</li>
+									</ul>
+								</div>
+							</div>
+							{state.accessibilityIssues.length > 0 && (
+								<div className="mt-4 p-3 rounded-lg">
+									<h4 className="neue-haas-grotesk-display text-sm mb-2 ">
+										検出された問題:
+									</h4>
+									<ul className="noto-sans-jp-light text-xs space-y-1">
+										{state.accessibilityIssues.map((issue) => (
+											<li key={issue}>• {issue}</li>
+										))}
+									</ul>
+								</div>
+							)}
+							<button
+								type="button"
+								onClick={() => setShowAccessibilityInfo(false)}
+								className="mt-4 px-3 py-1"
+								aria-label="アクセシビリティ情報を閉じる"
+							>
+								閉じる
+							</button>
+						</section>
+					)}
+
+					{/* Tool Content with Performance Optimization */}
+					<PerformanceOptimizer
+						toolName={toolName}
+						showPerformanceInfo={showPerformanceInfo}
+						enableOptimizations={enableOptimizations}
+					>
+						<div
+							role="application"
+							aria-label={`${toolName} tool`}
+							className={`${
+								state.prefersReducedMotion ? "" : "transition-all duration-200"
+							}`}
+						>
+							<h2 className="sr-only">{toolName} Tool Interface</h2>
+							{children}
+						</div>
+					</PerformanceOptimizer>
+
+					{/* Navigation */}
+					<nav aria-label="Site navigation">
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<Link
+								href="/tools"
+								className="rounded-2xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5    "
+							>
+								<span className="noto-sans-jp-regular leading-snug ">
+									← Tools
+								</span>
+							</Link>
+							<Link
+								href="/"
+								className="rounded-2xl  shadow-[0_24px_60px_rgba(0,0,0,0.35)] text-center p-4 flex items-center justify-center transition-transform duration-300 hover:-translate-y-0.5    "
+							>
+								<span className="noto-sans-jp-regular leading-snug ">
+									← Home
+								</span>
+							</Link>
+						</div>
+					</nav>
+				</div>
+			</main>
+		</div>
+	);
+}
