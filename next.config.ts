@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
 	},
 	transpilePackages: [
 		"@appletosolutions/reactbits",
-		"external/ui/src",
 		"external/prototype/src",
 		"external/text-counter/src",
 		"external/color-palette/src",
