@@ -437,7 +437,7 @@ function parseJson<T>(value: string | null | undefined): T | undefined {
 	}
 }
 
-export function getAllFromIndex(): Array<{
+type ContentIndexEntry = {
 	id: string;
 	dbFile: string;
 	title: string;
@@ -451,7 +451,49 @@ export function getAllFromIndex(): Array<{
 	tags?: string[];
 	thumbnails?: Record<string, unknown>;
 	seo?: Record<string, unknown>;
-}> {
+};
+
+/**
+ * Read a pre-built index JSON (written by scripts/dump-cms-index.ts) when
+ * `CMS_INDEX_JSON` is set. Used by Cloudflare Pages builds, where
+ * `bun:sqlite` is not available to Node 22.
+ */
+function readAllFromIndexJson(jsonPath: string): ContentIndexEntry[] {
+	try {
+		const raw = fs.readFileSync(jsonPath, "utf8");
+		const rows = JSON.parse(raw) as ContentIndexEntry[];
+		// Defensive: tags/thumbnails/seo are stored as JSON strings in DB and
+		// materialised to objects by the dumper. Re-parse in case a stale
+		// fixture or manual edit left them stringified.
+		return rows
+			.map((row) => ({
+				...row,
+				tags: parseJson<string[]>(row.tags as unknown as string) ?? row.tags,
+				thumbnails:
+					parseJson<Record<string, unknown>>(
+						row.thumbnails as unknown as string,
+					) ?? row.thumbnails,
+				seo:
+					parseJson<Record<string, unknown>>(row.seo as unknown as string) ??
+					row.seo,
+			}))
+			.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+	} catch (error) {
+		console.warn(
+			`[CMS] Failed to read index from ${jsonPath}, falling back to SQLite:`,
+			error,
+		);
+		return [];
+	}
+}
+
+export function getAllFromIndex(): ContentIndexEntry[] {
+	const jsonPath = process.env.CMS_INDEX_JSON;
+	if (jsonPath && fs.existsSync(jsonPath)) {
+		const fromJson = readAllFromIndexJson(jsonPath);
+		if (fromJson.length > 0) return fromJson;
+	}
+
 	const rows = listContentDbFiles().flatMap((file) =>
 		readContentRowsFromFile(file).map((row) => ({
 			id: row.id,
@@ -990,6 +1032,42 @@ export function getAllMarkdownPagesFromLocal(options?: {
 	updatedAt: string;
 	publishedAt?: string;
 }> {
+	const jsonPath = process.env.CMS_MARKDOWN_JSON;
+	if (jsonPath && fs.existsSync(jsonPath)) {
+		try {
+			const raw = fs.readFileSync(jsonPath, "utf8");
+			// The dumper (scripts/dump-cms-index.ts) writes normalised records
+			// via getAllMarkdownPagesFromLocal, so frontmatter is already an
+			// object. The shape matches the return type directly.
+			const all = JSON.parse(raw) as Array<{
+				id: string;
+				contentId: string;
+				slug: string;
+				frontmatter: Record<string, unknown>;
+				body: string;
+				htmlCache?: string;
+				path?: string;
+				lang?: string;
+				status: "draft" | "published" | "archived";
+				version: number;
+				createdAt: string;
+				updatedAt: string;
+				publishedAt?: string;
+			}>;
+			const filtered = options?.contentId
+				? all.filter((p) => p.contentId === options.contentId)
+				: all;
+			if (filtered.length > 0) {
+				return filtered.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+			}
+		} catch (error) {
+			console.warn(
+				`[CMS] Failed to read markdown pages from ${jsonPath}, falling back to SQLite:`,
+				error,
+			);
+		}
+	}
+
 	const files = options?.contentId
 		? [`content-${options.contentId}.db`]
 		: listContentDbFiles();

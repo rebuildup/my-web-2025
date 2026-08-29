@@ -1,0 +1,21 @@
+name = "yusuke-kim-router"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[assets]
+directory = "../../out"
+binding = "STATIC_ASSETS"
+
+[[r2_buckets]]
+binding = "CMS_DATA"
+bucket_name = "cms-data"
+preview_bucket_name = "cms-data-dev"
+
+[[containers]]
+binding = "CMS_API"
+image = "../../apps/cms-api/Dockerfile"
+instance_type = "lite"
+max_instances = 1
+
+[triggers]
+crons = ["*/5 * * * *"]

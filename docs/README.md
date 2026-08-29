@@ -8,6 +8,7 @@
 | `04_package.md`     | 主要依存 & bun scripts（Bun/Biome 運用）   |
 | `05_requirement.md` | 非機能要件ショートリスト                   |
 | `06_deploy.md`      | インフラ/CI/CD/PM2 手順 (2025-12)          |
+| `cloudflare-migration.md` | GCP→Cloudflare 移行ステータス (2026-08 in progress, Phase D 完了後に削除) |
 | `07_rules.md`       | コンプライアンス・運用ルール要点           |
 | `app/`              | ページ別仕様書                             |
 | `adr/`              | 意思決定記録 (Architecture Decision Records) |

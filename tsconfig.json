@@ -22,9 +22,7 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"],
-			"@rebuildup/my-web-tools-ui": ["./external/ui/src/index.ts"],
-			"@rebuildup/my-web-tools-ui/*": ["./external/ui/src/*"]
+			"@/*": ["./src/*"]
 		}
 	},
 	"watchOptions": {
@@ -59,6 +57,8 @@
 		"src/test-utils/**/*",
 		"src/app/admin/**/*",
 		"scripts/**/*",
+		"workers/**/*",
+		"external/**/*",
 		"src/app/tools/ProtoType/**/*"
 	]
 }

@@ -1,11 +1,15 @@
 #!/usr/bin/env bun
 import { spawnSync } from "node:child_process";
 /**
- * Install each submodule under external/.
+ * Install each workspace that has its own package.json.
  *
- * Runs `bun install` in each submodule directory. Skips empty/missing
- * submodule checkouts with a warning (so this script is safe to run before
- * `git submodule update --init --recursive`).
+ * Scans:
+ * - external/<name>/ (submodule tools)
+ * - workers/<name>/ (in-tree workspace packages like workers/router)
+ *
+ * Runs `bun install` in each. Missing directories or entries without a
+ * package.json are skipped with a warning (so this script is safe to run
+ * before `git submodule update --init --recursive`).
  *
  * Usage:
  *   bun --bun scripts/install-tools.ts
@@ -16,17 +20,20 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-const EXTERNAL_DIR = join(process.cwd(), "external");
+const SCAN_ROOTS: ReadonlyArray<{ dir: string; label: string }> = [
+	{ dir: join(process.cwd(), "external"), label: "external" },
+	{ dir: join(process.cwd(), "workers"), label: "workers" },
+];
 
-function listSubmoduleDirs(): string[] {
-	if (!existsSync(EXTERNAL_DIR)) return [];
+function listSubDirs(root: string): string[] {
+	if (!existsSync(root)) return [];
 	return Array.from(
-		new Bun.Glob("*/").scanSync({ cwd: EXTERNAL_DIR, onlyFiles: false }),
+		new Bun.Glob("*/").scanSync({ cwd: root, onlyFiles: false }),
 	);
 }
 
-function installOne(name: string): boolean {
-	const dir = join(EXTERNAL_DIR, name);
+function installOne(rootDir: string, name: string): boolean {
+	const dir = join(rootDir, name);
 	const marker = join(dir, "package.json");
 	if (!existsSync(marker)) {
 		console.warn(`[install-tools] skip ${name}: no package.json`);
@@ -41,19 +48,35 @@ function installOne(name: string): boolean {
 	return result.status === 0;
 }
 
-const dirs = listSubmoduleDirs();
-if (dirs.length === 0) {
-	console.log("[install-tools] no submodules found under external/");
+let total = 0;
+let failed = 0;
+let didAny = false;
+
+for (const { dir, label } of SCAN_ROOTS) {
+	if (!existsSync(dir)) {
+		console.log(`[install-tools] no ${label}/ directory, skipping`);
+		continue;
+	}
+	const names = listSubDirs(dir);
+	if (names.length === 0) {
+		console.log(`[install-tools] no entries under ${label}/`);
+		continue;
+	}
+	for (const name of names) {
+		didAny = true;
+		total += 1;
+		if (!installOne(dir, name)) failed += 1;
+	}
+}
+
+if (!didAny) {
+	console.log("[install-tools] no installable workspaces found");
 	process.exit(0);
 }
-
-let failed = 0;
-for (const name of dirs) {
-	if (!installOne(name)) failed += 1;
-}
-
 if (failed > 0) {
-	console.error(`[install-tools] ${failed} submodule(s) failed to install`);
+	console.error(
+		`[install-tools] ${failed}/${total} workspace(s) failed to install`,
+	);
 	process.exit(1);
 }
-console.log("[install-tools] all submodules OK");
+console.log(`[install-tools] all ${total} workspace(s) OK`);
