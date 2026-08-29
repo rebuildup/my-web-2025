@@ -93,7 +93,6 @@ const packageJson = `${JSON.stringify(
 			preview: "vite preview",
 		},
 		dependencies: {
-			"@rebuildup/my-web-tools-ui": "link:../../ui/src",
 			react: "^19.2.8",
 			"react-dom": "^19.2.8",
 		},
