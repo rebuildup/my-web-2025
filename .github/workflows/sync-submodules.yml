@@ -13,7 +13,7 @@ name: sync-submodules
 #   - workflow_dispatch: manual on-demand run from the Actions tab
 #
 # Output: opens (or updates) a PR titled "chore(submodule): sync
-# gitlinks to origin/main tip" against master. The PR triggers the
+# gitlinks to origin/main tip" against main. The PR triggers the
 # existing CI gate.
 
 on:
@@ -151,7 +151,7 @@ jobs:
             echo "Refs: AGENTS.md §14."
           } > /tmp/pr-body.md
           gh pr create \
-            --base master \
+            --base main \
             --head "$branch" \
             --title "chore(submodule): sync gitlinks to origin/main tip" \
             --body-file /tmp/pr-body.md
