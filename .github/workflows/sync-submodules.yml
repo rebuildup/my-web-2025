@@ -35,11 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout parent (no submodules)
+      - name: Checkout parent (with submodules)
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          submodules: false
+          submodules: recursive
 
       - name: Setup git identity
         run: |
@@ -101,6 +101,7 @@ jobs:
           fi
 
       - name: Bump gitlinks
+        id: bump
         if: steps.drift.outputs.has_drift == 'true'
         run: |
           set -euo pipefail
@@ -131,12 +132,12 @@ jobs:
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
 
       - name: Open or update PR
-        if: steps.drift.outputs.has_drift == 'true'
+        if: steps.bump.outputs.branch != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          branch=$(git rev-parse --abbrev-ref HEAD)
+          branch="${{ steps.bump.outputs.branch }}"
           existing=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
             echo "PR #$existing already open for $branch; the new push will update it"
