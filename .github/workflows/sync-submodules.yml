@@ -46,11 +46,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "1.3.14"
-
       - name: Detect submodule drift
         id: drift
         run: |
@@ -118,6 +113,16 @@ jobs:
           # do NOT touch each submodule's working tree — that path was
           # fragile (force-pushed upstream → unrelated histories, wrong
           # branch in .gitmodules → missing remote ref).
+          #
+          # We do NOT refresh bun.lock here. Doing so would require
+          # either checking out the submodule working trees (re-
+          # introducing the unrelated-histories problem above) or
+          # running `bun install` without them, which strips every
+          # external/* workspace package entry from the lockfile and
+          # breaks CI worse than the drift. The lockfile refresh is
+          # the reviewer's responsibility: pull the branch, `bun
+          # install`, push the updated bun.lock alongside the merge.
+          # Tracked as known quality debt (AGENTS.md §14 — Bun drift).
           while IFS='|' read -r p b a; do
             [ -z "$p" ] && continue
             url=$(git config -f .gitmodules "submodule.$p.url")
@@ -132,18 +137,6 @@ jobs:
             git branch -D "$branch"
             exit 0
           fi
-          # Submodule package.json changes shift the workspace dep set,
-          # so the parent's bun.lock drifts even on a pure gitlink bump.
-          # Refresh the lockfile with the new submodule state and stage
-          # it alongside the gitlinks. CI's --frozen-lockfile gate would
-          # otherwise always fail this PR (known quality debt; see
-          # AGENTS.md §14 — Bun drift).
-          if command -v bun >/dev/null 2>&1; then
-            bun install
-            git add bun.lock
-          else
-            echo "::warning::bun not installed on runner; skipping lockfile refresh"
-          fi
           {
             echo "chore(submodule): sync gitlinks to origin/main tip"
             echo ""
@@ -154,13 +147,12 @@ jobs:
               echo "  - $p: ${b:0:7} -> ${a:0:7}"
             done < /tmp/drift.txt
             echo ""
-            if git diff --cached --quiet -- bun.lock; then
-              : # no lockfile change
-            else
-              echo "bun.lock also updated to track the new submodule deps."
-            fi
-            echo ""
             echo "Refs: AGENTS.md §14."
+            echo ""
+            echo "Note for reviewer: if any bumped submodule's package.json"
+            echo "shifted its dep set, \`bun install --frozen-lockfile\` in"
+            echo "CI will fail until the lockfile is refreshed locally and"
+            echo "pushed alongside this PR."
           } > /tmp/commit-msg.txt
           git commit -F /tmp/commit-msg.txt
           git push -u origin "$branch"
