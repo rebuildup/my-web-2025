@@ -11,9 +11,11 @@
  * Exit 0 on success, 1 on first violation.
  *
  * Known exceptions (documented Phase 1 carry-overs):
- *   - external/ui/   : shared UI library placeholder, not a tool (name=@rebuildup/my-web-tools-ui)
  *   - external/prototype/ : Phase 1 Vite sub-project, package name "prototype", 5-dot bridge path
  *   - src/app/tools/ProtoType/page.tsx : Phase 1 bridge with loading callback + 5-dot path
+ *
+ * (external/ui was dissolved into my-web-2025/src/components/tools-ui/ in Phase N+1.
+ *  See AGENTS.md §14 for the canonical tools-ui location.)
  *
  * Usage: bun --bun scripts/check-tool-isolation.ts
  */
@@ -25,8 +27,9 @@ const ROOT = process.cwd();
 const EXTERNAL = join(ROOT, "external");
 const BRIDGES = join(ROOT, "src", "app", "tools");
 
-// Submodules that are NOT per-tool repos (UI placeholder, Phase 1 prototype).
-const TOOL_SUBMODULE_EXCEPTIONS = new Set<string>(["ui", "prototype"]);
+// Submodules that are NOT per-tool repos (Phase 1 prototype only now;
+// external/ui was dissolved into src/components/tools-ui/).
+const TOOL_SUBMODULE_EXCEPTIONS = new Set<string>(["prototype"]);
 const BRIDGE_EXCEPTIONS = new Set<string>(["ProtoType"]);
 
 type CheckResult = { ok: boolean; errors: string[] };
