@@ -107,7 +107,17 @@ jobs:
           set -euo pipefail
           branch="chore/sync-submodules-$(date -u +%Y%m%dT%H%M%SZ)"
           git checkout -b "$branch"
-          git submodule update --remote
+          # Only update the specific drifted paths from the drift step,
+          # not all submodules at once. Submodules whose .gitmodules
+          # branch differs from their real default branch (e.g. pi-game
+          # uses develop, not main) would otherwise fail with
+          # 'Unable to find refs/remotes/origin/<branch> revision'.
+          while IFS='|' read -r p b a; do
+            [ -z "$p" ] && continue
+            echo "::group::bumping $p"
+            git submodule update --remote --remote-branch="$(git config -f .gitmodules "submodule.$p.branch")" -- "$p"
+            echo "::endgroup::"
+          done < /tmp/drift.txt
           if git diff --cached --quiet && git diff --quiet; then
             echo "::warning::no changes after submodule update, aborting (rolling back branch)"
             git checkout main
