@@ -127,6 +127,18 @@ jobs:
             git branch -D "$branch"
             exit 0
           fi
+          # Submodule package.json changes shift the workspace dep set,
+          # so the parent's bun.lock drifts even on a pure gitlink bump.
+          # Refresh the lockfile with the new submodule state and stage
+          # it alongside the gitlinks. CI's --frozen-lockfile gate would
+          # otherwise always fail this PR (known quality debt; see
+          # AGENTS.md §14 — Bun drift).
+          if command -v bun >/dev/null 2>&1; then
+            bun install
+            git add bun.lock
+          else
+            echo "::warning::bun not installed on runner; skipping lockfile refresh"
+          fi
           {
             echo "chore(submodule): sync gitlinks to origin/main tip"
             echo ""
@@ -136,6 +148,12 @@ jobs:
               [ -z "$p" ] && continue
               echo "  - $p: ${b:0:7} -> ${a:0:7}"
             done < /tmp/drift.txt
+            echo ""
+            if git diff --cached --quiet -- bun.lock; then
+              : # no lockfile change
+            else
+              echo "bun.lock also updated to track the new submodule deps."
+            fi
             echo ""
             echo "Refs: AGENTS.md §14."
           } > /tmp/commit-msg.txt
