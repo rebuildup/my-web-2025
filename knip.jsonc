@@ -1,6 +1,9 @@
 {
   "$schema": "https://knip.dev/schema.json",
   "ignore": ["external/**"],
+  "workspaces": {
+    "workers/router": {}
+  },
   "ignoreDependencies": [
     "chrome-launcher",
     "lighthouse",
@@ -11,7 +14,7 @@
     "playwright",
     "tsx"
   ],
-  "ignoreBinaries": ["wslc"],
+  "ignoreBinaries": ["wslc", "wrangler"],
   "treatConfigHintsAsErrors": true,
   "rules": {
     "files": "off",

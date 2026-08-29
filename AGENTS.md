@@ -1,6 +1,6 @@
 # プロジェクト不変条件 (canonical agent contract)
 
-このプロジェクトは Next.js 16 + React 19 + TypeScript 7 を App Router で運用する samuido 個人サイト(yusuke-kim.com 公開, GitHub Pages ではなく GCP VM + nginx 静的エクスポート)である. AI エージェントが作業するときの canonical な不変条件をここに集約する. 詳細手順は Skill / docs/ / ADR 側へ委譲する.
+このプロジェクトは Next.js 16 + React 19 + TypeScript 7 を App Router で運用する samuido 個人サイト(yusuke-kim.com 公開, Cloudflare Pages (Static Assets) + Workers + Containers (lite) + R2 で運用 (詳細は ADR-0014))である. AI エージェントが作業するときの canonical な不変条件をここに集約する. 詳細手順は Skill / docs/ / ADR 側へ委譲する.
 
 ## 1. プロジェクト境界
 
@@ -86,10 +86,10 @@ review agent:
 
 ## 9. セキュリティ / 秘密情報
 
-- `.env*` は git ignore. 例外は `.env*.example` のみ.
-- 2026-08 時点でプロダクション deploy は GCP server + nginx + PM2 のみ. Cloudflare Workers / Pages / Container は preview 用途で運用していたものを整理済み (`docs/cloudflare-migration.md` を参照).
-- `.env.production` は GCP server 上のみで実値を保持. リポジトリには `.env.production.example` のみ commit. 旧 Cloudflare Workers Secrets (`wrangler secret put`) の項目 (`RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `X_BEARER_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`) は不要.
-- `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_CMS_API_BASE_URL`, `NEXT_PUBLIC_CDN_URL`, `SENTRY_DSN`, `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `GCP_SSH_KEY`, `GCP_HOST`, `GCP_USER`, `X_BEARER_TOKEN` は GitHub Secrets. local 値を持つなら `.env.development` / `.env.production` のみ.
+- `.env*` ファイルは git ignore. 例外は `.env*.example` のみ.
+- Cloudflare Workers Secrets (`wrangler secret put <NAME>`): `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `X_BEARER_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
+- Cloudflare Pages Environment Variables (build-time): `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_CMS_API_BASE_URL`.
+- `SENTRY_DSN` は Cloudflare Workers Secrets (Container env) に注入.
 - HTML / Markdown は `dompurify` または `isomorphic-dompurify` 経由が既定. 生 HTML を React へ直接渡さない.
 - CSP / HSTS / X-Frame-Options はリバースプロキシ側で付与(本リポジトリ範囲外).
 - 個人情報: 収集しない設計. 問い合わせはメール + メッセージのみで永続化しない.
@@ -130,7 +130,8 @@ disjoint file ownership を割り当て、各 subagent の完了作業は自分�
 - **`scripts/install-tools.ts` と Bun workspaces の相互作用** (Phase 0 導入, 2026-08): workspace と submodule の組合せは Bun のドキュメントで薄く, hoisting の挙動に edge case があれば個別対応する. Phase 1 (ProtoType) で最初の実 tool submodule を投入して挙動を確定する.
 - **Biome overrides**: 9 コンポーネントのみ `noArrayIndexKey` を `error`. 過剰検知回避と要件精度の tradeoff. 解消したら overrides を外す.
 - **Audio asset rules in `next.config.ts`** (2026-08-29, post ProtoType URL switch): `.wav` files imported by `external/prototype/src/gamesets/012_soundplay.ts` (and potentially other submodule sources) need both webpack AND Turbopack rules because `bun run build` uses Turbopack (`▲ Next.js 16.3.0 (Turbopack)`) and the build runner does not share config with the legacy webpack block. The webpack block at line ~151 covers `\.(wav|mp3|ogg|flac)$` with `type: "asset/resource"`. The Turbopack block at line ~38 mirrors it via `rules: { "*.wav": { type: "asset" } }`. **Adding new audio types or new submodules with audio imports requires updating both blocks**. Future clean-up: unify via a shared loader abstraction if Next.js adds one.
-- **apps/cms-api/src/main.rs の `/api/*` エイリアス**: 旧 Cloudflare Worker (`/api/*` を Container に forwarding) 向けに追加した dead route. Cloudflare Container preview 整理に伴い reachable な経路がなくなったが cms-api からは削除していない. 静的 export 側は `/api/cms/*` を nginx 経由で叩くので機能影響なし. 完全撤去する場合は Rust 側の alias nest 6 件と `/api/health` を削除して `cargo test` 緑を確認.
+- **Cloudflare Containers β依存**: 2026-08 時点で β 機能. SLA と価格改定のアナウンスを Phase A で再確認.
+- **R2 hydrate 整合性**: Container 起動時に per-content DB を R2 からローカルへ hydrate するが, 起動直後の同時起動やスリープ中の整合性にレースリスクあり. `max_instances = 1` で構造的に防止. `PRAGMA integrity_check` を boot で実行.
 
 ---
 
