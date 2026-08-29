@@ -107,7 +107,7 @@ jobs:
           set -euo pipefail
           branch="chore/sync-submodules-$(date -u +%Y%m%dT%H%M%SZ)"
           git checkout -b "$branch"
-          git submodule update --remote --merge
+          git submodule update --remote
           if git diff --cached --quiet && git diff --quiet; then
             echo "::warning::no changes after submodule update, aborting (rolling back branch)"
             git checkout main
