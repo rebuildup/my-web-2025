@@ -11,11 +11,27 @@ binding = "CMS_DATA"
 bucket_name = "cms-data"
 preview_bucket_name = "cms-data-dev"
 
+# wrangler 4 Container schema: the Container is exposed as a Durable Object
+# class (`CMSApiContainer`). The runtime binding `CMS_API` is a DO namespace
+# that points at that class; worker code fetches a stub via
+# `getContainer(env.CMS_API, "singleton")` (or `env.CMS_API.getByName(...)`)
+# and calls `.fetch(req)` to proxy into the Rust CMS API on port 3001.
 [[containers]]
-binding = "CMS_API"
+class_name = "CMSApiContainer"
 image = "../../apps/cms-api/Dockerfile"
 instance_type = "lite"
 max_instances = 1
+
+[[durable_objects.bindings]]
+name = "CMS_API"
+class_name = "CMSApiContainer"
+
+# First-time deploy of the CMSApiContainer DO class. Container classes don't
+# use SQLite-backed DO storage (per-content data lives in R2), so we
+# register under `new_classes` rather than `new_sqlite_classes`.
+[[migrations]]
+tag = "v1"
+new_classes = ["CMSApiContainer"]
 
 [triggers]
 crons = ["*/5 * * * *"]

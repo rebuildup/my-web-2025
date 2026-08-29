@@ -16,13 +16,31 @@ const SUBDOMAIN_REDIRECT: Record<string, string> = {
 // static asset is present. Matches the nginx `location ~ ^/(entries|...)` rule.
 const STATIC_API_PATHS = /^\/(entries|markdown|media|tags|search|preview|health)/;
 
+// Singleton id so every request pins to the same Container instance. Combined
+// with `max_instances = 1` in wrangler.toml this is structurally a singleton.
+const CMS_API_INSTANCE = "singleton";
+
+import { Container, getContainer as getContainerStub } from "@cloudflare/containers";
+
+// wrangler 4 requires the Container to be exported as a class so it can be
+// bound via `[[durable_objects.bindings]]` and built into the Worker bundle.
+// The Rust CMS API listens on port 3001 inside the container (see
+// `apps/cms-api/Dockerfile` + `apps/cms-api/src/main.rs`); `sleepAfter` keeps
+// the instance warm between the 5-minute cron triggers in `wrangler.toml`.
+export class CMSApiContainer extends Container {
+	override defaultPort = 3001;
+	override sleepAfter = "10m";
+}
+
 export interface Env {
 	STATIC_ASSETS: Fetcher;
 	CMS_DATA: R2Bucket;
-	// The Container binding exposes a Durable Object that proxies to the
-	// actual Container instance. We pin to a stable id so we always hit the
-	// same single instance (matches `max_instances = 1`).
-	CMS_API: DurableObjectNamespace;
+	// The Container is exposed via a Durable Object binding. The DO class
+	// (`CMSApiContainer`, defined above) extends the SDK `Container` base
+	// which wires `defaultPort` / `sleepAfter` / image build context.
+	// `DurableObjectNamespace<Container>` is the brand-compatible instance
+	// type that satisfies `getContainer<T extends Container>`.
+	CMS_API: DurableObjectNamespace<Container>;
 }
 
 export default {
@@ -63,7 +81,9 @@ export default {
 	): Promise<void> {
 		// Cron warm: keep Container alive (every 5 min, before sleep threshold).
 		ctx.waitUntil(
-			getContainer(env).fetch("https://internal/health").catch(() => null),
+			getContainerStub(env.CMS_API, CMS_API_INSTANCE)
+				.fetch("https://placeholder/health")
+				.catch(() => null),
 		);
 	},
 };
@@ -78,7 +98,7 @@ async function cachedProxy(
 		const cached = await cache.match(req);
 		if (cached) return cached;
 	}
-	const container = getContainer(env);
+	const container = getContainerStub(env.CMS_API, CMS_API_INSTANCE);
 	const resp = await container.fetch(req);
 	if (resp.status === 200 && req.method === "GET") {
 		const clone = resp.clone();
@@ -86,10 +106,4 @@ async function cachedProxy(
 		ctx.waitUntil(cache.put(req, clone));
 	}
 	return resp;
-}
-
-function getContainer(env: Env): Fetcher {
-	const id = env.CMS_API.idFromName("singleton");
-	const stub = env.CMS_API.get(id);
-	return stub;
 }

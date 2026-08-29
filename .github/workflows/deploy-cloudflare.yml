@@ -87,8 +87,9 @@ jobs:
 
       # Bypass `cloudflare/wrangler-action` and invoke the locally-pinned
       # `wrangler` directly (`workers/router/node_modules/.bin/wrangler`,
-      # currently 3.114.x). The action's bundled wrangler is older than the
-      # syntax blocks we use in wrangler.toml (`[assets]`, `[[containers]]`)
+      # currently 4.x). The action's bundled wrangler is older than the
+      # syntax blocks we use in wrangler.toml (`[assets]`, `[[containers]]`
+      # with `class_name`, `[[durable_objects.bindings]]`, `[[migrations]]`)
       # and errors out at "Processing wrangler.toml configuration".
       - name: Deploy Workers + Container + Static Assets
         env:
