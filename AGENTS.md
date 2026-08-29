@@ -75,7 +75,7 @@ review agent:
 
 ## 7. ブランチ / worktree
 
-ローカル `master` のみで作業. feature branch / 一時 branch / worktree は AI エージェント側で勝手に作らない. ユーザーが指定した場合のみ例外. `git status` で無関係な未コミット変更がないか毎回確認し、干渉しない.
+ローカル `main` のみで作業. feature branch / 一時 branch / worktree は AI エージェント側で勝手に作らない. ユーザーが指定した場合のみ例外. `git status` で無関係な未コミット変更がないか毎回確認し、干渉しない.
 
 ## 8. コミット / メッセージ
 
@@ -125,7 +125,7 @@ disjoint file ownership を割り当て、各 subagent の完了作業は自分�
 - **`@appletosolutions/reactbits` の transpilePackages hack**: workspace 依存が `@chakra-ui/react` を正しく解決できないため `next.config.ts` の `transpilePackages` で吸収. 上流修正が入るまで維持.
 - **Knip ルール緩和 (`knip.jsonc`)**: files / exports / types / nsExports / nsTypes を off. 一時的な dead code ノイズ回避. 残った false positive は個別 ignore で対応.
 - **`external/<tool-slug>/` per-tool submodules** (Phase 1 + Phase 2-N, 13 entries: 12 tools + 1 prototype Vite sub-project): text-counter / color-palette / sequential-png-preview / svg2tsx / business-mail-block / code-type-p5 / fillgen / qr-generator / pomodoro / history-quiz / pi-game / ae-expression / prototype. Shared UI primitives (ToolWrapper / RawDOMContainer / PerformanceOptimizer) live in **`src/components/tools-ui/`** on the parent (the former `external/ui` submodule was dissolved in Phase N+1). Bridges in `src/app/tools/<slug>/page.tsx` use `next/dynamic({ ssr: false })` → barrel import via 4-dot relative path; `src/app/tools/<slug>/components/...` from inside a tool submodule uses **4-dot relative to `../../../../src/components/tools-ui/...`**. Tool-specific deps live in each submodule's `package.json`. **`transpilePackages` array in `next.config.ts`** must be extended per batch. tsconfig.json carries `@rebuildup/tool-<slug>` path aliases. Adding a new tool requires: helper scaffold + source move + bridge rewrite + path alias + transpilePackages entry.
-- **Submodule branch workflow** (2026-08-29, P3-B): `develop` is the working branch in each of the 13 submodules (12 tools + prototype). New work lands on `develop` and merges into `main` via PR on the submodule repo. The parent repo refreshes gitlinks with `git submodule update --remote --merge` from the repo root (gitlink は origin/main tip に自動進行). Manual gitlink SHA bump は **禁止**. 13 entries have `.gitmodules` で `branch = main` 宣言済.
+- **Submodule branch workflow** (2026-08-29, P3-B): `develop` is the working branch in each of the 13 submodules (12 tools + prototype). New work lands on `develop` and merges into `main` via PR on the submodule repo. The parent repo refreshes gitlinks automatically via `.github/workflows/sync-submodules.yml` (15-min poll + `workflow_dispatch`), which opens a PR titled `chore(submodule): sync gitlinks to origin/main tip` against `main` (gitlink は origin/main tip に自動進行). Manual gitlink SHA bump は **禁止** (CI / reviewer-driven sync のみ). 13 entries have `.gitmodules` で `branch = main` 宣言済. `git submodule update --remote` は `--merge` 無しで使う (force-push された submodule で unrelated histories が出るため).
 - **(removed) `external/ui` submodule**: dissolved 2026-08-29 into `src/components/tools-ui/`. All tool submodules rewritten to import from there via 4-dot relative. No parked items remain under this slot.
 - **`scripts/install-tools.ts` と Bun workspaces の相互作用** (Phase 0 導入, 2026-08): workspace と submodule の組合せは Bun のドキュメントで薄く, hoisting の挙動に edge case があれば個別対応する. Phase 1 (ProtoType) で最初の実 tool submodule を投入して挙動を確定する.
 - **Biome overrides**: 9 コンポーネントのみ `noArrayIndexKey` を `error`. 過剰検知回避と要件精度の tradeoff. 解消したら overrides を外す.

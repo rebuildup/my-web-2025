@@ -121,8 +121,8 @@ for (const [rel, body] of [
 }
 run("git", ["add", "-A"], REPO_DIR);
 run("git", ["commit", "-m", "feat: scaffold per-tool repo"], REPO_DIR);
-// Phase 1 R-1: new tool repos default branch is `main` (GitHub modern default),
-// not `master`. The main my-web-2025 repo keeps `master`.
+// Phase 1 R-1: new tool repos default branch is `main` (GitHub modern default).
+// my-web-2025 itself also moved to `main` (2026-08-29, P3-B).
 run("git", ["push", "-u", "origin", "main"], REPO_DIR);
 
 console.log(
