@@ -24,9 +24,9 @@ git add external/<name>
 git commit -m "chore(submodule): bump external/<name> to <sha>"
 ```
 
-If the submodule's tracked branch is not `master`, set it first:
+If the submodule's tracked branch is not `main`, set it first:
 ```
-git -C external/<name> checkout master
+git -C external/<name> checkout main
 ```
 
 ### Add a new submodule
@@ -47,7 +47,7 @@ Then:
 ## Constraints
 
 - Submodule directories are fully owned by the submodule — never edit files inside `external/<name>/` from the main repo. Fix bugs in the upstream repo and bump the submodule.
-- Detached HEAD is normal. Use `git -C external/<name> checkout master` to land on a branch before making local changes.
+- Detached HEAD is normal. Use `git -C external/<name> checkout main` to land on a branch before making local changes.
 - Bridge files (`src/app/tools/<name>/page.tsx`, `layout.tsx`) live in the main repo and are NOT protected by `merge=ours` — they must be edited directly when the bridge contract changes.
 
 ## Reference
