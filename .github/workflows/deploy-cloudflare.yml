@@ -85,12 +85,17 @@ jobs:
       - name: Set up Docker Buildx (Container build uses the Docker daemon)
         uses: docker/setup-buildx-action@v3
 
-      - name: Deploy Workers + Container + Static Assets via wrangler
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: workers/router
-          command: deploy
-          # Bundling `out/` (Static Assets) + Container Dockerfile build are
-          # both handled by `wrangler deploy` reading workers/router/wrangler.toml.
+      # Bypass `cloudflare/wrangler-action` and invoke the locally-pinned
+      # `wrangler` directly (`workers/router/node_modules/.bin/wrangler`,
+      # currently 3.114.x). The action's bundled wrangler is older than the
+      # syntax blocks we use in wrangler.toml (`[assets]`, `[[containers]]`)
+      # and errors out at "Processing wrangler.toml configuration".
+      - name: Deploy Workers + Container + Static Assets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          cd workers/router
+          echo "Using wrangler $(./node_modules/.bin/wrangler --version) from workers/router/node_modules"
+          ./node_modules/.bin/wrangler deploy --config wrangler.toml
