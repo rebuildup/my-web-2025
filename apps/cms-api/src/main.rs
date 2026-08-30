@@ -57,27 +57,42 @@ fn cms_api_data_dir() -> PathBuf {
 // route reads directly from them so the rendered title/summary always
 // reflects the latest edit, even if `bun run sync:cms-entries` hasn't been
 // run yet.
+//
+// The Container image sets `CMS_API_DATA_DIR=/var/lib/cms/data` (see
+// `apps/cms-api/Dockerfile`), so the hydrator populates
+// `/var/lib/cms/data/content-{id}.db` — NOT `./data/db/`. The previous
+// candidate list only probed cwd-relative paths and missed the Container's
+// data dir entirely. Probing `CMS_API_DATA_DIR` directly closes that gap so
+// `/api/cms/media` and `/api/cms/og` can read the hydrated DBs without a
+// second env knob. See Task #83 / #86 for the failure history.
 fn cms_api_content_data_dir() -> PathBuf {
     if let Ok(dir) = env::var("CMS_API_CONTENT_DATA_DIR") {
         return PathBuf::from(dir);
     }
 
     let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
-    let candidates = [
+    let mut candidates: Vec<PathBuf> = Vec::new();
+
+    // Mirror `cms_api_data_dir()`'s env-var precedence. The Container
+    // hydrator writes here, so the media route must look here too.
+    if let Ok(dir) = env::var("CMS_API_DATA_DIR") {
+        let p = PathBuf::from(&dir);
+        candidates.push(p.clone());
+        // Hydrator puts per-content DBs in the same dir as `cms-api-dev.db`,
+        // so the `parent()` fallback below would be wrong; include the dir
+        // itself explicitly.
+        candidates.push(p.join("contents"));
+    }
+
+    candidates.extend([
         cwd.join("data").join("contents"),
         cwd.join("..").join("data").join("contents"),
         PathBuf::from("./data/contents"),
-        // Cloudflare Container: `sync::hydrate` writes
-        // `cms-api-dev.db` AND `content-{id}.db` into `./data/db/` (the
-        // `contents/` prefix is stripped by `hydrate`). Without these
-        // candidates, the `/api/media` and `/api/cms/og` routes look in a
-        // sibling directory that the Container never populates and return
-        // `MediaError::NotFound` for every entry — breaking all 22
-        // `/api/cms/media?contentId=...&id=...` URLs in the static-exported
-        // portfolio gallery (see Task #83).
+        // Cloudflare Container fallback (only meaningful when the env var
+        // above is unset, e.g. local dev or `bun run cms-api`).
         cwd.join("data").join("db"),
         PathBuf::from("./data/db"),
-    ];
+    ]);
 
     candidates
         .into_iter()
