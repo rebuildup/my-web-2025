@@ -71,6 +71,13 @@ jobs:
           # the Workers Router proxies /api/* to the Container in production.
           NEXT_PUBLIC_CMS_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          # Build-time Rust CMS API fetches. `shouldUseRustCmsApi()` returns
+          # true only when this is "1" — without it, the build reads from
+          # local SQLite which is empty in CI runners. The Worker URL is the
+          # canonical base for both server-side fetches and client-side
+          # hydration; `cmsApiFetch()` appends `/api/entries` etc.
+          CMS_USE_RUST_API: "1"
+          CMS_API_BASE_URL: ${{ secrets.CLOUDFLARE_WORKER_STAGING_URL }}
         run: |
           set -euo pipefail
 
