@@ -3,7 +3,11 @@
 # The lite instance has only 256 MB of memory and 0.0625 vCPU, so the release
 # binary must be small. `cargo build --release --locked` enforces the lockfile
 # so we don't accidentally bump a transitive dep during a build.
-FROM rust:1.83-bookworm AS builder
+#
+# Pinned to 1.85 because the `image` 0.25 crate's transitive dep `moxcms 0.8.1`
+# requires the Cargo `edition2024` feature, which stabilized in Rust 1.85.
+# Older tags (rust:1.83-bookworm etc.) abort the manifest parse at build time.
+FROM rust:1.85-bookworm AS builder
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
 COPY assets ./assets
