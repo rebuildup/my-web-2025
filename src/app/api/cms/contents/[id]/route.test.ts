@@ -48,7 +48,7 @@ describe("GET detail (path-based)", () => {
 		globalThis.fetch = (async (input: RequestInfo | URL) => {
 			const url = input.toString();
 			requestedUrls.push(url);
-			if (url === "http://cms-api.test/entries/LiteGlow") {
+			if (url === "http://cms-api.test/api/entries/LiteGlow") {
 				return Response.json({
 					id: "LiteGlow",
 					entry_type: "portfolio",
@@ -75,7 +75,7 @@ describe("GET detail (path-based)", () => {
 					ext: { type: "portfolio", slug: "LiteGlow" },
 				});
 			}
-			if (url === "http://cms-api.test/entries") {
+			if (url === "http://cms-api.test/api/entries") {
 				return Response.json([
 					{
 						id: "LiteGlow",
@@ -108,8 +108,8 @@ describe("GET detail (path-based)", () => {
 		expect(body.tags).toEqual(["plugin", "ae"]);
 		expect(body.thumbnails).toEqual({ image: { src: "/thumb.png" } });
 		expect(requestedUrls).toEqual([
-			"http://cms-api.test/entries/LiteGlow",
-			"http://cms-api.test/entries",
+			"http://cms-api.test/api/entries/LiteGlow",
+			"http://cms-api.test/api/entries",
 		]);
 	});
 
@@ -156,7 +156,7 @@ describe("GET detail (path-based)", () => {
 
 		globalThis.fetch = (async (input: RequestInfo | URL) => {
 			const url = input.toString();
-			if (url === "http://cms-api.test/entries/Migrated") {
+			if (url === "http://cms-api.test/api/entries/Migrated") {
 				return Response.json({
 					id: "Migrated",
 					entry_type: "blog",
@@ -183,7 +183,7 @@ describe("GET detail (path-based)", () => {
 					ext: null,
 				});
 			}
-			if (url === "http://cms-api.test/entries") {
+			if (url === "http://cms-api.test/api/entries") {
 				return Response.json([
 					{
 						id: "Migrated",

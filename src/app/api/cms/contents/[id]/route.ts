@@ -205,8 +205,10 @@ export async function GET(
 		}
 
 		const [detail, entries] = await Promise.all([
-			cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
-			cmsApiFetch<RustEntryListItem[]>("/entries"),
+			cmsApiFetch<RustEntryDetail>(
+				`/api/entries/${encodeURIComponent(id)}`,
+			),
+			cmsApiFetch<RustEntryListItem[]>("/api/entries"),
 		]);
 		const indexEntry = entries.find((entry) => entry.id === id);
 		const rustContent = mapRustDetailToContent(detail);

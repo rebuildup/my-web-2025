@@ -189,7 +189,7 @@ export async function GET(_req: Request) {
 			return Response.json(entries.map(mapDbIndexToContentIndexItem));
 		}
 
-		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
+		const entries = await cmsApiFetch<RustEntryListItem[]>("/api/entries");
 		return Response.json(entries.map(mapRustListItemToContentIndexItem));
 	} catch (error) {
 		console.error("GET /api/cms/contents error:", error);

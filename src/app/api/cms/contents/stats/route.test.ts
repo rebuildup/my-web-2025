@@ -18,7 +18,7 @@ test("stats fetches entries from Rust API when CMS_USE_RUST_API is enabled", asy
 	globalThis.fetch = (async (input: RequestInfo | URL) => {
 		const url = input.toString();
 		requestedUrls.push(url);
-		if (url === "http://cms-api.test/entries") {
+		if (url === "http://cms-api.test/api/entries") {
 			return Response.json([
 				{
 					id: "LiteGlow",
@@ -52,5 +52,5 @@ test("stats fetches entries from Rust API when CMS_USE_RUST_API is enabled", asy
 		title: "LiteGlow",
 		dbFile: "cms-api-dev.db",
 	});
-	expect(requestedUrls).toEqual(["http://cms-api.test/entries"]);
+	expect(requestedUrls).toEqual(["http://cms-api.test/api/entries"]);
 });

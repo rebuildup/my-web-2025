@@ -48,7 +48,7 @@ async function searchWithRustApi(
 	}
 
 	const rows = await cmsApiFetch<RustSearchResult[]>(
-		`/search?${params.toString()}`,
+		`/api/search?${params.toString()}`,
 	);
 
 	return rows.map((row, index) => ({

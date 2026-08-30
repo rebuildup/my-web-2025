@@ -159,7 +159,13 @@ export async function fetchCmsContentIndex(): Promise<CmsContentIndexEntry[]> {
 	}
 
 	try {
-		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
+		// Use the canonical `/api/entries` alias. The Rust CMS API also
+		// mounts `/entries`, but the Cloudflare Worker router only proxies
+		// `/api/*` to the Container (`workers/router/src/index.ts:122-131`).
+		// Bare `/entries` falls into the static-API collision branch and
+		// returns a 500 (Cloudflare 1101) on POST. Going through `/api/`
+		// works for both the Worker URL and a direct Rust API at port 3001.
+		const entries = await cmsApiFetch<RustEntryListItem[]>("/api/entries");
 		return entries.map(mapRustEntryListItem);
 	} catch (error) {
 		console.warn(
@@ -198,7 +204,7 @@ export async function fetchCmsContentById(
 
 	try {
 		const [detail, index] = await Promise.all([
-			cmsApiFetch<RustEntryDetail>(`/entries/${encodeURIComponent(id)}`),
+			cmsApiFetch<RustEntryDetail>(`/api/entries/${encodeURIComponent(id)}`),
 			fetchCmsContentIndex(),
 		]);
 		const indexEntry = index.find((item) => item.id === id);
@@ -273,7 +279,7 @@ export async function fetchMarkdownPages(options?: {
 	}
 	try {
 		return await cmsApiFetch<MarkdownPage[]>(
-			`/markdown${params.size > 0 ? `?${params.toString()}` : ""}`,
+			`/api/markdown${params.size > 0 ? `?${params.toString()}` : ""}`,
 		);
 	} catch (error) {
 		console.error(
@@ -313,7 +319,9 @@ export async function fetchMarkdownPageBySlug(
 	}
 
 	try {
-		return await cmsApiFetch<MarkdownPage>(`/markdown?${params.toString()}`);
+		return await cmsApiFetch<MarkdownPage>(
+			`/api/markdown?${params.toString()}`,
+		);
 	} catch (error) {
 		console.error(
 			"[CMS] fetchMarkdownPageBySlug Rust CMS unreachable; falling back to local SQLite",

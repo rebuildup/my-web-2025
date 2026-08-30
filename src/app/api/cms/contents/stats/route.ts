@@ -17,7 +17,7 @@ export async function GET() {
 			return Response.json(stats);
 		}
 
-		const entries = await cmsApiFetch<RustEntryListItem[]>("/entries");
+		const entries = await cmsApiFetch<RustEntryListItem[]>("/api/entries");
 		return Response.json({
 			totalContents: entries.length,
 			totalDbFiles: entries.length,
