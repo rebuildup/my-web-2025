@@ -34,6 +34,13 @@ import { Container, getContainer as getContainerStub } from "@cloudflare/contain
 // `build_r2_client` returns Err → `main()` panics with exit code 101 on first
 // request. See docs/superpowers/specs/2026-08-26-cloudflare-deploy-design.md
 // §6 (Environment Variables).
+//
+// We also override `containerFetch` so the port-ready timeout can be extended
+// past the SDK default of 20 s. Lite instances (256 MB RAM, 0.0625 vCPU) need
+// significantly longer to bootstrap the Rust binary + R2 hydrate on cold
+// start, and the default 20 s window reports "Container is not listening in
+// the TCP address 10.0.0.1:3001" before the binary has finished binding.
+// 180 s is comfortably above the worst observed cold start in dev.
 export class CMSApiContainer extends Container {
 	override defaultPort = 3001;
 	override sleepAfter = "10m";
@@ -49,6 +56,24 @@ export class CMSApiContainer extends Container {
 			R2_BUCKET: env.R2_BUCKET,
 			R2_ENDPOINT: env.R2_ENDPOINT,
 		};
+	}
+
+	override async containerFetch(
+		requestOrUrl: Request | string | URL,
+		portOrInit?: number | RequestInit,
+		portParam?: number,
+	): Promise<Response> {
+		// Use a 180 s port-ready window for the lite instance. Warm starts hit
+		// the early-return below and skip this entirely; cold starts benefit.
+		await this.startAndWaitForPorts({
+			cancellationOptions: {
+				portReadyTimeoutMS: 180_000,
+				instanceGetTimeoutMS: 60_000,
+			},
+		});
+		// After start (or immediately if already running), fall through to the
+		// base class proxy that does the actual TCP-fetch to the container.
+		return super.containerFetch(requestOrUrl, portOrInit, portParam);
 	}
 }
 
