@@ -4,13 +4,14 @@
 # binary must be small. `cargo build --release --locked` enforces the lockfile
 # so we don't accidentally bump a transitive dep during a build.
 #
-# Pinned to 1.88 because the latest transitive deps of `image 0.25`
-# (`image@0.25.10`, `time@0.3.55`, `time-core@0.1.9`) all require rustc
-# 1.88.0; older tags (1.83, 1.85) fail the manifest parse or the
+# Pinned to 1.95 because the AWS SDK transitive deps (`aws-smithy-xml
+# 0.62.0`, `aws-types 1.5.0`) require rustc 1.94.1+, and `crc-fast 1.10.0`
+# + `font-types 0.12.2` require 1.89. Older tags (1.83/1.85/1.88) trip the
 # minimum-rustc-version check at build time. The host toolchain file
-# (`rust-toolchain.toml`) is `stable`, which already resolves to 1.88+
-# locally, so this tag matches the developer environment.
-FROM rust:1.88-bookworm AS builder
+# (`rust-toolchain.toml`) is `stable`, which already resolves to ≥ 1.95
+# locally, so this tag matches the developer environment. When the
+# Cargo.lock floors move again, bump this number in lockstep.
+FROM rust:1.95-bookworm AS builder
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
 COPY assets ./assets
