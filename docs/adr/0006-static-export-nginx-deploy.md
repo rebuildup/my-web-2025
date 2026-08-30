@@ -1,7 +1,7 @@
 # ADR-0006: 静的エクスポート + nginx リバースプロキシでデプロイ
 
 ## ステータス
-Accepted
+**Superseded by ADR-0014 (2026-08-31)** — yusuke-kim.com の本番配信は Cloudflare (Pages Static Assets + Workers Router + Container lite + R2) に移行済み. GCP VM の SSH デプロイ (deploy.yml) と GCP 接続シークレット (GCP_HOST / GCP_SSH_KEY / GCP_USER) は Phase D で削除された. 本 ADR は歴史的記録として残す.
 
 ## コンテキスト
 個人サイト規模でコンテナオーケストレーションは過剰. 一方でメディア配信と一部 API は動的処理が必要. セキュリティヘッダ (CSP, HSTS, X-Frame-Options) はアプリ側で持ちたくない.
