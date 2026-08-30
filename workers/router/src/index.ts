@@ -161,9 +161,19 @@ async function cachedProxy(
 	const container = getContainerStub(env.CMS_API, CMS_API_INSTANCE);
 	const resp = await container.fetch(req);
 	if (resp.status === 200 && req.method === "GET") {
-		const clone = resp.clone();
-		clone.headers.set("Cache-Control", "s-maxage=60");
-		ctx.waitUntil(cache.put(req, clone));
+		// `Response.headers` is immutable in the Workers runtime; `.clone()`
+		// duplicates the body stream but the headers stay frozen. To rewrite
+		// `Cache-Control` we have to build a fresh Response from the cloned
+		// body and lift the original headers into a mutable Headers object.
+		const body = resp.clone().body;
+		const mutableHeaders = new Headers(resp.headers);
+		mutableHeaders.set("Cache-Control", "s-maxage=60");
+		const cached = new Response(body, {
+			status: resp.status,
+			statusText: resp.statusText,
+			headers: mutableHeaders,
+		});
+		ctx.waitUntil(cache.put(req, cached));
 	}
 	return resp;
 }
