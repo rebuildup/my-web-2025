@@ -27,14 +27,40 @@ import { Container, getContainer as getContainerStub } from "@cloudflare/contain
 // The Rust CMS API listens on port 3001 inside the container (see
 // `apps/cms-api/Dockerfile` + `apps/cms-api/src/main.rs`); `sleepAfter` keeps
 // the instance warm between the 5-minute cron triggers in `wrangler.toml`.
+//
+// `Workers Secrets` (R2_*) are NOT auto-injected into the Container runtime;
+// the SDK requires explicit `envVars` to be set in the constructor so the
+// Rust binary's `env::var("R2_ACCESS_KEY_ID")` lookup succeeds. Without this,
+// `build_r2_client` returns Err → `main()` panics with exit code 101 on first
+// request. See docs/superpowers/specs/2026-08-26-cloudflare-deploy-design.md
+// §6 (Environment Variables).
 export class CMSApiContainer extends Container {
 	override defaultPort = 3001;
 	override sleepAfter = "10m";
+
+	constructor(
+		ctx: ConstructorParameters<typeof Container>[0],
+		env: Env,
+	) {
+		super(ctx, env);
+		this.envVars = {
+			R2_ACCESS_KEY_ID: env.R2_ACCESS_KEY_ID,
+			R2_SECRET_ACCESS_KEY: env.R2_SECRET_ACCESS_KEY,
+			R2_BUCKET: env.R2_BUCKET,
+			R2_ENDPOINT: env.R2_ENDPOINT,
+		};
+	}
 }
 
 export interface Env {
 	STATIC_ASSETS: Fetcher;
 	CMS_DATA: R2Bucket;
+	// Container runtime env (set via Workers Secrets for the R2 credentials,
+	// via `[[vars]]` in wrangler.toml for the non-secret values).
+	R2_ACCESS_KEY_ID: string;
+	R2_SECRET_ACCESS_KEY: string;
+	R2_BUCKET: string;
+	R2_ENDPOINT: string;
 	// The Container is exposed via a Durable Object binding. The DO class
 	// (`CMSApiContainer`, defined above) extends the SDK `Container` base
 	// which wires `defaultPort` / `sleepAfter` / image build context.

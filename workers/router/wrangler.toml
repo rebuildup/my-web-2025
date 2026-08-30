@@ -2,6 +2,16 @@ name = "yusuke-kim-router"
 main = "src/index.ts"
 compatibility_date = "2026-08-01"
 
+# Non-secret runtime config injected into the Container startup env. R2
+# credentials (`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`) live in Workers
+# Secrets (see deploy-cloudflare.yml) and reach the Container via the
+# `CMSApiContainer` constructor's `this.envVars = {...}` in
+# `workers/router/src/index.ts`. The endpoint and bucket name are not
+# secrets (they're public in R2 API calls), so `[vars]` is fine here.
+[vars]
+R2_BUCKET = "cms-data"
+R2_ENDPOINT = "https://c6ab6651a5d4d6d0d07686bbd3c3d56f.r2.cloudflarestorage.com"
+
 [assets]
 directory = "../../out"
 binding = "STATIC_ASSETS"
