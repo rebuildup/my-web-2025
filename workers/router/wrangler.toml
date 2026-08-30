@@ -29,6 +29,14 @@ class_name = "CMSApiContainer"
 # First-time deploy of the CMSApiContainer DO class. Container classes don't
 # use SQLite-backed DO storage (per-content data lives in R2), so we
 # register under `new_classes` rather than `new_sqlite_classes`.
+#
+# Note: the Cloudflare account previously held a stale DO class with
+# different identifier casing (`CmsApiContainer`, lowercase m/s) from an
+# earlier `wrangler deploy` attempt. Code 10064 ("does not export class")
+# blocked subsequent deploys until the stale Worker was `wrangler delete`d.
+# R2 holds the per-item CMS data, so deleting the Worker drops only the
+# DO instance handle — the next deploy re-creates the DO namespace from
+# scratch and the Container hydrates per-item state from R2 on boot.
 [[migrations]]
 tag = "v1"
 new_classes = ["CMSApiContainer"]
