@@ -4,10 +4,13 @@
 # binary must be small. `cargo build --release --locked` enforces the lockfile
 # so we don't accidentally bump a transitive dep during a build.
 #
-# Pinned to 1.85 because the `image` 0.25 crate's transitive dep `moxcms 0.8.1`
-# requires the Cargo `edition2024` feature, which stabilized in Rust 1.85.
-# Older tags (rust:1.83-bookworm etc.) abort the manifest parse at build time.
-FROM rust:1.85-bookworm AS builder
+# Pinned to 1.88 because the latest transitive deps of `image 0.25`
+# (`image@0.25.10`, `time@0.3.55`, `time-core@0.1.9`) all require rustc
+# 1.88.0; older tags (1.83, 1.85) fail the manifest parse or the
+# minimum-rustc-version check at build time. The host toolchain file
+# (`rust-toolchain.toml`) is `stable`, which already resolves to 1.88+
+# locally, so this tag matches the developer environment.
+FROM rust:1.88-bookworm AS builder
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
 COPY assets ./assets
