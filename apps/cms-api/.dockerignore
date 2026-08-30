@@ -4,4 +4,6 @@ target/
 **/*.md
 .dockerignore
 Dockerfile
-docker-entrypoint.sh
+# Note: docker-entrypoint.sh is referenced by the Dockerfile COPY at the
+# final stage (`stage-1 4/4`) and must NOT be excluded from the build
+# context.
