@@ -26,20 +26,23 @@ max_instances = 1
 name = "CMS_API"
 class_name = "CMSApiContainer"
 
-# First-time deploy of the CMSApiContainer DO class. Container classes don't
-# use SQLite-backed DO storage (per-content data lives in R2), so we
-# register under `new_classes` rather than `new_sqlite_classes`.
+# First-time deploy of the CMSApiContainer DO class.
 #
-# Note: the Cloudflare account previously held a stale DO class with
-# different identifier casing (`CmsApiContainer`, lowercase m/s) from an
-# earlier `wrangler deploy` attempt. Code 10064 ("does not export class")
-# blocked subsequent deploys until the stale Worker was `wrangler delete`d.
-# R2 holds the per-item CMS data, so deleting the Worker drops only the
-# DO instance handle — the next deploy re-creates the DO namespace from
-# scratch and the Container hydrates per-item state from R2 on boot.
+# The Cloudflare account is enrolled in the SQLite-backed DO migration
+# that became mandatory after code 10099 made new key-value namespaces
+# unsupported. Container DO classes don't write DO storage themselves
+# (per-item state lives in R2 via the CMS_DATA binding), so SQLite vs.
+# key-value is purely a namespace-shape question; the migration tag is
+# what Cloudflare uses to track the DO class lifecycle, not the storage
+# backend.
+#
+# History note: a prior deploy attempt left a stale `CmsApiContainer`
+# (lowercase m/s) namespace that blocked subsequent deploys with code
+# 10064. Resolved by `wrangler delete --force yusuke-kim-router`; this
+# is the first clean deploy of `CMSApiContainer`.
 [[migrations]]
 tag = "v1"
-new_classes = ["CMSApiContainer"]
+new_sqlite_classes = ["CMSApiContainer"]
 
 [triggers]
 crons = ["*/5 * * * *"]
