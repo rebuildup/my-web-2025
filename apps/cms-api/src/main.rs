@@ -50,10 +50,13 @@ fn cms_api_data_dir() -> PathBuf {
         .unwrap_or_else(|_| PathBuf::from("./data/db"))
 }
 
-// Per-content SQLite databases live in `data/contents/content-{id}.db` and are
-// managed by the Bun SQLite CMS. The OG image route reads directly from them
-// so the rendered title/summary always reflects the latest edit, even if
-// `bun run sync:cms-entries` hasn't been run yet.
+// Per-content SQLite databases live in `data/contents/content-{id}.db` (legacy
+// Bun SQLite CMS layout) or `data/db/content-{id}.db` (Cloudflare Container
+// R2-hydrated layout — see `sync::hydrate`, which strips the `contents/`
+// prefix from R2 keys and writes into `cms_api_data_dir()`). The OG image
+// route reads directly from them so the rendered title/summary always
+// reflects the latest edit, even if `bun run sync:cms-entries` hasn't been
+// run yet.
 fn cms_api_content_data_dir() -> PathBuf {
     if let Ok(dir) = env::var("CMS_API_CONTENT_DATA_DIR") {
         return PathBuf::from(dir);
@@ -64,6 +67,16 @@ fn cms_api_content_data_dir() -> PathBuf {
         cwd.join("data").join("contents"),
         cwd.join("..").join("data").join("contents"),
         PathBuf::from("./data/contents"),
+        // Cloudflare Container: `sync::hydrate` writes
+        // `cms-api-dev.db` AND `content-{id}.db` into `./data/db/` (the
+        // `contents/` prefix is stripped by `hydrate`). Without these
+        // candidates, the `/api/media` and `/api/cms/og` routes look in a
+        // sibling directory that the Container never populates and return
+        // `MediaError::NotFound` for every entry — breaking all 22
+        // `/api/cms/media?contentId=...&id=...` URLs in the static-exported
+        // portfolio gallery (see Task #83).
+        cwd.join("data").join("db"),
+        PathBuf::from("./data/db"),
     ];
 
     candidates
