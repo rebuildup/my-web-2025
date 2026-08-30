@@ -56,3 +56,21 @@ new_sqlite_classes = ["CMSApiContainer"]
 
 [triggers]
 crons = ["*/5 * * * *"]
+
+# Bind the apex + every subdomain's `/api/*` to this Worker so the static
+# Pages deployment can serve the public surface (HTML/CSS/JS/images) while
+# the Worker hands every CMS / monitoring / health request to the Rust
+# Container. Without these routes, `staging.yusuke-kim.com/api/cms/media`
+# reaches Pages and returns 502 (Pages has no route for `/api/*`), and the
+# DNS-switch milestone (Phase C Task #27) cannot pass E2E because the
+# static-exported portfolio gallery fetches thumbnails via
+# `https://yusuke-kim.com/api/cms/media?…`. The apex zone
+# (`yusuke-kim.com`) is already on the Cloudflare account; `zone_name`
+# disambiguates it for wrangler's route validator.
+[[routes]]
+pattern = "yusuke-kim.com/api/*"
+zone_name = "yusuke-kim.com"
+
+[[routes]]
+pattern = "*.yusuke-kim.com/api/*"
+zone_name = "yusuke-kim.com"
