@@ -50,7 +50,16 @@ export class CMSApiContainer extends Container {
 		env: Env,
 	) {
 		super(ctx, env);
+		// Cloudflare Containers run the binary inside a Firecracker microVM whose
+		// network interface is `10.0.0.1`. The Worker SDK's `waitForPort` does a
+		// TCP connect to `10.0.0.1:<defaultPort>` (not `127.0.0.1`) — so a binary
+		// bound to loopback-only is invisible to the port probe and reports
+		// "The container is not listening in the TCP address 10.0.0.1:3001"
+		// until the 180 s timeout fires. Force `0.0.0.0` here so axum binds on
+		// every interface; the container's network mode is `private`, so this
+		// does not expose the port beyond the Worker runtime.
 		this.envVars = {
+			CMS_API_HOST: "0.0.0.0",
 			R2_ACCESS_KEY_ID: env.R2_ACCESS_KEY_ID,
 			R2_SECRET_ACCESS_KEY: env.R2_SECRET_ACCESS_KEY,
 			R2_BUCKET: env.R2_BUCKET,
