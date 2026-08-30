@@ -78,8 +78,14 @@ function toRustEntryPayload(content: Content): RustEntryPayload {
 	};
 }
 
+// Use `/api/entries` (canonical mount in apps/cms-api/src/main.rs:177,205).
+// The Rust API serves both `/entries` and `/api/entries`, but the Worker
+// router (`workers/router/src/index.ts:122-131`) only proxies `/api/*` to the
+// Container — bare `/entries` falls into the static-API collision branch and
+// returns a 500 (Cloudflare 1101) for POST. Going through `/api/entries`
+// works for both the Worker URL and a direct Rust API at port 3001.
 async function upsertEntry(payload: RustEntryPayload): Promise<void> {
-	const detailUrl = `${cmsApiBaseUrl}/entries/${encodeURIComponent(payload.id)}`;
+	const detailUrl = `${cmsApiBaseUrl}/api/entries/${encodeURIComponent(payload.id)}`;
 	const detailResponse = await fetch(detailUrl);
 
 	const init: RequestInit = {
@@ -90,7 +96,9 @@ async function upsertEntry(payload: RustEntryPayload): Promise<void> {
 		body: JSON.stringify(payload),
 	};
 
-	const targetUrl = detailResponse.ok ? detailUrl : `${cmsApiBaseUrl}/entries`;
+	const targetUrl = detailResponse.ok
+		? detailUrl
+		: `${cmsApiBaseUrl}/api/entries`;
 	const response = await fetch(targetUrl, init);
 
 	if (!response.ok) {
