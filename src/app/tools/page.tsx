@@ -145,18 +145,29 @@ export default function ToolsPage() {
 				</p>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-					{tools.map((tool) => (
-						<Link
-							key={tool.href}
-							href={tool.href}
-							className="block p-4 rounded-md border border-neutral-300 hover:bg-neutral-50 transition-colors"
-						>
-							<div className="font-semibold">{tool.title}</div>
-							<div className="text-sm text-neutral-600 mt-1">
-								{tool.description}
-							</div>
-						</Link>
-					))}
+					{tools.map((tool) => {
+						const Icon = tool.icon;
+						return (
+							<Link
+								key={tool.href}
+								href={tool.href}
+								className="block p-4 rounded-md border border-neutral-300 hover:bg-neutral-50 transition-colors"
+							>
+								<div className="flex items-center gap-2 mb-1.5">
+									<Icon className="w-[18px] h-[18px] shrink-0" />
+									<span className="text-[0.95rem] font-semibold">
+										{tool.title}
+									</span>
+									<span className="ml-auto text-[0.7rem] bg-neutral-100 px-2 py-0.5 rounded-full shrink-0">
+										{tool.category}
+									</span>
+								</div>
+								<p className="text-[0.8rem] text-neutral-600 mt-0 leading-relaxed">
+									{tool.description}
+								</p>
+							</Link>
+						);
+					})}
 				</div>
 			</div>
 		</div>
