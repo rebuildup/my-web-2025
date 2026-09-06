@@ -1,5 +1,7 @@
 node_modules/
 .wrangler/
 dist/
+dist-test/
+tmp/
 .dev.vars
 .dev.vars.*

@@ -12,6 +12,7 @@
 | `07_rules.md`       | コンプライアンス・運用ルール要点           |
 | `app/`              | ページ別仕様書                             |
 | `adr/`              | 意思決定記録 (Architecture Decision Records) |
+| `agent/`            | 並行実行、復旧、release、品質、onboardingの運用契約 |
 | `archive/`          | 旧ドキュメント・詳細版                     |
 
 ## フォルダ構造

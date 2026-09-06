@@ -44,7 +44,7 @@ UI changes additionally need Playwright smoke on the affected route (use `mcp__p
 
 - **`bun --bun next build` SIGILL 132 on Bun 1.3.14 + Next 16.3.0**: the build itself completes, `out/index.html` lands on disk, then the runtime crashes during `bun:sqlite` teardown. `deploy.yml` tolerates exit 132 **iff** `out/index.html` exists; otherwise the workflow fails. Reproduce locally with the same flag and check that the artifact exists before claiming green.
 - **Knip `knip.jsonc` rule relaxation**: files / exports / types / nsExports / nsTypes are off. Don't be alarmed by the small surface area — that's intentional, not a false-negative.
-- **Bun version drift**: `package.json` pins 1.3.10, `ci.yml` and `deploy.yml` use 1.3.14, `claude.yml` uses 1.3.10. If your local Bun is 1.3.10, you may not see the SIGILL the runner sees, and vice versa. Document the local version in the deploy PR body.
+- **Bun version**: `package.json`, CI workflows, Claude workflow, and WSL helper are pinned to 1.3.14. If the host Bun differs, run the gate in the pinned CI/container runtime before comparing build behavior.
 - **Biome overrides**: nine components have stricter `noArrayIndexKey`. Don't open overrides casually.
 
 ## What to report
@@ -59,7 +59,7 @@ UI changes additionally need Playwright smoke on the affected route (use `mcp__p
 | Rust fmt     | `cargo fmt --all -- --check` (apps/cms-api/) | PASS / FAIL | |
 | Rust clippy  | `cargo clippy --all-targets -- -D warnings` (apps/cms-api/) | PASS / FAIL | |
 | Rust tests   | `cargo test --all-targets` (apps/cms-api/) | PASS / FAIL | |
-| Env note     | local Bun version                    | x.y.z  | e.g. 1.3.10 (matches `package.json`) |
+| Env note     | local Bun version                    | x.y.z  | e.g. 1.3.14 (matches `package.json`) |
 | SIGILL check | `bun run build` exit 132 tolerance  | ok / not-applicable | if reproducible, mention it in the PR |
 
 Stop at the first FAIL and fix the root cause. No `--no-verify`, no skipped tests, no blanket lint suppression. When everything is green, hand off to the user — the agent does NOT trigger the GitHub Actions deploy.
