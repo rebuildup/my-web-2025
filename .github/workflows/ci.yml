@@ -54,10 +54,10 @@ jobs:
           NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
         run: |
           set +e
-          bun --bun next build
+          bun run build
           ec=$?
           if [ "$ec" -eq 132 ] && [ -f out/index.html ]; then
-            echo "::warning::bun --bun next build exited 132 (SIGILL at teardown), but out/index.html exists; proceeding"
+            echo "::warning::bun run build exited 132 (SIGILL at teardown), but out/index.html exists; proceeding"
             exit 0
           fi
           exit "$ec"
