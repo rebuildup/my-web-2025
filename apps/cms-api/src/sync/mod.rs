@@ -15,6 +15,20 @@ use tracing::{info, warn};
 
 pub const R2_KEY_PREFIX: &str = "contents/";
 
+/// Strip the configured R2 key prefix and return the relative path under
+/// `R2Config.local_dir`. Returns `None` for keys that don't have the prefix
+/// or that resolve to an empty relative path (e.g. R2's `contents/` zero-byte
+/// "directory marker" object, which would otherwise make `hydrate` try to
+/// write 0 bytes onto `local_dir` itself and fail).
+pub(crate) fn rel_path_from_key(key: &str) -> Option<&str> {
+    let rel = key.strip_prefix(R2_KEY_PREFIX)?;
+    if rel.is_empty() {
+        None
+    } else {
+        Some(rel)
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct R2Config {
     pub bucket: String,
@@ -58,7 +72,7 @@ pub async fn hydrate(client: &S3Client, config: &R2Config) -> Result<()> {
                 Some(k) => k,
                 None => continue,
             };
-            let rel = match key.strip_prefix(R2_KEY_PREFIX) {
+            let rel = match rel_path_from_key(key) {
                 Some(r) => r,
                 None => continue,
             };
