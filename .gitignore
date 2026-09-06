@@ -87,3 +87,4 @@ apps/cms-api/Cargo.lock
 apps/cms-api/data/db/
 
 .tmp/
+.reference/

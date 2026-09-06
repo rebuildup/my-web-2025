@@ -1,26 +1,5 @@
 #!/usr/bin/env bash
-# Mirror .claude/ agent configuration to .agents/ and .codex/ so non-Claude
-# agents (Codex CLI, .agents-compatible runners) can discover the same skills
-# and hooks. The .claude/ directory remains the canonical source of truth per
-# ADR-0007.
-#
-# Usage:
-#   ./scripts/sync-agent-skills.sh           # apply mirror
-#   ./scripts/sync-agent-skills.sh --check   # exit 1 if any drift detected
-#
-# What is mirrored:
-#   .claude/skills/<name>/SKILL.md -> .agents/skills/<name>/SKILL.md
-#   .claude/hooks/block-binary.sh -> .codex/hooks/block-binary.sh
-#
-# Why a script, not a symlink:
-#   - Codex CLI does not consume .claude/ directly. We want byte-identical
-#     output regardless of host (Windows bash, WSL, NixOS).
-#   - The .agents/ tree is committed, so a symlink would not be portable.
-#
-# Why not Bun / Node:
-#   - This script is a bootstrap-time tool. It must work before
-#     `bun install` on a fresh clone.
-
+# Mirror .claude/ agent configuration to .agents/ and .codex/.
 set -euo pipefail
 
 CHECK_ONLY=0
@@ -40,7 +19,6 @@ CLAUDE_SKILLS_DIR=".claude/skills"
 AGENTS_SKILLS_DIR=".agents/skills"
 CLAUDE_HOOKS_DIR=".claude/hooks"
 CODEX_HOOKS_DIR=".codex/hooks"
-
 DRIFT=0
 
 mirror_file() {
@@ -65,7 +43,6 @@ mirror_file() {
   echo "wrote: $dest"
 }
 
-# Skills: each subdirectory of .claude/skills with a SKILL.md
 if [ -d "$CLAUDE_SKILLS_DIR" ]; then
   while IFS= read -r -d '' skill_md; do
     skill_dir="$(dirname "$skill_md")"
@@ -76,7 +53,6 @@ else
   echo "skip: $CLAUDE_SKILLS_DIR (missing)" >&2
 fi
 
-# Hooks: block-binary.sh is the only project-shared script today.
 mirror_file "$CLAUDE_HOOKS_DIR/block-binary.sh" "$CODEX_HOOKS_DIR/block-binary.sh"
 
 if [ "$CHECK_ONLY" -eq 1 ] && [ "$DRIFT" -ne 0 ]; then
