@@ -1,24 +1,28 @@
 name: sync-submodules
 
-# Polls each submodule's main branch tip and bumps the parent gitlink
-# when the submodule has advanced. This implements the "submodule main
-# merge → my-web-2025 gitlink update" flow described in AGENTS.md §14.
+# ============================================================
+#  DISABLED 2026-09-06 (sprint housekeeping)
+# ============================================================
+# The workflow file has been moved from .github/workflows/ to this
+# _disabled/ subdirectory to stop the 15-minute cron from piling up
+# stale PRs. See .github/workflows/_disabled/README.md for the
+# rationale and the restore procedure.
 #
-# Why pull-based: 13 submodules would otherwise each need a
-# PARENT_REPO_TOKEN secret to call repository_dispatch. A 15-minute
-# poll on the parent side needs no cross-repo credentials.
+# The schedule block below is also commented out as defense in
+# depth in case GitHub Actions ever starts scanning subdirectories
+# (current docs say it does not, but the bot PR pile-up proved how
+# expensive a regression here would be).
 #
-# Triggers:
-#   - schedule: every 15 min (catches all submodule main advances)
-#   - workflow_dispatch: manual on-demand run from the Actions tab
-#
-# Output: opens (or updates) a PR titled "chore(submodule): sync
-# gitlinks to origin/main tip" against main. The PR triggers the
-# existing CI gate.
+# Original purpose (kept for archaeology):
+#   Polls each submodule's main branch tip and bumps the parent
+#   gitlink when the submodule has advanced. Implements the
+#   "submodule main merge → my-web-2025 gitlink update" flow
+#   described in AGENTS.md §14.
+# ============================================================
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"
+  # schedule:
+  #   - cron: "*/15 * * * *"  # disabled 2026-09-06, see README
   workflow_dispatch:
 
 concurrency:
