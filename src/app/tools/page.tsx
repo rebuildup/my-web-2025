@@ -127,134 +127,36 @@ const tools: Tool[] = [
 
 export default function ToolsPage() {
 	return (
-		<div
-			style={{
-				position: "fixed",
-				top: 0,
-				left: 0,
-				width: "100vw",
-				height: "100vh",
-				zIndex: 9999,
-				backgroundColor: "#ffffff",
-				color: "#000000",
-				colorScheme: "light",
-				fontFamily: "sans-serif",
-				overflowY: "auto",
-				padding: "2rem",
-				boxSizing: "border-box",
-			}}
-		>
-			<div
-				style={{
-					maxWidth: "1100px",
-					margin: "0 auto",
-					paddingBottom: "4rem",
-				}}
-			>
-				<nav
-					style={{
-						fontSize: "0.85rem",
-						marginBottom: "1rem",
-						color: "#666",
-					}}
-				>
-					<Link href="/" style={{ color: "#0066cc", textDecoration: "none" }}>
+		<div className="min-h-dvh w-full bg-white text-black px-4 sm:px-6 lg:px-12 py-8 pb-[env(safe-area-inset-bottom)]">
+			<div className="max-w-5xl mx-auto pb-16">
+				<nav className="text-sm mb-4 text-neutral-600">
+					<Link href="/" className="text-blue-600 hover:underline">
 						Home
 					</Link>
-					<span style={{ margin: "0 8px" }}>/</span>
-					<span style={{ color: "#000" }}>Tools</span>
+					<span className="mx-2">/</span>
+					<span className="text-black">Tools</span>
 				</nav>
 
-				<h1
-					style={{
-						borderBottom: "1px solid #ccc",
-						paddingBottom: "10px",
-						marginBottom: "20px",
-						fontSize: "1.5rem",
-						fontWeight: "normal",
-					}}
-				>
+				<h1 className="text-2xl font-normal border-b border-neutral-300 pb-2.5 mb-5">
 					Tools
 				</h1>
-				<p
-					style={{
-						fontSize: "0.875rem",
-						color: "#666",
-						marginBottom: "40px",
-						marginTop: 0,
-					}}
-				>
+				<p className="text-sm text-neutral-600 mt-0 mb-10">
 					便利なWebツールのコレクション.
 				</p>
 
-				<div
-					style={{
-						display: "grid",
-						gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-						gap: "12px",
-					}}
-				>
-					{tools.map((tool) => {
-						const Icon = tool.icon;
-						return (
-							<Link
-								key={tool.id}
-								href={tool.href}
-								style={{
-									textDecoration: "none",
-									color: "inherit",
-									display: "flex",
-									height: "100%",
-								}}
-							>
-								<div
-									style={{
-										border: "1px solid #ddd",
-										borderRadius: "6px",
-										padding: "16px",
-										width: "100%",
-										cursor: "pointer",
-									}}
-								>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "8px",
-											marginBottom: "6px",
-										}}
-									>
-										<Icon style={{ width: 18, height: 18, flexShrink: 0 }} />
-										<span style={{ fontSize: "0.95rem", fontWeight: 600 }}>
-											{tool.title}
-										</span>
-										<span
-											style={{
-												marginLeft: "auto",
-												fontSize: "0.7rem",
-												background: "#f0f0f0",
-												padding: "2px 8px",
-												borderRadius: "10px",
-												flexShrink: 0,
-											}}
-										>
-											{tool.category}
-										</span>
-									</div>
-									<p
-										style={{
-											fontSize: "0.8rem",
-											color: "#555",
-											margin: 0,
-											lineHeight: 1.5,
-										}}
-									>
-										{tool.description}
-									</p>
-								</div>
-							</Link>
-						);
-					})}
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+					{tools.map((tool) => (
+						<Link
+							key={tool.href}
+							href={tool.href}
+							className="block p-4 rounded-md border border-neutral-300 hover:bg-neutral-50 transition-colors"
+						>
+							<div className="font-semibold">{tool.title}</div>
+							<div className="text-sm text-neutral-600 mt-1">
+								{tool.description}
+							</div>
+						</Link>
+					))}
 				</div>
 			</div>
 		</div>
