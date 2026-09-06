@@ -108,7 +108,7 @@ aws s3 ls "s3://cms-data/contents/" --endpoint-url "$AWS_ENDPOINT_URL" --recursi
    - Build command: `bun run build` (Task 21 で `bun run build:cloudflare` に切替)
    - Build output directory: `out`
    - Root directory: `/`
-   - Env var: `BUN_VERSION=1.3.10`
+   - Env var: `BUN_VERSION=1.3.14`
 3. Save and Deploy. Bun が見つからない等のエラーが出たら build command の先頭に下記を足して再 deploy:
    ```bash
    echo "=== Installing Bun ===" && curl -fsSL https://bun.sh/install | bash && export PATH="$HOME/.bun/bin:$PATH" && bun --version && \
