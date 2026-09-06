@@ -1,14 +1,18 @@
 #!/usr/bin/env bun
 
 /**
- * Compare local `data/contents/*.db` against R2 bucket `cms-data/contents/`.
+ * Compare / sync local `data/contents/*.db` against R2 bucket
+ * `cms-data/contents/`.
  *
  * Modes:
  *   --snapshot     Write a manifest JSON of local state (upload to R2 later).
  *   --verify       Compare local vs R2, exit 1 if mismatch.
+ *   --push         `aws s3 sync` local → R2 (initial mirror / Task 7).
+ *   --pull         `aws s3 sync` R2 → local (hydrate dev env from staging).
  *
- * Uses AWS CLI for the R2 list call (S3-compatible API). Endpoint is read
- * from the R2_ENDPOINT env var, e.g. https://<account>.r2.cloudflarestorage.com.
+ * Uses AWS CLI for the R2 list / sync call (S3-compatible API). Endpoint is
+ * read from the R2_ENDPOINT env var, e.g.
+ * https://<account>.r2.cloudflarestorage.com.
  */
 
 import { spawnSync } from "node:child_process";
@@ -85,12 +89,16 @@ const mode = process.argv.includes("--snapshot")
 	? "snapshot"
 	: process.argv.includes("--verify")
 		? "verify"
-		: "snapshot";
+		: process.argv.includes("--push")
+			? "push"
+			: process.argv.includes("--pull")
+				? "pull"
+				: "snapshot";
 
 if (mode === "snapshot") {
 	const manifest = await snapshotLocal();
 	process.stdout.write(JSON.stringify(manifest, null, 2));
-} else {
+} else if (mode === "verify") {
 	const local = await snapshotLocal();
 	const remote = await listR2();
 	const localKeys = new Set(local.contents.map((e) => e.key));
@@ -104,4 +112,35 @@ if (mode === "snapshot") {
 		process.exit(1);
 	}
 	console.log(`OK: ${localKeys.size} files match between local and R2`);
+} else {
+	// push / pull: delegate to `aws s3 sync` for efficient bulk transfer.
+	const endpoint = process.env.R2_ENDPOINT;
+	if (!endpoint) {
+		console.error(
+			"R2_ENDPOINT required (e.g. https://<acct>.r2.cloudflarestorage.com)",
+		);
+		process.exit(2);
+	}
+	const src = mode === "push" ? LOCAL_DIR : `s3://${R2_BUCKET}/contents/`;
+	const dst = mode === "push" ? `s3://${R2_BUCKET}/contents/` : LOCAL_DIR;
+	console.log(`[${mode}] ${src} → ${dst}`);
+	const out = spawnSync(
+		"aws",
+		[
+			"s3",
+			"sync",
+			src,
+			dst,
+			"--endpoint-url",
+			endpoint,
+			"--exact-timestamps",
+			"--no-progress" satisfies string,
+		],
+		{ stdio: "inherit" },
+	);
+	if (out.status !== 0) {
+		console.error(`aws s3 sync failed with exit ${out.status}`);
+		process.exit(out.status ?? 1);
+	}
+	console.log(`[${mode}] OK`);
 }
