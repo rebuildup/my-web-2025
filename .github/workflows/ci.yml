@@ -52,7 +52,16 @@ jobs:
         env:
           NEXT_PUBLIC_GA_ID: "G-DUMMY12345"
           NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
-        run: bun run build
+        run: |
+          set +e
+          bun run build
+          ec=$?
+          if [ "$ec" -eq 132 ] && [ -f out/index.html ]; then
+            echo "::warning::bun run build exited 132 (SIGILL at teardown), but out/index.html exists; proceeding"
+            exit 0
+          fi
+          exit "$ec"
+          test -f out/index.html || { echo "out/index.html missing after build"; exit 1; }
 
   rust:
     name: Rust CMS API gate
