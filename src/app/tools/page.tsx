@@ -3,6 +3,7 @@ import {
 	FileCode,
 	Gamepad2,
 	Image,
+	Mic,
 	Palette,
 	QrCode,
 	ScrollText,
@@ -122,6 +123,15 @@ const tools: Tool[] = [
 		href: "/tools/fillgen",
 		category: "ユーティリティ",
 		icon: ScrollText,
+	},
+	{
+		id: "mic-level",
+		title: "Mic Level Checker",
+		description:
+			"ブラウザだけでマイク入力レベル (dBFS) をリアルタイム表示し、5秒間の発話から OBS 基準のゲイン調整量を判定します.",
+		href: "/tools/mic-level",
+		category: "ユーティリティ",
+		icon: Mic,
 	},
 ];
 
