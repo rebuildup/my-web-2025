@@ -22,13 +22,7 @@
 
 "use client";
 
-import {
-	ArrowRight,
-	ChevronDown,
-	CircleDot,
-	Command,
-	Sparkles,
-} from "lucide-react";
+import { ArrowRight, CircleDot, Command, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -298,7 +292,9 @@ export default function DesignPlaygroundPage() {
 			<header
 				className={`sticky top-0 z-30 border-b ${HAIRLINE} bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70`}
 			>
-				<div className={`${SHELL} flex h-14 items-center justify-between gap-4`}>
+				<div
+					className={`${SHELL} flex h-14 items-center justify-between gap-4`}
+				>
 					<Breadcrumbs
 						items={[
 							{ label: "Home", href: "/" },
@@ -359,7 +355,9 @@ export default function DesignPlaygroundPage() {
 							<div className="mt-8 flex flex-wrap items-center gap-3">
 								<button
 									type="button"
-									onClick={() => setActiveExperiment(filteredExperiments[0]?.id)}
+									onClick={() =>
+										setActiveExperiment(filteredExperiments[0]?.id)
+									}
 									className="group inline-flex items-center gap-2 rounded-md bg-stone-900 px-4 py-2.5 text-[13px] font-medium text-white shadow-sm transition-all duration-200 ease-out hover:bg-stone-800 hover:shadow-md active:scale-[0.98]"
 								>
 									<Sparkles className="h-3.5 w-3.5" aria-hidden />
@@ -388,9 +386,7 @@ export default function DesignPlaygroundPage() {
 								/>
 								<CapabilityCell
 									term="Touch"
-									detail={
-										deviceCapabilities.touchSupport ? "Yes" : "No"
-									}
+									detail={deviceCapabilities.touchSupport ? "Yes" : "No"}
 								/>
 								<CapabilityCell
 									term="Pixel ratio"
@@ -475,7 +471,9 @@ export default function DesignPlaygroundPage() {
 			>
 				<div className={`${SHELL} py-3`}>
 					<div className="flex items-center gap-4">
-						<span className={`flex shrink-0 items-center gap-1.5 ${EYEBROW_SM}`}>
+						<span
+							className={`flex shrink-0 items-center gap-1.5 ${EYEBROW_SM}`}
+						>
 							<CircleDot className="h-3 w-3 text-blue-600" aria-hidden />
 							Filter
 						</span>
@@ -511,23 +509,17 @@ export default function DesignPlaygroundPage() {
 						<div className={SECTION_GAP}>
 							<FilterRailSection
 								title="Difficulty"
-								options={[
-									"beginner",
-									"intermediate",
-									"advanced",
-								].map((d) => ({
+								options={["beginner", "intermediate", "advanced"].map((d) => ({
 									label: d,
 									value: d,
-									count: designExperiments.filter(
-										(x) => x.difficulty === d,
-									).length,
+									count: designExperiments.filter((x) => x.difficulty === d)
+										.length,
 								}))}
 								active={filter.difficulty}
 								onSelect={(v) =>
 									setFilter((f) => ({
 										...f,
-										difficulty:
-											f.difficulty === v ? undefined : (v as never),
+										difficulty: f.difficulty === v ? undefined : (v as never),
 									}))
 								}
 							/>
@@ -544,16 +536,25 @@ export default function DesignPlaygroundPage() {
 								onSelect={(v) =>
 									setFilter((f) => ({
 										...f,
-										technology:
-											f.technology === v ? undefined : (v as never),
+										technology: f.technology === v ? undefined : (v as never),
 									}))
 								}
 							/>
 							<FilterRailSection
 								title="Interactive"
 								options={[
-									{ label: "Yes", value: "true", count: 0 },
-									{ label: "No", value: "false", count: 0 },
+									{
+										label: "Yes",
+										value: "true",
+										count: designExperiments.filter((x) => x.interactive)
+											.length,
+									},
+									{
+										label: "No",
+										value: "false",
+										count: designExperiments.filter((x) => !x.interactive)
+											.length,
+									},
 								]}
 								active={
 									filter.interactive === undefined
@@ -565,10 +566,7 @@ export default function DesignPlaygroundPage() {
 								onSelect={(v) =>
 									setFilter((f) => ({
 										...f,
-										interactive:
-											v === undefined
-												? undefined
-												: v === "true",
+										interactive: v === undefined ? undefined : v === "true",
 									}))
 								}
 							/>
@@ -580,10 +578,7 @@ export default function DesignPlaygroundPage() {
 						<div className={SECTION_GAP}>
 							{/* 5.1 — Featured (auto-selects the first interactive one) */}
 							{filteredExperiments.length > 0 && (
-								<section
-									id="featured"
-									aria-labelledby="featured-heading"
-								>
+								<section id="featured" aria-labelledby="featured-heading">
 									<div className="flex items-end justify-between gap-4">
 										<div>
 											<p className={EYEBROW_ACCENT}>Featured</p>
@@ -665,30 +660,12 @@ export default function DesignPlaygroundPage() {
 									</div>
 								</div>
 								<dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
-									<ShortcutRow
-										keys={["↑", "↓"]}
-										label="Navigate experiments"
-									/>
-									<ShortcutRow
-										keys={["Enter"]}
-										label="Open experiment"
-									/>
-									<ShortcutRow
-										keys={["Esc"]}
-										label="Close active panel"
-									/>
-									<ShortcutRow
-										keys={["⌘", "K"]}
-										label="Command palette"
-									/>
-									<ShortcutRow
-										keys={["⌘", "/"]}
-										label="Show shortcuts"
-									/>
-									<ShortcutRow
-										keys={["Q"]}
-										label="Toggle quality preset"
-									/>
+									<ShortcutRow keys={["↑", "↓"]} label="Navigate experiments" />
+									<ShortcutRow keys={["Enter"]} label="Open experiment" />
+									<ShortcutRow keys={["Esc"]} label="Close active panel" />
+									<ShortcutRow keys={["⌘", "K"]} label="Command palette" />
+									<ShortcutRow keys={["⌘", "/"]} label="Show shortcuts" />
+									<ShortcutRow keys={["Q"]} label="Toggle quality preset" />
 								</dl>
 							</section>
 
@@ -841,7 +818,11 @@ function CapabilityCell({
 	term,
 	detail,
 	accent,
-}: { term: string; detail: string; accent?: boolean }) {
+}: {
+	term: string;
+	detail: string;
+	accent?: boolean;
+}) {
 	return (
 		<div className="flex flex-col gap-0.5 bg-white px-3.5 py-2.5">
 			<dt className={EYEBROW_SM}>{term}</dt>
@@ -861,7 +842,9 @@ function Metric({ label, value }: { label: string; value: string }) {
 	return (
 		<div className="flex shrink-0 flex-col leading-none">
 			<span className={EYEBROW_SM}>{label}</span>
-			<span className={`${TABS} font-mono mt-1 text-[15px] font-semibold text-stone-900`}>
+			<span
+				className={`${TABS} font-mono mt-1 text-[15px] font-semibold text-stone-900`}
+			>
 				{value}
 			</span>
 		</div>
@@ -885,7 +868,7 @@ function FilterRailSection({
 			<h3 className="font-mono text-[11px] uppercase tracking-[0.08em] text-stone-500">
 				{title}
 			</h3>
-			<ul className="mt-3 space-y-1">
+			<ul className="mt-3 list-none space-y-1">
 				{options.map((opt) => (
 					<li key={opt.value}>
 						<button
@@ -977,10 +960,7 @@ function FeaturedTile({
 }
 
 /** Shortcut key + label row. Borderless; just text. */
-function ShortcutRow({
-	keys,
-	label,
-}: { keys: string[]; label: string }) {
+function ShortcutRow({ keys, label }: { keys: string[]; label: string }) {
 	return (
 		<div className="flex items-center justify-between gap-4 border-b border-stone-200/60 py-2.5">
 			<dt className="text-[13px] text-stone-700">{label}</dt>
@@ -1003,7 +983,11 @@ function ResourceItem({
 	href,
 	title,
 	note,
-}: { href: string; title: string; note: string }) {
+}: {
+	href: string;
+	title: string;
+	note: string;
+}) {
 	return (
 		<li className="bg-white">
 			<Link
@@ -1011,9 +995,7 @@ function ResourceItem({
 				className="group flex items-center justify-between gap-4 px-5 py-5 transition-colors duration-200 ease-out hover:bg-stone-50"
 			>
 				<div>
-					<div className="text-[14px] font-medium text-stone-900">
-						{title}
-					</div>
+					<div className="text-[14px] font-medium text-stone-900">{title}</div>
 					<div
 						className="mt-0.5 text-[12px] text-stone-500"
 						dangerouslySetInnerHTML={{ __html: note }}
@@ -1032,7 +1014,10 @@ function ResourceItem({
 function FooterLink({
 	href,
 	children,
-}: { href: string; children: React.ReactNode }) {
+}: {
+	href: string;
+	children: React.ReactNode;
+}) {
 	return (
 		<Link
 			href={href}
