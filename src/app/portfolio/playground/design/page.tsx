@@ -612,38 +612,16 @@ export default function DesignPlaygroundPage() {
 								</section>
 							)}
 
-							{/* 5.2 — All experiments (the actual grid; cells are tiles) */}
-							<section
-								id="all-experiments"
-								aria-labelledby="all-experiments-heading"
-							>
-								<div className="flex items-end justify-between gap-4">
-									<div>
-										<p className={EYEBROW_SM}>Library</p>
-										<h2
-											id="all-experiments-heading"
-											className="mt-2 text-2xl font-semibold tracking-tight text-stone-900"
-										>
-											All experiments
-										</h2>
-									</div>
-									<p className="text-[13px] text-stone-500">
-										<span className="font-mono">
-											{filteredExperiments.length}
-										</span>{" "}
-										items
-									</p>
-								</div>
-								<div className="mt-6">
-									<ResponsiveExperimentGrid
-										experiments={filteredExperiments}
-										activeExperiment={activeExperiment}
-										onExperimentSelect={(experimentId) => {
-											setActiveExperiment(experimentId);
-											setExperimentError(null);
-										}}
-									/>
-								</div>
+							{/* 5.2 — All experiments (component owns its own heading) */}
+							<section id="all-experiments">
+								<ResponsiveExperimentGrid
+									experiments={filteredExperiments}
+									activeExperiment={activeExperiment}
+									onExperimentSelect={(experimentId) => {
+										setActiveExperiment(experimentId);
+										setExperimentError(null);
+									}}
+								/>
 							</section>
 
 							{/* 5.3 — Shortcuts (NEW section, addresses v4 gap) */}
