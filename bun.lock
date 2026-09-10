@@ -139,6 +139,25 @@
         "next": "^16.3.0",
       },
     },
+    "external/mic-level": {
+      "name": "@rebuildup/tool-mic-level",
+      "version": "0.1.0",
+      "dependencies": {
+        "lucide-react": "^1.28.0",
+        "next": "^16.3.0",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "^2.5.7",
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.4",
+        "typescript": "^7.0.2",
+      },
+      "peerDependencies": {
+        "next": "^16.3.0",
+      },
+    },
     "external/pi-game": {
       "name": "@rebuildup/tool-pi-game",
       "version": "0.1.0",
@@ -784,6 +803,8 @@
     "@rebuildup/tool-fillgen": ["@rebuildup/tool-fillgen@workspace:external/fillgen"],
 
     "@rebuildup/tool-history-quiz": ["@rebuildup/tool-history-quiz@workspace:external/history-quiz"],
+
+    "@rebuildup/tool-mic-level": ["@rebuildup/tool-mic-level@workspace:external/mic-level"],
 
     "@rebuildup/tool-pi-game": ["@rebuildup/tool-pi-game@workspace:external/pi-game"],
 
