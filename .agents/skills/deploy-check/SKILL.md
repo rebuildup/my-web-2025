@@ -44,7 +44,7 @@ UI changes additionally need Playwright smoke on the affected route (use `mcp__p
 
 - **`bun --bun next build` SIGILL 132 on Bun 1.3.14 + Next 16.3.0**: the build itself completes, `out/index.html` lands on disk, then the runtime crashes during `bun:sqlite` teardown. `deploy.yml` tolerates exit 132 **iff** `out/index.html` exists; otherwise the workflow fails. Reproduce locally with the same flag and check that the artifact exists before claiming green.
 - **Knip `knip.jsonc` rule relaxation**: files / exports / types / nsExports / nsTypes are off. Don't be alarmed by the small surface area — that's intentional, not a false-negative.
-- **Bun version**: `package.json`, CI workflows, Claude workflow, and WSL helper are pinned to 1.3.14. If the host Bun differs, run the gate in the pinned CI/container runtime before comparing build behavior.
+- **Bun version**: `package.json`, CI workflows, Claude workflow, native runner, and WSL helper are pinned to 1.3.14. If the host Bun differs, run the gate in the pinned CI/container runtime before comparing build behavior.
 - **Biome overrides**: nine components have stricter `noArrayIndexKey`. Don't open overrides casually.
 
 ## What to report
