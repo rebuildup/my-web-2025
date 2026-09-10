@@ -737,7 +737,7 @@ export default function DesignPlaygroundPage() {
 										</h2>
 									</div>
 								</div>
-								<ul className="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-stone-200 bg-stone-200 sm:grid-cols-3">
+								<ul className="mt-6 list-none grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-stone-200 bg-stone-200 sm:grid-cols-3">
 									<ResourceItem
 										href="/portfolio/playground/WebGL"
 										title="WebGL Playground"
