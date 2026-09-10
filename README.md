@@ -63,14 +63,19 @@ bun run dev
 
 **CMS API (Rust)**
 
-CMS API は Rust 製で直接実行します.
+CMS API は Rust 製です. Linux / macOS などのネイティブ環境では、リリースビルドをプリビルドして直接バイナリ実行するのが推奨導線です. Windows / WSL 環境では従来通り `wslc:*` ヘルパーも利用可能です.
 
 ```bash
-# CMS API を起動
+# ネイティブ (Linux / macOS):
+# 1. リリースビルドをプリビルド (apps/cms-api/Dockerfile と同じ cargo フラグ)
+bun run cms-api:build
+# 2. CMS API を起動 (プリビルドがあれば直接実行、なければ cargo run にフォールバック)
 bun run dev:cms-api
 ```
 
 API は [http://localhost:3001](http://localhost:3001) で動作します.
+
+詳しい Rust ツールチェーンのセットアップ手順は [`docs/agent/cms-native-dev.md`](docs/agent/cms-native-dev.md) を参照してください.
 
 **両方を同時に起動する場合**
 
@@ -78,6 +83,8 @@ API は [http://localhost:3001](http://localhost:3001) で動作します.
 # Next.js + CMS API を同時に起動
 bun run dev:full
 ```
+
+> Windows / WSL で `wslc:pull` / `wslc:run` を使う導線は削除せず温存しています. 詳細は `package.json#scripts` 内の `wslc:*` を参照.
 
 ### 停止 (Stop)
 
