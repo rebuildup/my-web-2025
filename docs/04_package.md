@@ -78,7 +78,7 @@
 ## Rust CMS API
 - `apps/cms-api/Cargo.toml` に Rust 側依存を集約. ローカル検証は同ディレクトリで `cargo fmt / clippy / test`.
 - 本リポジトリの検証ゲートは Bun 側に加えて Rust 側 (`cargo fmt --all -- --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test --all-targets`) を CI で必須とする (`docs/adr/0005-rust-cms-api.md`).
-- **ローカル開発の動線**: ネイティブ (Linux / macOS) では `bun run cms-api:build` でプリビルドし、`bun run dev:cms-api` はプリビルド優先 / なければ `cargo run` にフォールバックする. Windows / WSL では `wslc:*` ヘルパーを従来通り利用可能. 詳細は `docs/agent/cms-native-dev.md`.
+- **ローカル開発の動線**: ネイティブ (Linux / macOS) では `bun run cms-api:build` でプリビルドできる. `bun run dev:cms-api` はプリビルド済み release バイナリを起動するが、`apps/cms-api/` 配下のいずれかのソースがバイナリより新しければ `cargo run` に自動フォールバックする (stale 検出). Windows / WSL では `wslc:*` ヘルパーを従来通り利用可能. 詳細は `docs/agent/cms-native-dev.md`.
 
 ## アップグレード指針
 - **Next / React**: minor はビルド + Bun test を通した上でマージ. major は canary ブランチで検証.

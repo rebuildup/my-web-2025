@@ -1,7 +1,38 @@
 #!/usr/bin/env bun
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
+
+const SOURCE_EXCLUDE_NAMES: ReadonlySet<string> = new Set([
+	// Cargo's own build output — never compare the binary against itself.
+	"target",
+	// `.git` and `.cargo` are workspace bookkeeping, not Rust source.
+	".git",
+]);
+
+/**
+ * Walk `dir` recursively and return the newest mtime (epoch ms) of any
+ * regular file inside it. Names listed in `exclude` are skipped
+ * recursively so we never descend into `target/` or similar build trees.
+ */
+function findNewestMtimeMs(dir: string, exclude: ReadonlySet<string>): number {
+	let max = 0;
+	const walk = (current: string): void => {
+		for (const entry of readdirSync(current, { withFileTypes: true })) {
+			if (exclude.has(entry.name)) continue;
+			const full = path.join(current, entry.name);
+			if (entry.isDirectory()) {
+				walk(full);
+				continue;
+			}
+			if (!entry.isFile()) continue;
+			const st = statSync(full);
+			if (st.mtimeMs > max) max = st.mtimeMs;
+		}
+	};
+	walk(dir);
+	return max;
+}
 
 const host = process.env.CMS_API_HOST || "127.0.0.1";
 const port = process.env.CMS_API_PORT || "3001";
@@ -24,21 +55,40 @@ const releaseBinary =
 	process.platform === "win32"
 		? path.join(cmsApiDir, "target", "release", "cms-api.exe")
 		: path.join(cmsApiDir, "target", "release", "cms-api");
-const usePrebuilt = existsSync(releaseBinary);
 
-const launchSpec = usePrebuilt
-	? {
-			label: "prebuilt release binary",
-			command: releaseBinary,
-			args: [] as string[],
-			cwd: cmsApiDir,
-		}
-	: {
-			label: "cargo run (no release binary found)",
-			command: "cargo",
-			args: ["run"],
-			cwd: cmsApiDir,
-		};
+// Decide between the prebuilt release binary and `cargo run`. A prebuilt
+// binary only wins when it is *fresher* than every tracked source file
+// under `apps/cms-api/` — otherwise we'd happily run stale code after a
+// Rust edit. Stale detection walks the workspace and skips `target/`
+// (so the binary's own mtime never enters the comparison) and `.git/`.
+const usePrebuilt = existsSync(releaseBinary);
+const sourceNewestMtimeMs = findNewestMtimeMs(cmsApiDir, SOURCE_EXCLUDE_NAMES);
+const releaseBinaryMtimeMs = usePrebuilt ? statSync(releaseBinary).mtimeMs : 0;
+const prebuiltIsStale =
+	usePrebuilt && sourceNewestMtimeMs > releaseBinaryMtimeMs;
+
+const launchSpec =
+	usePrebuilt && !prebuiltIsStale
+		? {
+				label: "prebuilt release binary",
+				command: releaseBinary,
+				args: [] as string[],
+				cwd: cmsApiDir,
+			}
+		: {
+				label: prebuiltIsStale
+					? "cargo run (release binary is stale)"
+					: "cargo run (no release binary found)",
+				command: "cargo",
+				args: ["run"],
+				cwd: cmsApiDir,
+			};
+
+if (prebuiltIsStale) {
+	console.log(
+		`[dev-cms-api] source newer than release binary, falling back to cargo run`,
+	);
+}
 
 const specDescription = [launchSpec.command, ...launchSpec.args].join(" ");
 console.log(

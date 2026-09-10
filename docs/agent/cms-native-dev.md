@@ -120,7 +120,9 @@ bun run test
 
 ### Q. ソースを編集したら自動で再ビルドされる?
 
-`cargo run` 経路は dev ビルドが再リンクされる. プリビルド経路は明示的に `bun run cms-api:build` で再生成する (Docker エントリポイントと同じ動作). ソース反復開発中は `bun run dev:cms-api` をプリビルドなしで実行 → cargo run に任せるのが最短.
+はい. `bun run dev:cms-api` は起動時に release バイナリ (`apps/cms-api/target/release/cms-api`) と `apps/cms-api/` 配下のソース (`target/` / `.git/` を除外) の mtime を比較し、いずれかのソースが新しい場合は `[dev-cms-api] source newer than release binary, falling back to cargo run` をログして `cargo run` に切り替える. したがってソース反復開発のたびに `bun run cms-api:build` を再実行する必要はない.
+
+プリビルド済みバイナリは、リリース相当の cargo フラグ (`--release --locked`) で動作確認したい・ベンチを取りたいといったときに活かすユースケース.
 
 ### Q. macOS でクロスコンパイルしたバイナリを CI で流せますか?
 
