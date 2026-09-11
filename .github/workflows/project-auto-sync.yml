@@ -1,0 +1,182 @@
+name: Project board auto-sync
+
+# Keeps the GitHub Project "Status" field in sync with PR lifecycle events so the
+# board reflects current state without manual updates. See docs/agent/agile-premises.md
+# § 2.1 / § 2.3 for the column contract.
+#
+# Required repo/org variables (configure at repo Settings → Secrets and variables
+# → Actions → Variables — these are not secret values, only project identifiers):
+#   PROJECT_NODE_ID       — GraphQL node ID of the Project (e.g. PVT_xxx)
+#   STATUS_FIELD_ID       — GraphQL node ID of the Status field on the Project
+#
+# Required repo/org secrets (do NOT commit actual values):
+#   PROJECT_TOKEN         — PAT with `project` scope (token is not exposed in logs)
+#
+# Column name → Status option mapping (overridable via JSON variable if needed):
+#   In Review   — newly opened or reopened PRs that are ready for review
+#   In Progress — PR converted back to draft (work resuming)
+#   Done        — PR merged into a tracked release branch
+#   Backlog     — PR closed without merge (rework expected)
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, converted_to_draft, closed]
+
+concurrency:
+  group: project-auto-sync-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sync-status:
+    name: Sync Project Status
+    runs-on: ubuntu-latest
+    # Skip when the PR never touched a release branch — keep the script idempotent.
+    if: github.event.pull_request.base.ref == 'release-*' || github.event.pull_request.base.ref == 'main'
+    steps:
+      - name: Resolve target Status option
+        id: resolve
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          MERGED: ${{ github.event.pull_request.merged }}
+        run: |
+          set -euo pipefail
+          case "$EVENT_ACTION" in
+            opened)
+              # Newly opened PRs are immediately ready for review by repo convention.
+              STATUS="In Review"
+              ;;
+            reopened)
+              STATUS="In Review"
+              ;;
+            ready_for_review)
+              STATUS="In Review"
+              ;;
+            converted_to_draft)
+              # Draft conversion signals active work resuming on the ticket.
+              STATUS="In Progress"
+              ;;
+            closed)
+              if [[ "$MERGED" == "true" ]]; then
+                STATUS="Done"
+              else
+                # Closed without merge → back to backlog for rework.
+                STATUS="Backlog"
+              fi
+              ;;
+            *)
+              echo "::error::Unhandled PR action '$EVENT_ACTION'"
+              exit 1
+              ;;
+          esac
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+
+      - name: Update Project Status
+        uses: actions/github-script@v8
+        env:
+          PROJECT_NODE_ID: ${{ vars.PROJECT_NODE_ID }}
+          STATUS_FIELD_ID: ${{ vars.STATUS_FIELD_ID }}
+          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          TARGET_STATUS: ${{ steps.resolve.outputs.status }}
+          PR_NODE_ID: ${{ github.event.pull_request.node_id }}
+        with:
+          script: |
+            const required = {
+              PROJECT_NODE_ID: process.env.PROJECT_NODE_ID,
+              STATUS_FIELD_ID: process.env.STATUS_FIELD_ID,
+              PROJECT_TOKEN: process.env.PROJECT_TOKEN,
+            };
+            for (const [key, value] of Object.entries(required)) {
+              if (!value) {
+                core.setFailed(`Missing required env var: ${key}. Configure it at repo Settings → Secrets and variables → Actions.`);
+                return;
+              }
+            }
+
+            const target = process.env.TARGET_STATUS;
+            const prNodeId = process.env.PR_NODE_ID;
+
+            // Use a custom token so the workflow can update the Project even when
+            // GITHUB_TOKEN does not have project scope.
+            const { graphql } = await graphql.defaults({
+              headers: { authorization: `bearer ${process.env.PROJECT_TOKEN}` },
+            });
+
+            // 1. Resolve the Status field options to find the option ID for TARGET_STATUS.
+            const fieldQuery = await graphql(`
+              query($projectId: ID!, $fieldId: ID!) {
+                node(id: $projectId) {
+                  ... on ProjectV2 {
+                    field(id: $fieldId) {
+                      ... on ProjectV2SingleSelectField {
+                        options { id name }
+                      }
+                    }
+                  }
+                }
+              }
+            `, {
+              projectId: process.env.PROJECT_NODE_ID,
+              fieldId: process.env.STATUS_FIELD_ID,
+            });
+
+            const options = fieldQuery.node?.field?.options ?? [];
+            const match = options.find((o) => o.name === target);
+            if (!match) {
+              core.setFailed(`Status field has no option named '${target}'. Available: ${options.map((o) => o.name).join(', ')}`);
+              return;
+            }
+
+            // 2. Find any existing draft issue / PR item on the project for this PR.
+            //    PRs are represented on Projects as Draft Issues linked via the PR's node ID.
+            const itemQuery = await graphql(`
+              query($projectId: ID!) {
+                node(id: $projectId) {
+                  ... on ProjectV2 {
+                    items(first: 50) {
+                      nodes {
+                        id
+                        content {
+                          ... on PullRequest { id number }
+                          ... on DraftIssue { id }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `, { projectId: process.env.PROJECT_NODE_ID });
+
+            const items = itemQuery.node?.items?.nodes ?? [];
+            const item = items.find((i) => i.content?.id === prNodeId);
+            if (!item) {
+              // PR is not on the project board — log and skip. The maintainer may add it later.
+              core.info(`PR ${prNodeId} is not yet tracked on the project board. Skipping Status update.`);
+              return;
+            }
+
+            // 3. Update the Status field on the matched project item.
+            await graphql(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(
+                  input: {
+                    projectId: $projectId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: { singleSelectOptionId: $optionId }
+                  }
+                ) {
+                  projectV2Item { id }
+                }
+              }
+            `, {
+              projectId: process.env.PROJECT_NODE_ID,
+              itemId: item.id,
+              fieldId: process.env.STATUS_FIELD_ID,
+              optionId: match.id,
+            });
+
+            core.info(`Updated PR ${prNodeId} → Status '${target}' on project ${process.env.PROJECT_NODE_ID}.`);
