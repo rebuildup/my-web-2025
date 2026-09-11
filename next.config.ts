@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
 		"external/history-quiz/src",
 		"external/pi-game/src",
 		"external/ae-expression/src",
+		"external/mic-level/src",
 	],
 	typescript: {
 		ignoreBuildErrors: true,

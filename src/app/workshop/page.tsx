@@ -878,12 +878,20 @@ export default async function WorkshopPage({
 							allTags={allTags}
 						/>
 
-						<MobileSidebarReplacement
-							allTags={allTags}
-							mode={mode}
-							articlesByTag={articlesByTag}
-							popularArticles={popularArticles}
-						/>
+						<details className="lg:hidden mb-4 group">
+							<summary className="cursor-pointer list-none flex items-center gap-2 px-4 py-2 bg-neutral-100 rounded-md">
+								<span aria-hidden>≡</span>
+								<span>サイドバー</span>
+							</summary>
+							<div className="mt-2">
+								<MobileSidebarReplacement
+									allTags={allTags}
+									mode={mode}
+									articlesByTag={articlesByTag}
+									popularArticles={popularArticles}
+								/>
+							</div>
+						</details>
 
 						<div className="flex gap-8">
 							<section className="flex-1">
@@ -902,11 +910,19 @@ export default async function WorkshopPage({
 
 				{/* Grouped view - show by default */}
 				{showGroupedView && (
-					<GroupedTagsView
-						topTags={topTags}
-						articlesByTag={articlesByTag}
-						mode={mode}
-					/>
+					<>
+						<MobileSidebarReplacement
+							allTags={allTags}
+							mode={mode}
+							articlesByTag={articlesByTag}
+							popularArticles={popularArticles}
+						/>
+						<GroupedTagsView
+							topTags={topTags}
+							articlesByTag={articlesByTag}
+							mode={mode}
+						/>
+					</>
 				)}
 			</main>
 		</div>
