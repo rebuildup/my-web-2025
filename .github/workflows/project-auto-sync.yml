@@ -4,19 +4,24 @@ name: Project board auto-sync
 # board reflects current state without manual updates. See docs/agent/agile-premises.md
 # § 2.1 / § 2.3 for the column contract.
 #
-# Required repo/org variables (configure at repo Settings → Secrets and variables
-# → Actions → Variables — these are not secret values, only project identifiers):
-#   PROJECT_NODE_ID       — GraphQL node ID of the Project (e.g. PVT_xxx)
-#   STATUS_FIELD_ID       — GraphQL node ID of the Status field on the Project
+# Authentication: GitHub App installation token (1h, auto-rotated). This avoids
+# the need for a long-lived PAT with `project` scope — the `GITHUB_TOKEN` exposed
+# to workflows intentionally lacks project-level permissions per GitHub's
+# security model. A GitHub App installed on the target project provides scoped,
+# short-lived credentials that match the project's owner-scope rules.
 #
-# Required repo/org secrets (do NOT commit actual values):
-#   PROJECT_TOKEN         — PAT with `project` scope (token is not exposed in logs)
+# Required repo/org variables (configure at repo Settings → Secrets and
+# variables → Actions → Variables — these are identifiers, not secrets):
+#   PROJECT_NODE_ID             — GraphQL node ID of the Project V2 (e.g. PVT_xxx)
+#   STATUS_FIELD_ID             — GraphQL node ID of the Status field on the Project
+#   PROJECT_APP_ID              — Numeric App ID from the GitHub App "General" page
+#   PROJECT_APP_INSTALLATION_ID — Numeric Installation ID from the GitHub App
+#                                 "Install App" tab URL (…/installations/<ID>)
 #
-# Column name → Status option mapping (overridable via JSON variable if needed):
-#   In Review   — newly opened or reopened PRs that are ready for review
-#   In Progress — PR converted back to draft (work resuming)
-#   Done        — PR merged into a tracked release branch
-#   Backlog     — PR closed without merge (rework expected)
+# Required repo/org secret:
+#   PROJECT_APP_PRIVATE_KEY     — RSA private key (PEM) generated on the App page
+#                                 under "Private keys". Store exactly the
+#                                 -----BEGIN RSA PRIVATE KEY----- contents.
 
 on:
   pull_request:
@@ -34,7 +39,8 @@ jobs:
   sync-status:
     name: Sync Project Status
     runs-on: ubuntu-latest
-    # Skip when the PR never touched a release branch — keep the script idempotent.
+    # Limit to release-* and main base refs — feature branches targeting other
+    # branches should not move tickets on the Project board.
     if: github.event.pull_request.base.ref == 'release-*' || github.event.pull_request.base.ref == 'main'
     steps:
       - name: Resolve target Status option
@@ -74,12 +80,20 @@ jobs:
           esac
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
 
+      - name: Generate GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.PROJECT_APP_ID }}
+          private-key: ${{ secrets.PROJECT_APP_PRIVATE_KEY }}
+          installation-id: ${{ vars.PROJECT_APP_INSTALLATION_ID }}
+
       - name: Update Project Status
         uses: actions/github-script@v8
         env:
           PROJECT_NODE_ID: ${{ vars.PROJECT_NODE_ID }}
           STATUS_FIELD_ID: ${{ vars.STATUS_FIELD_ID }}
-          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
           TARGET_STATUS: ${{ steps.resolve.outputs.status }}
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
         with:
@@ -87,7 +101,7 @@ jobs:
             const required = {
               PROJECT_NODE_ID: process.env.PROJECT_NODE_ID,
               STATUS_FIELD_ID: process.env.STATUS_FIELD_ID,
-              PROJECT_TOKEN: process.env.PROJECT_TOKEN,
+              APP_TOKEN: process.env.APP_TOKEN,
             };
             for (const [key, value] of Object.entries(required)) {
               if (!value) {
@@ -99,10 +113,9 @@ jobs:
             const target = process.env.TARGET_STATUS;
             const prNodeId = process.env.PR_NODE_ID;
 
-            // Use a custom token so the workflow can update the Project even when
-            // GITHUB_TOKEN does not have project scope.
+            // Use the GitHub App installation token (1h, scoped to the project).
             const { graphql } = await graphql.defaults({
-              headers: { authorization: `bearer ${process.env.PROJECT_TOKEN}` },
+              headers: { authorization: `bearer ${process.env.APP_TOKEN}` },
             });
 
             // 1. Resolve the Status field options to find the option ID for TARGET_STATUS.
@@ -130,8 +143,7 @@ jobs:
               return;
             }
 
-            // 2. Find any existing draft issue / PR item on the project for this PR.
-            //    PRs are represented on Projects as Draft Issues linked via the PR's node ID.
+            // 2. Find any existing project item (PR or DraftIssue) for this PR.
             const itemQuery = await graphql(`
               query($projectId: ID!) {
                 node(id: $projectId) {
