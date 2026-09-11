@@ -29,11 +29,9 @@ $PAGES = @(
     # About profiles
     "/about/profile/real",
     "/about/profile/handle",
-    "/about/profile/AI",
 
     # About cards
     "/about/card/real",
-    "/about/card/handle",
 
     # Commission
     "/about/commission/develop",
@@ -46,12 +44,10 @@ $PAGES = @(
     # Tools
     "/tools",
     "/tools/ProtoType",
-    "/tools/ae-expression",
     "/tools/business-mail-block",
     "/tools/code-type-p5",
     "/tools/color-palette",
     "/tools/fillgen",
-    "/tools/history-quiz",
     "/tools/pi-game",
     "/tools/pomodoro",
     "/tools/qr-generator",

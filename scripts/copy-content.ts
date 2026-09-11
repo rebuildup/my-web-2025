@@ -3,7 +3,7 @@ import { copyContentDb, getFromIndex } from "@/cms/lib/content-db-manager";
 async function main() {
 	const [, , oldId, newId] = process.argv;
 	if (!oldId || !newId) {
-		console.error("Usage: tsx scripts/copy-content.ts <oldId> <newId>");
+		console.error("Usage: bun scripts/copy-content.ts <oldId> <newId>");
 		process.exit(1);
 	}
 	try {

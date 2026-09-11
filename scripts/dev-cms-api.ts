@@ -37,6 +37,10 @@ function findNewestMtimeMs(dir: string, exclude: ReadonlySet<string>): number {
 const host = process.env.CMS_API_HOST || "127.0.0.1";
 const port = process.env.CMS_API_PORT || "3001";
 const dataDir = process.env.CMS_API_DATA_DIR || "./data/db";
+// Default local dev to skipping R2 hydrate / write-back so a fresh checkout
+// boots without R2 credentials. Set `SKIP_R2=0` to force R2 sync locally
+// (requires `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`).
+const skipR2 = process.env.SKIP_R2 ?? "1";
 // The per-content CMS DBs live at `<repo>/data/contents/` and the Rust binary
 // is run from `./apps/cms-api/`'s cwd. Without an explicit override,
 // `cms_api_content_data_dir()` falls back to `cwd/data/contents` =
@@ -100,6 +104,7 @@ const child = spawn(launchSpec.command, launchSpec.args, {
 	stdio: "inherit",
 	env: {
 		...process.env,
+		SKIP_R2: skipR2,
 		CMS_API_HOST: host,
 		CMS_API_PORT: port,
 		CMS_API_DATA_DIR: dataDir,
