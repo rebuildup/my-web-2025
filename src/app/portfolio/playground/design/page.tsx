@@ -358,7 +358,7 @@ export default function DesignPlaygroundPage() {
 									onClick={() =>
 										setActiveExperiment(filteredExperiments[0]?.id)
 									}
-									className="group inline-flex items-center gap-2 rounded-md bg-stone-900 px-4 py-2.5 text-[13px] font-medium text-white shadow-sm transition-all duration-200 ease-out hover:bg-stone-800 hover:shadow-md active:scale-[0.98]"
+									className="group inline-flex items-center gap-2 rounded-md bg-stone-900 px-4 py-2.5 text-[13px] font-medium text-white shadow-sm transition-[color,background-color,box-shadow,transform] duration-200 ease-out hover:bg-stone-800 hover:shadow-md active:scale-[0.98]"
 								>
 									<Sparkles className="h-3.5 w-3.5" aria-hidden />
 									Launch first experiment
@@ -369,7 +369,7 @@ export default function DesignPlaygroundPage() {
 								</button>
 								<Link
 									href="#all-experiments"
-									className="inline-flex items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2.5 text-[13px] font-medium text-stone-700 transition-all duration-200 ease-out hover:border-stone-400 hover:bg-stone-50 active:scale-[0.98]"
+									className="inline-flex items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2.5 text-[13px] font-medium text-stone-700 transition-[color,background-color,border-color,transform] duration-200 ease-out hover:border-stone-400 hover:bg-stone-50 active:scale-[0.98]"
 								>
 									Browse library
 								</Link>
@@ -895,7 +895,7 @@ function FeaturedTile({
 		<button
 			type="button"
 			onClick={onSelect}
-			className={`group mt-6 flex w-full items-stretch gap-0 overflow-hidden rounded-lg border bg-white text-left transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg ${
+			className={`group mt-6 flex w-full items-stretch gap-0 overflow-hidden rounded-lg border bg-white text-left transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg ${
 				isActive
 					? "border-blue-600 shadow-md ring-1 ring-blue-600/20"
 					: "border-stone-200 hover:border-stone-300"
@@ -980,7 +980,7 @@ function ResourceItem({
 					/>
 				</div>
 				<ArrowRight
-					className="h-4 w-4 -translate-x-1 text-stone-300 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:text-stone-700"
+					className="h-4 w-4 -translate-x-1 text-stone-300 transition-[transform,color] duration-200 ease-out group-hover:translate-x-0 group-hover:text-stone-700"
 					aria-hidden
 				/>
 			</Link>
@@ -1004,7 +1004,7 @@ function FooterLink({
 			<span>{children}</span>
 			<span
 				aria-hidden
-				className="-translate-x-0.5 text-stone-300 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:text-stone-700"
+				className="-translate-x-0.5 text-stone-300 transition-[transform,color] duration-200 ease-out group-hover:translate-x-0 group-hover:text-stone-700"
 			>
 				→
 			</span>
