@@ -5,7 +5,7 @@ const SUBDOMAIN_REDIRECT: Record<string, string> = {
 	"portfolio.yusuke-kim.com": "/portfolio/",
 	"www.yusuke-kim.com": "/",
 	"pomodoro.yusuke-kim.com": "/tools/pomodoro/",
-	"prototype.yusuke-kim.com": "/tools/prototype/",
+	"prototype.yusuke-kim.com": "/tools/ProtoType/",
 	"samuido.yusuke-kim.com": "/about/profile/handle/",
 	"361do.yusuke-kim.com": "/about/profile/handle/",
 };
