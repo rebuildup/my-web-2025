@@ -21,7 +21,15 @@ jobs:
   create-retro:
     name: Create retro draft PR
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release-')
+    # Disabled 2026-09-12 (Sprint 2.2.0 close): has 'Duplicate header:
+    # Authorization' bug in peter-evans/create-pull-request@v6 step
+    # (line 124: `token: ${{ secrets.GITHUB_TOKEN }}` injected on top of
+    # actions/checkout@v7's auth header, see run 34661433640). Sprint 2.2.0
+    # is the final sprint — no follow-up retro auto-creation needed.
+    # Re-enable by removing this `if: false` gate after fixing the bug.
+    if: false
+    # Original conditional preserved below for reference when re-enabling.
+    # if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release-')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7

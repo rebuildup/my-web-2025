@@ -1,3 +1,5 @@
+# Disabled 2026-09-12 (Sprint 2.2.0 close): TDZ bug + project board not used. Re-enable by removing the if:false gate.
+
 name: Project board auto-sync
 
 # Keeps the GitHub Project "Status" field in sync with PR lifecycle events so the
@@ -39,9 +41,13 @@ jobs:
   sync-status:
     name: Sync Project Status
     runs-on: ubuntu-latest
-    # Limit to release-* and main base refs — feature branches targeting other
-    # branches should not move tickets on the Project board.
-    if: github.event.pull_request.base.ref == 'release-*' || github.event.pull_request.base.ref == 'main'
+    # Disabled 2026-09-12 (Sprint 2.2.0 close): TDZ bug in actions/github-script
+    # (`const { graphql } = await graphql.defaults(...)` evaluates before
+    # assignment) AND the project board is not actively used in Sprint 2.2.0.
+    # Re-enable by removing this `if: false` gate after fixing the TDZ bug.
+    if: false
+    # Original base-ref gate preserved below for reference when re-enabling.
+    # if: github.event.pull_request.base.ref == 'release-*' || github.event.pull_request.base.ref == 'main'
     steps:
       - name: Resolve target Status option
         id: resolve
