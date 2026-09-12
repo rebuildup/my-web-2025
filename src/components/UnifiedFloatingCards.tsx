@@ -535,7 +535,7 @@ export default function UnifiedFloatingCards({
 	};
 
 	return (
-		<div className="fixed inset-0 pointer-events-none z-20 overflow-hidden">
+		<div className="fixed inset-0 pointer-events-none z-20 overflow-hidden hidden md:block">
 			{cards.map((card) => renderCard(card))}
 		</div>
 	);

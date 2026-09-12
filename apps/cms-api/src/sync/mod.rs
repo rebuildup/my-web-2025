@@ -15,6 +15,41 @@ use tracing::{info, warn};
 
 pub const R2_KEY_PREFIX: &str = "contents/";
 
+/// Strip the configured R2 key prefix and return the relative path under
+/// `R2Config.local_dir`. Returns `None` for keys that don't have the prefix,
+/// resolve to an empty relative path (e.g. R2's `contents/` zero-byte
+/// "directory marker" object, which would otherwise make `hydrate` try to
+/// write 0 bytes onto `local_dir` itself and fail), or contain a traversal
+/// segment (`..`, `.`), an absolute path, or a backslash. The traversal /
+/// absolute-path check is the path-traversal guard for `hydrate`: without
+/// it, an R2 key like `contents/../../etc/passwd` would resolve to a path
+/// outside `local_dir` and overwrite arbitrary files on the host.
+pub(crate) fn rel_path_from_key(key: &str) -> Option<&str> {
+    let rel = key.strip_prefix(R2_KEY_PREFIX)?;
+    if rel.is_empty() {
+        return None;
+    }
+    if rel.starts_with('/') || rel.starts_with('\\') {
+        return None;
+    }
+    for seg in rel.split(['/', '\\']) {
+        if seg.is_empty() || seg == "." || seg == ".." {
+            return None;
+        }
+    }
+    Some(rel)
+}
+
+/// Resolve `key` to an absolute path under `config.local_dir` after the same
+/// traversal / absolute-path guard as [`rel_path_from_key`]. This is the
+/// single chokepoint `hydrate` uses to turn an attacker-controlled R2 key
+/// into a filesystem write target — every other call site that takes an
+/// R2 key as input should funnel through this helper.
+pub(crate) fn safe_local_path(root: &Path, key: &str) -> Option<PathBuf> {
+    let rel = rel_path_from_key(key)?;
+    Some(root.join(rel))
+}
+
 #[derive(Debug, Clone)]
 pub struct R2Config {
     pub bucket: String,
@@ -58,13 +93,51 @@ pub async fn hydrate(client: &S3Client, config: &R2Config) -> Result<()> {
                 Some(k) => k,
                 None => continue,
             };
-            let rel = match key.strip_prefix(R2_KEY_PREFIX) {
-                Some(r) => r,
-                None => continue,
+            let local_path = match safe_local_path(&config.local_dir, key) {
+                Some(p) => p,
+                None => {
+                    warn!(key, "R2 hydrate: refusing suspicious key");
+                    continue;
+                }
             };
-            let local_path = config.local_dir.join(rel);
             if let Some(parent) = local_path.parent() {
                 fs::create_dir_all(parent).await?;
+            }
+            // Belt-and-braces: even after the prefix + traversal guard above,
+            // resolve symlinks / canonicalise the target and confirm it stays
+            // under local_dir. Catches the case where an attacker plants a
+            // symlink inside local_dir pointing at an arbitrary directory.
+            let canon_root = match fs::canonicalize(&config.local_dir).await {
+                Ok(p) => p,
+                Err(e) => {
+                    warn!(?e, "R2 hydrate: canonicalize local_dir failed");
+                    continue;
+                }
+            };
+            match fs::canonicalize(&local_path).await {
+                Ok(canon) if canon.starts_with(&canon_root) => {}
+                Ok(canon) => {
+                    warn!(
+                        ?canon,
+                        ?canon_root,
+                        "R2 hydrate: resolved path escaped local_dir"
+                    );
+                    continue;
+                }
+                Err(_) => {
+                    // canonicalize fails for not-yet-existing paths. Try the
+                    // parent which we just created above; if that resolves
+                    // and still starts under canon_root, the missing file
+                    // will be created inside local_dir and is safe to write.
+                    let parent = local_path.parent().unwrap_or(&config.local_dir);
+                    match fs::canonicalize(parent).await {
+                        Ok(p) if p.starts_with(&canon_root) => {}
+                        _ => {
+                            warn!(?local_path, "R2 hydrate: parent canonicalize rejected");
+                            continue;
+                        }
+                    }
+                }
             }
             let body = client
                 .get_object()

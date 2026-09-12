@@ -161,6 +161,9 @@ pub fn router(content_data_dir: PathBuf) -> Router {
                 .post(create_media)
                 .delete(delete_media),
         )
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .layer(DefaultBodyLimit::max(64 * 1024 * 1024))
         .with_state(MediaState {
             content_data_dir: Arc::new(content_data_dir),
@@ -295,6 +298,26 @@ async fn get_media_or_list(
         warn!(content_db = %db_path.display(), error = %err, "failed to open per-content DB");
         MediaError::Database
     })?;
+
+    // Enforce the draft/private read boundary. The per-content DB holds one
+    // content's media + the matching `contents` row; we check that row's
+    // `status` / `visibility` before serving any media, so anonymous
+    // callers cannot read media for unpublished or private content. Admin
+    // tooling still goes through the JWT-gated write paths; this read
+    // boundary only affects the public surface.
+    let visibility: Option<(String, String)> =
+        sqlx::query_as("SELECT status, visibility FROM contents WHERE id = ? LIMIT 1")
+            .bind(query.content_id.trim())
+            .fetch_optional(&pool)
+            .await?;
+    match visibility {
+        Some((status, visibility))
+            if status == "published" && (visibility == "public" || visibility == "unlisted") =>
+        {
+            // public path
+        }
+        _ => return Err(MediaError::NotFound),
+    }
 
     if let Some(media_id) = query.media_id.as_ref() {
         let row = sqlx::query_as::<_, MediaBlobRow>(

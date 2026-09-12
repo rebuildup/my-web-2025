@@ -64,6 +64,12 @@ export class CMSApiContainer extends Container {
 			R2_SECRET_ACCESS_KEY: env.R2_SECRET_ACCESS_KEY,
 			R2_BUCKET: env.R2_BUCKET,
 			R2_ENDPOINT: env.R2_ENDPOINT,
+			// CMS API admin JWT secret — required by `require_admin` middleware
+			// (apps/cms-api/src/routes/auth.rs) for every write endpoint. Without
+			// this in the Container env, all POST/PATCH/DELETE/PUT return 401
+			// even with a valid token. Pushed via `wrangler secret put` in
+			// deploy-cloudflare.yml so the value never lands in wrangler.toml.
+			CMS_API_ADMIN_JWT_SECRET: env.CMS_API_ADMIN_JWT_SECRET,
 		};
 	}
 
@@ -95,6 +101,11 @@ export interface Env {
 	R2_SECRET_ACCESS_KEY: string;
 	R2_BUCKET: string;
 	R2_ENDPOINT: string;
+	// CMS API admin JWT secret — bound from a Workers Secret (see
+	// deploy-cloudflare.yml `wrangler secret put`). Passed into the Container
+	// startup env via `CMSApiContainer.envVars` so the Rust auth middleware
+	// (`apps/cms-api/src/routes/auth.rs`) can validate write requests.
+	CMS_API_ADMIN_JWT_SECRET: string;
 	// The Container is exposed via a Durable Object binding. The DO class
 	// (`CMSApiContainer`, defined above) extends the SDK `Container` base
 	// which wires `defaultPort` / `sleepAfter` / image build context.

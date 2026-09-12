@@ -34,7 +34,7 @@
 | パッケージ | バージョン | 用途 |
 | ---------- | ---------- | ---- |
 | @biomejs/biome | ^2.5.7 | Lint / Format (ESLint / Prettier 置換) |
-| bun | 1.3.14 (packageManager/CI固定) | パッケージマネージャ + テストランナー |
+| bun | 1.4.2 (packageManager/CI固定) | パッケージマネージャ + テストランナー |
 | knip | ^6.31.0 | 未使用コード / 依存検出 |
 | lighthouse | ^13.4.1 | パフォーマンス監査 |
 | playwright | ^1.62.1 | UI / E2E 検証 |
@@ -66,10 +66,10 @@
 
 - `bun scripts/check-env.js`: ビルド必須の env (NEXT_PUBLIC_GA_ID 等) を検査.
 - `bun scripts/copy-content-data.js`: 静的エクスポート (`out/`) 後に `data/` を同梱.
-- `bun run dev` は `bun --bun next dev` 経由. Bun 1.3.14 + Next 16.3.0 ビルドは teardown で SIGILL 132 が出る既知問題があり, デプロイ runner では exit 132 を `out/index.html` 存在条件付きで許容する (`deploy.yml` 参照).
+- `bun run dev` は `bun --bun next dev` 経由. Bun 1.4.2 + Next 16.3.0 ビルドは teardown で SIGILL 132 が出る既知問題があり, デプロイ runner では exit 132 を `out/index.html` 存在条件付きで許容する (`deploy-cloudflare.yml` / `ci.yml` 参照).
 
 ## パッケージ管理ポリシー
-- パッケージマネージャ: `bun@1.3.14` (lockfile 必須, `--frozen-lockfile` 運用).
+- パッケージマネージャ: `bun@1.4.2` (lockfile 必須, `--frozen-lockfile` 運用).
 - Lint / Format: `bun run lint` / `bun run format` (Biome).
 - テスト: `bun run test` (Bun test canonical, jest@30 は将来 fallback).
 - ビルド: `bun run build` → Next.js 静的エクスポート (`out/`) を生成.
@@ -78,8 +78,9 @@
 ## Rust CMS API
 - `apps/cms-api/Cargo.toml` に Rust 側依存を集約. ローカル検証は同ディレクトリで `cargo fmt / clippy / test`.
 - 本リポジトリの検証ゲートは Bun 側に加えて Rust 側 (`cargo fmt --all -- --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test --all-targets`) を CI で必須とする (`docs/adr/0005-rust-cms-api.md`).
+- **ローカル開発の動線**: ネイティブ (Linux / macOS) では `bun run cms-api:build` でプリビルドできる. `bun run dev:cms-api` はプリビルド済み release バイナリを起動するが、`apps/cms-api/` 配下のいずれかのソースがバイナリより新しければ `cargo run` に自動フォールバックする (stale 検出). Windows / WSL では `wslc:*` ヘルパーを従来通り利用可能. 詳細は `docs/agent/cms-native-dev.md`.
 
 ## アップグレード指針
 - **Next / React**: minor はビルド + Bun test を通した上でマージ. major は canary ブランチで検証.
 - **Tailwind v4**: PostCSS 連携は `@tailwindcss/postcss` で完結. `tailwind.config.ts` の互換性を確認.
-- **Bun**: `package.json#packageManager`、CI runner、WSL containerを `1.3.14` に固定する. ビルドのSIGILL既知問題は `docs/06_deploy.md` のartifact条件付き手順に従う.
+- **Bun**: `package.json#packageManager`、CI runner、native runner、wslc helper を `1.4.2` に固定する. ビルドのSIGILL既知問題は `docs/06_deploy.md` のartifact条件付き手順に従う.

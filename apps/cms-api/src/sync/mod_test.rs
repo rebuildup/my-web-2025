@@ -7,11 +7,79 @@
 
 use std::path::PathBuf;
 
-use crate::sync::{R2Config, SyncState, R2_KEY_PREFIX};
+use crate::sync::{rel_path_from_key, safe_local_path, R2Config, SyncState, R2_KEY_PREFIX};
 
 #[test]
 fn r2_key_prefix_matches_spec() {
     assert_eq!(R2_KEY_PREFIX, "contents/");
+}
+
+#[test]
+fn rel_path_from_key_strips_prefix() {
+    assert_eq!(
+        rel_path_from_key("contents/content-foo.db"),
+        Some("content-foo.db")
+    );
+    assert_eq!(
+        rel_path_from_key("contents/content-foo.db-wal"),
+        Some("content-foo.db-wal")
+    );
+}
+
+#[test]
+fn rel_path_from_key_rejects_unprefixed() {
+    assert_eq!(rel_path_from_key("other-prefix/foo.db"), None);
+    assert_eq!(rel_path_from_key("content/foo.db"), None);
+}
+
+#[test]
+fn rel_path_from_key_rejects_directory_marker() {
+    // The `contents/` zero-byte key (R2's "directory marker") would resolve
+    // to an empty relative path and crash `hydrate` on the `fs::write` step.
+    // We must skip it.
+    assert_eq!(rel_path_from_key("contents/"), None);
+}
+
+#[test]
+fn rel_path_from_key_rejects_traversal() {
+    // Path-traversal guard: keys carrying `..` segments must never reach the
+    // filesystem. Before the guard, `contents/../../etc/passwd` would have
+    // resolved to /etc/passwd via Path::join.
+    assert_eq!(rel_path_from_key("contents/../../etc/passwd"), None);
+    assert_eq!(rel_path_from_key("contents/foo/../../etc/passwd"), None);
+    // `.` segments are also rejected (no-op traversals are still no-ops we
+    // don't want to encourage on the production path).
+    assert_eq!(rel_path_from_key("contents/./foo.db"), None);
+}
+
+#[test]
+fn rel_path_from_key_rejects_absolute_paths() {
+    // After strip_prefix the leading `/` would let Path::join leave root
+    // entirely. Reject before that happens.
+    assert_eq!(rel_path_from_key("contents//etc/passwd"), None);
+    assert_eq!(rel_path_from_key("contents/\\windows\\system32"), None);
+}
+
+#[test]
+fn rel_path_from_key_rejects_empty_segments() {
+    // Empty segments (`foo//bar`) collapse to the same path but signal that
+    // the upstream key is malformed; rejecting them keeps the allowed key
+    // space tight.
+    assert_eq!(rel_path_from_key("contents/foo//bar.db"), None);
+}
+
+#[test]
+fn safe_local_path_joins_under_root() {
+    let root = PathBuf::from("/var/lib/cms/data");
+    let p = safe_local_path(&root, "contents/content-foo.db").unwrap();
+    assert_eq!(p, root.join("content-foo.db"));
+}
+
+#[test]
+fn safe_local_path_rejects_traversal() {
+    let root = PathBuf::from("/var/lib/cms/data");
+    assert!(safe_local_path(&root, "contents/../../etc/passwd").is_none());
+    assert!(safe_local_path(&root, "contents/foo/../bar.db").is_none());
 }
 
 #[test]

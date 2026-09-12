@@ -1,1294 +1,149 @@
 # デプロイ手順書
 
-> **目的**: GitHub Actionsで自動デプロイするための完全な手順書
-> **対象**: GCP/Linux VM (Ubuntu 22.04以上) に Next.js 静的エクスポート + Rust CMS API をデプロイ
-> **canonical workflow**: `.github/workflows/deploy.yml`
-
----
-
-## 📋 目次
-
-1. [アーキテクチャ概要](#1-アーキテクチャ概要)
-2. [初回セットアップ（VM構築時のみ）](#2-初回セットアップvm構築時のみ)
-3. [GitHub Secrets設定](#3-github-secrets設定)
-4. [デプロイ実行](#4-デプロイ実行)
-5. [nginx設定（必須）](#5-nginx設定必須)
-6. [HTTPS化（Let's Encrypt）](#6-https化lets-encrypt)
-7. [サブドメイン設定（任意）](#7-サブドメイン設定任意)
-8. [動作確認](#8-動作確認)
-9. [トラブルシューティング](#9-トラブルシューティング)
+> **目的**: GitHub Actions で Cloudflare (Workers + Container + Static Assets) へ自動デプロイする手順
+> **canonical workflow**: `.github/workflows/deploy-cloudflare.yml` (`main` push / `workflow_dispatch`)
+> **Cloudflare Pages**: Dashboard の GitHub Integration で out-of-band build (本 workflow は Pages を deploy しない)
+> **旧 VM デプロイ手順**: [`docs/archive/deploy-vm.md`](./archive/deploy-vm.md)（GCP/PM2/nginx 構成。Sprint 2.2.0 で Cloudflare へ完全移行済み）
 
 ---
 
 ## 1. アーキテクチャ概要
 
-### 構成要素
-- **フロントエンド**: Next.js 16 (`output: "export"` で生成された静的 HTML/JS を nginx から直接配信)
-- **CMS API**: Rust (axum + sqlx + tokio) バイナリを port 3001 で起動
-- **ランタイム**: Bun 1.3.14 (packageManager / CI / WSL)
-- **パッケージマネージャー**: Bun (`bun install --frozen-lockfile`)
-- **プロセス管理**: PM2 (systemd 自動起動, `interpreter: "none"` で Rust バイナリを直接実行)
-- **リバースプロキシ**: nginx (`/api/` と `/entries|markdown|media|tags|search|preview|health` を Rust API にプロキシ, それ以外は静的ファイルを配信)
-- **データベース**: SQLite (1 アイテム 1 DB, `data/contents/content-{id}.db`) を Rust API が読み書き. per-content DB は git 管理外で `data/contents/` 配下に置かれ, `deploy.yml` の `Package per-content SQLite databases` ステップで `content-data.tar.gz` に固めて VM に転送される (サーバー側のみの追加ファイルは `tar -x` が削除しないので保持される).
+### この workflow が deploy するもの
 
-### デプロイフロー (`.github/workflows/deploy.yml`)
-1. `verification` ジョブ: `bun install --frozen-lockfile` → `bun run type-check` → `bun run lint` → `bun x knip` → `bun run test` → Rust toolchain 設定 → `cargo fmt --check` → `cargo clippy -D warnings` → `cargo test`.
-2. `deploy` ジョブ: Checkout → Bun setup → `bun install --frozen-lockfile` → `bun --bun next build` (静的エクスポート `out/` 生成) → `out/` を `deployment-static.tar.gz` に固める → `data/contents/` を `content-data.tar.gz` に固める (per-content DB 同梱) → Rust toolchain 設定 → `cargo build --release` → `cms-api` バイナリを `cms-api-binary.tar.gz` に固める → SSH 経由で VM に転送 → VM 上で `out/` を差し替え + per-content DB を `$APP_DIR/data/contents/` に展開 (サーバー側追加は保持) + PM2 + nginx を再起動.
-3. Bun の静的ビルドは SIGILL 132 で teardown 失敗する既知問題があるため, `out/index.html` が存在すれば exit 132 を許容する (詳細は `deploy.yml` の `Bun Build, Static Export and Server Deploy` ジョブ内).
+- **Workers Router**: `workers/router/wrangler.toml` の `yusuke-kim-router`。`[[routes]]` で `yusuke-kim.com/api/*` と `*.yusuke-kim.com/api/*` を bind し、それ以外の静的 surface は Cloudflare Pages が担当 (Pages は out-of-band)。
+- **CMS API Container**: `apps/cms-api/Dockerfile` を `wrangler deploy` の `[[containers]]` ブロック経由で build + push (DO class `CMSApiContainer`, `instance_type = "lite"`, `max_instances = 1`)。**Container image の build は wrangler 4.x が `wrangler deploy` 内で実行する** — workflow に別 build step は存在しない (Docker Buildx step は daemon 準備のみ)。
+- **Workers Static Assets**: `[assets] directory = "../../out"`, binding `STATIC_ASSETS`。Next.js `output: "export"` で生成された `out/` を Worker 経由で serve (主に workers.dev URL / Worker 直接アクセスのフォールバック)。
+- **ランタイム**: Bun 1.4.2 (`package.json#packageManager` 固定、CI runner と同一)
+- **データ**: Cloudflare R2 bucket `cms-data` (`cms-data-dev` が preview)。Container 起動時に hydrate — **per-content `content-data.tar.gz` の packaging は存在しない** (R2 hydrate のみ)。
+- **管理 API**: 書き込みエンドポイントは `CMS_API_ADMIN_JWT_SECRET` (HS256) で認証。`wrangler secret put` で Worker Secrets に push → Container 起動時 envVars として bind (`workers/router/src/index.ts` の `CMSApiContainer` コンストラクタ経由)。
 
----
+### この workflow が deploy しないもの
 
-## 2. 初回セットアップ（VM構築時のみ）
+- **Cloudflare Pages**: out-of-band (Dashboard の GitHub Integration)。
+- **cms-api binary tar**: Rust CMS は Container image としてのみ ship され、別 tar としては package されない。
 
-### 2.1 システム更新と基本ツール
+### デプロイフロー (`.github/workflows/deploy-cloudflare.yml`)
 
-```bash
-sudo apt update && sudo apt -y upgrade
-sudo apt -y install build-essential python3 git curl unzip ca-certificates fail2ban ufw
-```
-
-**期待される出力:**
-```
-Reading package lists... Done
-Building dependency tree... Done
-...
-Setting up build-essential (12.9ubuntu3) ...
-Setting up python3 (3.10.12-1~22.04) ...
-...
-```
-
-### 2.2 デプロイユーザー作成
-
-```bash
-sudo adduser deploy
-sudo usermod -aG sudo deploy
-```
-
-**期待される出力:**
-```
-Adding user `deploy' ...
-Adding new user `deploy' (1001) with group `deploy' ...
-...
-```
-
-### 2.3 SSH鍵登録
-
-```bash
-sudo -iu deploy
-mkdir -p ~/.ssh && chmod 700 ~/.ssh
-# ここでローカルの公開鍵（gcp_deploy.pub）の内容を貼り付け
-cat >> ~/.ssh/authorized_keys
-# Ctrl+Dで終了
-chmod 600 ~/.ssh/authorized_keys
-```
-
-**確認コマンド:**
-```bash
-cat ~/.ssh/authorized_keys
-```
-
-**期待される出力:**
-```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... deploy@my-web-2025
-```
-
-### 2.4 ファイアウォール設定
-
-```bash
-sudo ufw allow OpenSSH
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw --force enable
-sudo ufw status
-```
-
-**期待される出力:**
-```
-Status: active
-
-To                         Action      From
---                         ------      ----
-OpenSSH                    ALLOW       Anywhere
-80/tcp                     ALLOW       Anywhere
-443/tcp                    ALLOW       Anywhere
-OpenSSH (v6)               ALLOW       Anywhere (v6)
-80/tcp (v6)                ALLOW       Anywhere (v6)
-443/tcp (v6)               ALLOW       Anywhere (v6)
-```
-
-### 2.5 Bun / Rust / PM2 インストール
-
-```bash
-# deployユーザーで実行
-curl -fsSL https://bun.sh/install | bash
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-bun add -g pm2
-
-# Rust toolchain (CMS API ビルドで必要)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal
-source "$HOME/.cargo/env"
-```
-
-**期待される出力:**
-```
-bun was installed successfully to ~/.bun/bin/bun
-...
-info: default toolchain set to stable
-  stable-x86_64-unknown-linux-gnu installed
-```
-
-**動作確認:**
-```bash
-bun --version
-rustc --version
-cargo --version
-pm2 --version
-```
-
-**期待される出力:**
-```
-bun 1.3.x
-rustc 1.x.x (...)
-cargo 1.x.x (...)
-5.x.x
-```
-
-### 2.6 ディレクトリ準備
-
-```bash
-sudo mkdir -p /var/www/yusuke-kim
-sudo chown deploy:deploy /var/www/yusuke-kim
-```
-
-**確認:**
-```bash
-ls -ld /var/www/yusuke-kim
-```
-
-**期待される出力:**
-```
-drwxr-xr-x 2 deploy deploy 4096 Dec 11 00:00 /var/www/yusuke-kim
-```
+1. **Checkout**: `actions/checkout@v7` (submodules: recursive)
+2. **Setup**: Bun 1.4.2 + `bun install --frozen-lockfile` + `bun --bun scripts/install-tools.ts` (workspace deps for `workers/router`)
+3. **Offline dump (best-effort)**: `bun scripts/dump-cms-index.ts` を staging Container (`$CLOUDFLARE_WORKER_STAGING_URL`) に対して実行し、`node_modules/.cache/cms-build/{cms-index,markdown-pages}.json` を materialize。**`continue-on-error: true`** (PR #433 review) — 既存 staging が 404 でも新 Container の deploy は継続する。
+4. **Build static export**: `bun run build` (offline path, `CMS_USE_RUST_API=0` + `CMS_INDEX_JSON` / `CMS_MARKDOWN_JSON` 経由) → `out/` 生成。Bun SIGILL 132 teardown は `out/index.html` 存在条件下で許容。
+5. **Docker Buildx setup**: `docker/setup-buildx-action@v3` — daemon 準備のみ。**Container image の build はここから先の `wrangler deploy` 内で実行**。
+6. **Push Workers Secrets**: `wrangler secret put` で `RESEND_API_KEY`, `RECAPTCHA_SECRET_KEY`, `X_BEARER_TOKEN`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `SENTRY_DSN`, `CMS_API_ADMIN_JWT_SECRET` を Cloudflare へ push (idempotent)。空 secret は skip + `::warning::`。
+7. **Deploy (single command)**: `./node_modules/.bin/wrangler deploy --config wrangler.toml` が Worker + Container image + Static Assets を一度に deploy。Container image build + push はこの step 内で完結。
 
 ---
 
-## 3. GitHub Secrets設定
+## 2. 必要な GitHub Secrets
 
-### 3.1 SSH鍵の生成（ローカルPC）
+| Name | 用途 | Container env? |
+|---|---|---|
+| `CLOUDFLARE_API_TOKEN` | wrangler / Cloudflare API 操作 (Workers:edit + R2:write + Account:read + Containers:write) | — |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare アカウント ID | — |
+| `R2_ACCESS_KEY_ID` | R2 認証 (CMS hydrate 用) | ✅ Container env (Worker Secrets 経由) |
+| `R2_SECRET_ACCESS_KEY` | R2 認証 | ✅ Container env |
+| `SENTRY_DSN` | エラー監視 | — |
+| `RESEND_API_KEY` | メール送信 (Worker から) | — |
+| `RECAPTCHA_SECRET_KEY` | reCAPTCHA 検証 | — |
+| `X_BEARER_TOKEN` | Twitter API | — |
+| `CMS_API_ADMIN_JWT_SECRET` | **CMS API 書き込み JWT (HS256)** — `apps/cms-api/src/routes/auth.rs` の `require_admin` middleware が検証。**Container env に bind 必須**。空だと production の全 write endpoint が 401 | ✅ Container env |
+| `NEXT_PUBLIC_GA_ID` | Next.js build env (GA) | — |
+| `NEXT_PUBLIC_SITE_URL` | Next.js build env (絶対 URL の基準) | — |
+| `CLOUDFLARE_WORKER_STAGING_URL` | offline dump が叩く staging URL | — |
 
-**PowerShell:**
-```powershell
-New-Item -ItemType Directory -Force -Path $env:USERPROFILE\.ssh | Out-Null
-ssh-keygen -t ed25519 -C "deploy@my-web-2025" -f $env:USERPROFILE\.ssh\gcp_deploy -N "" -q
-```
-
-**期待される出力:**
-```
-（出力なし - 正常に完了）
-```
-
-**確認:**
-```powershell
-Get-Content $env:USERPROFILE\.ssh\gcp_deploy.pub
-```
-
-**期待される出力:**
-```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... deploy@my-web-2025
-```
-
-### 3.2 GitHub Secrets登録
-
-GitHubリポジトリの Settings → Secrets and variables → Actions で以下を登録:
-
-| Secret名               | 値                                       | 説明                 |
-| ---------------------- | ---------------------------------------- | -------------------- |
-| `GCP_SSH_KEY`          | `~/.ssh/gcp_deploy` の**全文**（秘密鍵） | SSH接続用            |
-| `GCP_HOST`             | `34.146.209.224`                         | VMのIPアドレス       |
-| `GCP_USER`             | `deploy`                                 | SSH接続ユーザー名    |
-| `RESEND_API_KEY`       | （APIキー）                              | メール送信用（任意） |
-| `RECAPTCHA_SECRET_KEY` | （シークレットキー）                     | reCAPTCHA用（任意）  |
-| `NEXT_PUBLIC_SITE_URL` | `https://yusuke-kim.com`                 | サイトURL（必須）    |
-
-**重要**: `GCP_SSH_KEY`は秘密鍵の**全文**（`-----BEGIN OPENSSH PRIVATE KEY-----`から`-----END OPENSSH PRIVATE KEY-----`まで）をコピーしてください.
+設定場所: repo Settings → Secrets and variables → Actions
 
 ---
 
-## 4. デプロイ実行
+## 3. デプロイ実行
 
-### 4.1 自動デプロイ（推奨）
+### 自動 (push to `main`)
+`main` への merge で `deploy-cloudflare.yml` がトリガーされる。concurrency group `deploy-cloudflare-main` + `cancel-in-progress: true` で同一 main HEAD の重複実行を排除。
 
-1. GitHubリポジトリの Actions タブを開く
-2. 「Bun Build, Static Export and Server Deploy」ワークフローを選択
-3. 「Run workflow」をクリック
-4. ブランチを選択（通常は `master`）
-5. 「Run workflow」ボタンをクリック
+### 手動 (workflow_dispatch)
+GitHub Actions タブ → `Deploy Cloudflare (Workers + Container)` → Run workflow。最新の `main` HEAD を再デプロイする。
 
-**成功時の表示:**
-- ✅ `verification` ジョブが緑色 (type-check, lint, knip, test, cargo fmt/clippy/test すべて PASS)
-- ✅ `deploy` ジョブが緑色. SSH 経由で VM 上で nginx + Rust CMS API が再起動し, `http://127.0.0.1:3001/health` が 200 を返すことを確認.
-
-### 4.2 デプロイ確認
-
-**SSH経由で確認:**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 status"
-```
-
-**期待される出力:**
-```
-┌─────┬──────────────┬─────────┬─────────┬──────────┬─────────┐
-│ id  │ name         │ mode    │ ↺       │ status   │ cpu     │
-├─────┼──────────────┼─────────┼─────────┼──────────┼─────────┤
-│ 0   │ yusuke-kim   │ cluster │ 0       │ online   │ 0%      │
-└─────┴──────────────┴─────────┴─────────┴──────────┴─────────┘
-```
-
-**ローカルでの動作確認 (Rust CMS API の health):**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -s http://localhost:3001/health | jq ."
-```
-
-**期待される出力:**
-```json
-{
-  "status": "ok"
-}
-```
+### タイミング
+- 旧 staging が 404 の状態でも新 Container の deploy は止まらない (step 3 で `continue-on-error: true`)。
+- Container cold-start 初回は `/api/entries` が 503/timeout する可能性あり → 60s 待って retry。
 
 ---
 
-## 5. nginx設定（必須）
+## 4. Quick verification after deploy
 
-**重要**: この手順はデプロイ後、外部からアクセスできるようにするために**必須**です.
-
-### 5.1 nginxインストール
+デプロイ完了後、`$CLOUDFLARE_WORKER_STAGING_URL` に対して:
 
 ```bash
-sudo apt update
-sudo apt install -y nginx
+# 1. Worker Static Assets (Worker 直接 URL / /api/* 以外の Worker 経路)
+curl -sf -o /dev/null -w "%{http_code}\n" "$CLOUDFLARE_WORKER_STAGING_URL/"            # 期待: 200
+
+# 2. Worker → Container proxy (本番ドメインの /api/*)
+curl -sf "$CLOUDFLARE_WORKER_STAGING_URL/api/entries" | jq 'length'                     # 期待: 公開済みエントリ数 (>0)
+curl -sf "$CLOUDFLARE_WORKER_STAGING_URL/api/search?q=test" | jq '.results | length'    # 期待: 検索結果数
+
+# 3. 認証境界 — write / preview は JWT 必須
+curl -s -X POST  "$CLOUDFLARE_WORKER_STAGING_URL/api/entries" -d '{}' -w "\nstatus=%{http_code}\n"     # 期待: 401
+curl -s -X PATCH "$CLOUDFLARE_WORKER_STAGING_URL/api/entries/x" -w "\nstatus=%{http_code}\n"          # 期待: 401
+# Preview router exposes /api/preview/routes/:path and /api/preview/entries/:id
+# (PR #433 review: /api/preview/<bare> → 404 router, with real id → 401 without JWT).
+curl -s          "$CLOUDFLARE_WORKER_STAGING_URL/api/preview/entries/<known-id>" -w "\nstatus=%{http_code}\n"  # 期待: 401
+curl -sf -H "Authorization: Bearer $ADMIN_JWT" \
+     "$CLOUDFLARE_WORKER_STAGING_URL/api/preview/entries/<known-id>" -w "\nstatus=%{http_code}\n"             # 期待: 200
+
+# 4. Read 境界 (commit B7-B11 で draft/private GET は 404 を返す)
+curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/entries/<draft-id>" -w "\nstatus=%{http_code}\n"           # 期待: 404
+curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/markdown?id=<draft-slug>" -w "\nstatus=%{http_code}\n"      # 期待: 404
+# Rust route は `/:id` で `.png` suffix を strip しないので、`<id>.png` を付けると
+# boundary に関係なく id mismatch で 404 になる (偽陰性)。suffix なしで叩くこと。
+curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/cms/og/<draft-id>" -w "\nstatus=%{http_code}\n"         # 期待: 404
+curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/cms/media?contentId=<draft-id>" -w "\nstatus=%{http_code}\n"  # 期待: 404
 ```
 
-**期待される出力:**
-```
-Reading package lists... Done
-...
-Setting up nginx (1.18.0-6ubuntu14.4) ...
-...
-```
-
-**起動確認:**
-```bash
-sudo systemctl status nginx
-```
-
-**期待される出力:**
-```
-● nginx.service - A high performance web server and a reverse proxy server
-     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
-     Active: active (running) since ...
-```
-
-### 5.2 nginx設定ファイル作成
-
-```bash
-sudo tee /etc/nginx/sites-available/yusuke-kim > /dev/null << 'EOF'
-# Subdomain → path redirect map.
-# Sync target: keep this map aligned with the heredoc in
-# `.github/workflows/deploy.yml`. Legacy dev-only middleware
-# (middleware.ts) was removed 2026-08; the canonical subdomain
-# redirect lives here because Next.js `output: 'export'` does not
-# execute middleware at runtime.
-map $host $subdomain_redirect {
-    default "";
-    "links.yusuke-kim.com"     "/about/links/";
-    "portfolio.yusuke-kim.com" "/portfolio/";
-    "www.yusuke-kim.com"       "/";
-    "pomodoro.yusuke-kim.com"  "/tools/pomodoro/";
-    "prototype.yusuke-kim.com" "/tools/prototype/";
-    "samuido.yusuke-kim.com"   "/about/profile/handle/";
-    "361do.yusuke-kim.com"     "/about/profile/handle/";
-}
-
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    server_name yusuke-kim.com *.yusuke-kim.com _;
-
-    root /var/www/yusuke-kim/out;
-    index index.html;
-
-    access_log /var/log/nginx/yusuke-kim-access.log;
-    error_log /var/log/nginx/yusuke-kim-error.log;
-
-    # HSTS: tell browsers to never attempt HTTP for this host so
-    # Lighthouse's "is-on-https" audit does not log the initial
-    # insecure 307 redirect as a security failure.
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
-    client_max_body_size 50M;
-
-    # Next.js static export: never SPA-fallback missing RSC/chunk
-    # paths to index.html (that returns HTML where JSON is expected).
-    # When the request comes in on a mapped subdomain, redirect to
-    # the corresponding directory first; only fall back to the root
-    # page for unmapped subdomains / direct main-domain access.
-    location = / {
-        if ($subdomain_redirect) {
-            return 301 https://$host$subdomain_redirect;
-        }
-        try_files /index.html =404;
-    }
-
-    # Try the file directly first, then fall back to `<uri>/index.html`
-    # so that requests without a trailing slash (e.g. `/workshop`) are
-    # served from `out/workshop/index.html` without an external 301
-    # redirect. The previous `$uri/` form caused nginx to issue an
-    # extra redirect (and downgrade the URL to http://) which
-    # Lighthouse penalised in the "Avoid multiple page redirects"
-    # audit (~800 ms wasted on every page entry).
-    location / {
-        try_files $uri $uri/index.html $uri.html =404;
-    }
-
-    location /_next/static/ {
-        try_files $uri =404;
-        expires 1y;
-        add_header Cache-Control "public, max-age=31536000, immutable";
-    }
-
-    location /api/ {
-        proxy_pass http://127.0.0.1:3001/api/;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # Static-exported Next.js routes that share their path with a Rust CMS API
-    # endpoint (e.g. `/search` is both the in-site search page and the
-    # CMS search endpoint). The static page must win, so check the
-    # file system first and only proxy to the API when no static
-    # asset is present.
-    location ~ ^/(entries|markdown|media|tags|search|preview|health) {
-        root /var/www/yusuke-kim/out;
-        try_files $uri $uri/index.html $uri.html @cms_api;
-        expires -1;
-    }
-    location @cms_api {
-        proxy_pass http://127.0.0.1:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-EOF
-```
-
-**期待される出力:**
-```
-（出力なし - 正常に完了）
-```
-
-> 注: この nginx 設定は `deploy.yml` の SSH 経由で VM に書き込まれる内容と同一です. 手動運用時のみ直接編集し, GitHub Actions で再実行すると上書きされます.
-
-### 5.3 設定を有効化
-
-```bash
-sudo ln -sf /etc/nginx/sites-available/yusuke-kim /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
-```
-
-**確認:**
-```bash
-ls -la /etc/nginx/sites-enabled/
-```
-
-**期待される出力:**
-```
-lrwxrwxrwx 1 root root 40 Dec 11 00:00 yusuke-kim -> /etc/nginx/sites-available/yusuke-kim
-```
-
-### 5.4 設定テストとリロード
-
-```bash
-sudo nginx -t
-```
-
-**期待される出力:**
-```
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-```
-
-```bash
-sudo systemctl reload nginx
-```
-
-**期待される出力:**
-```
-（出力なし - 正常に完了）
-```
-
-### 5.5 動作確認
-
-**ローカル確認:**
-```bash
-curl -I http://localhost/
-```
-
-**期待される出力:**
-```
-HTTP/1.1 200 OK
-Server: nginx/1.18.0
-Date: ...
-Content-Type: text/html; charset=utf-8
-...
-```
-
-**外部確認（IPアドレスでアクセス）:**
-```bash
-curl -I http://34.146.209.224/
-```
-
-**期待される出力:**
-```
-HTTP/1.1 200 OK
-Server: nginx/1.18.0
-...
-```
+期待値のまとめ: Static = 200, list = 公開済み数 (>0), search = 結果数, write/preview (無 JWT) = 401, preview (admin JWT) = 200, draft/private GET = 404。
 
 ---
 
-## 6. HTTPS化（Let's Encrypt）
+## 5. ロールバック
 
-### 6.1 前提条件
-
-- ドメイン名が設定されていること（IPアドレスのみでは不可）
-- DNSのAレコードがサーバーのIPアドレスを指していること
-- ポート80と443が外部からアクセス可能であること
-
-### 6.2 certbotインストール
+直近の Worker deploy を一つ前に戻す:
 
 ```bash
-sudo apt update
-sudo apt install -y certbot python3-certbot-nginx
+cd workers/router
+./node_modules/.bin/wrangler rollback
 ```
 
-**期待される出力:**
-```
-Setting up certbot (0.40.0-1ubuntu0.1) ...
-Setting up python3-certbot-nginx (0.40.0-1ubuntu0.1) ...
-```
-
-### 6.3 証明書取得
-
-```bash
-sudo certbot --nginx -d yusuke-kim.com
-```
-
-**対話的な入力:**
-```
-Enter email address (used for urgent renewal and security notices) (Enter 'c' to cancel): your-email@example.com
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Please read the Terms of Service at
-https://letsencrypt.org/documents/LE-SA-v1.3-September-21-2022.pdf. You must
-agree in order to register with the ACME server at
-https://acme-v02.api.letsencrypt.org/directory
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-(A)gree/(C)ancel: A
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Would you be willing, once your first certificate is successfully issued, to
-share your email address with the Electronic Frontier Foundation, a founding
-partner of the Let's Encrypt project, is the United States? (Y/N): N
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Would you like to redirect HTTP traffic to HTTPS? (Y/n): Y
-```
-
-**成功時の出力:**
-```
-Successfully received certificate.
-Certificate is saved at: /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/yusuke-kim.com/privkey.pem
-This certificate expires on 2026-03-11.
-These files will be updated automatically in the background.
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Redirecting all traffic on port 80 to port 443 in /etc/nginx/sites-enabled/yusuke-kim
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Congratulations! You have successfully enabled https://yusuke-kim.com
-```
-
-### 6.4 自動更新確認
-
-```bash
-sudo certbot renew --dry-run
-```
-
-**期待される出力:**
-```
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-The dry run was successful.
-```
+DB スキーマ変更を巻き戻す場合は hotfix PR を `release-2-x-x` ベースで出し、Sprint を 1 個戻す。
 
 ---
 
-## 7. サブドメイン設定（任意）
-
-サブドメインを使って特定のページにアクセスできるようにする設定です.
-
-### 7.1 DNS設定
-
-**重要**: サブドメインのHTTPS証明書を取得する前に、必ずDNS設定を完了してください.
-
-**ネームサーバーの確認:**
-
-まず、ドメインが使用しているネームサーバーを確認してください：
-
-```bash
-nslookup -type=NS yusuke-kim.com
-```
-
-**期待される出力（Cloudflareの場合）:**
-```
-yusuke-kim.com	nameserver = gabriel.ns.cloudflare.com
-yusuke-kim.com	nameserver = mia.ns.cloudflare.com
-```
-
-**期待される出力（その他のDNSプロバイダの場合）:**
-```
-yusuke-kim.com	nameserver = ns1.example.com
-yusuke-kim.com	nameserver = ns2.example.com
-```
-
-**重要**: DNSレコードは、**実際に使用されているネームサーバー**の管理画面で設定する必要があります.ドメイン登録業者のデフォルトDNS設定画面では反映されません.
-
-#### Cloudflareを使用している場合
-
-1. [Cloudflare Dashboard](https://dash.cloudflare.com/) にログイン
-2. `yusuke-kim.com` ドメインを選択
-3. 左メニューから「DNS」→「レコード」を選択
-4. 以下のAレコードを追加（「レコードを追加」ボタンをクリック）：
-
-| サブドメイン | タイプ | 値               | 説明                                               |
-| ------------ | ------ | ---------------- | -------------------------------------------------- |
-| `links`      | A      | `34.146.209.224` | `links.yusuke-kim.com` → `/about/links`            |
-| `portfolio`  | A      | `34.146.209.224` | `portfolio.yusuke-kim.com` → `/portfolio`          |
-| `pomodoro`   | A      | `34.146.209.224` | `pomodoro.yusuke-kim.com` → `/tools/pomodoro`      |
-| `prototype`  | A      | `34.146.209.224` | `prototype.yusuke-kim.com` → `/tools/prototype`    |
-| `samuido`    | A      | `34.146.209.224` | `samuido.yusuke-kim.com` → `/about/profile/handle` |
-| `361do`      | A      | `34.146.209.224` | `361do.yusuke-kim.com` → `/about/profile/handle`   |
-
-   **設定例（Cloudflare）:**
-   - **タイプ**: A
-   - **名前**: `links`（サブドメイン名のみ、`.yusuke-kim.com`は不要）
-   - **IPv4アドレス**: `34.146.209.224`
-   - **プロキシ状態**: オフ（DNSのみ、オレンジの雲アイコンをクリックしてグレーにする）
-   - **TTL**: 自動
-
-   **注意**: Cloudflareのプロキシ（オレンジの雲）を有効にしている場合、certbotの認証が失敗する可能性があります.サブドメインのAレコードは必ず「DNSのみ」（グレーの雲）に設定してください.
-
-#### その他のDNSプロバイダを使用している場合
-
-ドメイン管理画面で、上記と同じAレコードを追加してください.
-
-**DNS反映確認:**
-```bash
-nslookup links.yusuke-kim.com
-nslookup portfolio.yusuke-kim.com
-nslookup pomodoro.yusuke-kim.com
-nslookup prototype.yusuke-kim.com
-nslookup samuido.yusuke-kim.com
-nslookup 361do.yusuke-kim.com
-```
-
-**期待される出力:**
-```
-Name:   links.yusuke-kim.com
-Address: 34.146.209.224
-
-Name:   portfolio.yusuke-kim.com
-Address: 34.146.209.224
-
-Name:   pomodoro.yusuke-kim.com
-Address: 34.146.209.224
-
-Name:   prototype.yusuke-kim.com
-Address: 34.146.209.224
-
-Name:   samuido.yusuke-kim.com
-Address: 34.146.209.224
-
-Name:   361do.yusuke-kim.com
-Address: 34.146.209.224
-```
-
-**注意**: 
-- DNS設定の反映には数分から数時間かかる場合があります.`nslookup`で確認できるようになるまで待ってから、次のステップ（証明書取得）に進んでください.
-- Cloudflareを使用している場合、プロキシ（オレンジの雲）を有効にしていると、certbotの認証が失敗する可能性があります.サブドメインのAレコードは必ず「DNSのみ」（グレーの雲）に設定してください.
-
-### 7.2 nginx設定の更新
-
-nginx設定は既にサブドメインに対応しています（セクション5.2で`server_name`に`*.yusuke-kim.com`が含まれています）.
-
-設定を確認:
-```bash
-sudo cat /etc/nginx/sites-available/yusuke-kim | grep server_name
-```
-
-**期待される出力:**
-```
-    server_name yusuke-kim.com *.yusuke-kim.com _;
-```
-
-### 7.3 アプリケーション側の設定
-
-サブドメインのリダイレクトは **nginx の `map` ディレクティブ** で処理されます（`docs/06_deploy.md` §5.2 / `.github/workflows/deploy.yml` heredoc）.
-
-**なぜ middleware ではなく nginx か**: Next.js は `output: 'export'`（静的エクスポート）でビルドされているため、本番ランタイムには Node.js サーバーが存在せず `middleware.ts` は実行されません. canonical な経路判定は nginx 側で行います.
-
-**現在のマッピング**（`$host` → `Location: https://$host$subdomain_redirect`）:
-- `links.yusuke-kim.com` → `/about/links/`
-- `portfolio.yusuke-kim.com` → `/portfolio/`
-- `www.yusuke-kim.com` → `/`
-- `pomodoro.yusuke-kim.com` → `/tools/pomodoro/`
-- `prototype.yusuke-kim.com` → `/tools/prototype/`
-- `samuido.yusuke-kim.com` → `/about/profile/handle/`
-- `361do.yusuke-kim.com` → `/about/profile/handle/`
-
-マップされていないサブドメインやメインドメインへの `/` アクセスは、引き続きルートページ（`out/index.html`）を返します.
-
-新しいサブドメインを追加する場合は、次の **2 箇所** を同期して更新してください:
-1. `.github/workflows/deploy.yml` の heredoc 内 `map $host $subdomain_redirect { ... }`
-2. `docs/06_deploy.md` §5.2 の同定義（手動運用時の参照用）
-
-### 7.4 HTTPS証明書の取得（サブドメイン用）
-
-**重要**: セクション7.1でDNS設定を完了し、DNS反映が確認できてから実行してください.
-
-#### 方法1: 一度にすべてのサブドメインで証明書を取得
-
-サブドメインにもHTTPSを設定する場合:
-
-```bash
-sudo certbot --nginx -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com -d portfolio.yusuke-kim.com -d pomodoro.yusuke-kim.com -d prototype.yusuke-kim.com -d samuido.yusuke-kim.com -d 361do.yusuke-kim.com
-```
-
-**注意**: この方法で`www.yusuke-kim.com`のserver blockが見つからないエラーが発生する場合があります.その場合は方法2を使用してください.
-
-#### 方法2: 証明書を取得してから手動でインストール（推奨）
-
-証明書の取得とインストールを分離することで、エラーを回避できます：
-
-```bash
-# 1. 証明書のみ取得（nginxへの自動インストールはスキップ）
-sudo certbot certonly --nginx -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com -d portfolio.yusuke-kim.com -d pomodoro.yusuke-kim.com -d prototype.yusuke-kim.com -d samuido.yusuke-kim.com -d 361do.yusuke-kim.com
-
-# 2. 証明書を手動でインストール
-sudo certbot install --cert-name yusuke-kim.com
-```
-
-**方法2でエラーが発生する場合（特に数字で始まるサブドメイン）:**
-
-certbotが`361do.yusuke-kim.com`などの数字で始まるサブドメインのserver blockを見つけられない場合があります.この場合、nginx設定ファイルを手動で更新する必要があります：
-
-```bash
-# 現在の設定を確認
-sudo cat /etc/nginx/sites-available/yusuke-kim
-
-# 設定ファイルを編集
-sudo nano /etc/nginx/sites-available/yusuke-kim
-```
-
-以下のように設定を更新してください：
-
-```nginx
-server {
-    listen 80;
-    server_name yusuke-kim.com www.yusuke-kim.com *.yusuke-kim.com _;
-    
-    # Let's Encrypt認証用
-    location /.well-known/acme-challenge/ {
-        root /var/www/html;
-    }
-    
-    # HTTPからHTTPSへリダイレクト
-    location / {
-        return 301 https://$host$request_uri;
-    }
-}
-
-server {
-    listen 443 ssl http2;
-    server_name yusuke-kim.com www.yusuke-kim.com *.yusuke-kim.com _;
-    
-    ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers HIGH:!aNULL:!MD5;
-    
-    access_log /var/log/nginx/yusuke-kim-access.log;
-    error_log /var/log/nginx/yusuke-kim-error.log;
-    
-    client_max_body_size 50M;
-    
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-        
-        proxy_connect_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_read_timeout 60s;
-    }
-    
-    location /api/health {
-        proxy_pass http://127.0.0.1:3000/api/health;
-        access_log off;
-    }
-}
-```
-
-設定を保存後：
-
-```bash
-# 設定をテスト
-sudo nginx -t
-
-# 問題なければリロード
-sudo systemctl reload nginx
-```
-
-**対話的な入力:**
-```
-Do you want to expand and replace this existing certificate with the new certificate?
-(E)xpand/(C)ancel: E
-```
-
-**成功時の出力:**
-```
-Successfully received certificate.
-Certificate is saved at: /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/yusuke-kim.com/privkey.pem
-This certificate expires on 2026-03-11.
-These files will be updated automatically in the background.
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Redirecting all traffic on port 80 to port 443 in /etc/nginx/sites-enabled/yusuke-kim
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Congratulations! You have successfully enabled https://yusuke-kim.com
-```
-
-**エラーが発生した場合:**
-
-DNSレコードが見つからない（NXDOMAIN）エラーが表示された場合：
-1. セクション7.1のDNS設定を確認
-2. DNS反映を待つ（数分から数時間）
-3. `nslookup`でDNS反映を確認
-4. 反映確認後に再度証明書取得を実行
-
-一部のサブドメインのみDNS設定が完了している場合、まず設定済みのサブドメインのみで証明書を取得し、後から追加することもできます：
-```bash
-# まず設定済みのサブドメインのみで証明書を取得
-sudo certbot --nginx -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com
-
-# 後から他のサブドメインを追加
-sudo certbot --nginx -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com -d portfolio.yusuke-kim.com
-```
-
-### 7.5 動作確認
-
-**サブドメインでのアクセステスト:**
-```bash
-curl -I http://links.yusuke-kim.com/
-curl -I http://portfolio.yusuke-kim.com/
-```
-
-**期待される出力（HTTP → HTTPS へ 301 リダイレクト + 対応パスへ）:**
-```
-HTTP/1.1 301 Moved Permanently
-Location: https://links.yusuke-kim.com/about/links/
-...
-```
-
-> `Location` のパス末尾スラッシュは `next.config.ts` の `trailingSlash: true` と整合します.スラッシュ無しで観測された場合は nginx 設定の `map` 定義を再同期してください.
-
-**HTTPSでの確認:**
-```bash
-curl -I https://links.yusuke-kim.com/
-curl -I https://portfolio.yusuke-kim.com/
-```
-
-**期待される出力:**
-```
-HTTP/1.1 200 OK
-Server: nginx/1.18.0
-...
-```
-
----
-
-## 8. 動作確認
-
-### 8.1 アプリケーション状態確認
-
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 status"
-```
-
-**期待される出力:**
-```
-┌─────┬──────────────┬─────────┬─────────┬──────────┬─────────┐
-│ id  │ name         │ mode    │ ↺       │ status   │ cpu     │
-├─────┼──────────────┼─────────┼─────────┼──────────┼─────────┤
-│ 0   │ yusuke-kim   │ cluster │ 0       │ online   │ 0%      │
-└─────┴──────────────┴─────────┴─────────┴──────────┴─────────┘
-```
-
-### 8.2 ヘルスチェック
-
-**ローカル:**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -s http://localhost:3000/api/health"
-```
-
-**期待される出力:**
-```json
-{"status":"ok","timestamp":"2025-12-11T00:00:00.000Z","version":"2.1.1","environment":"production"}
-```
-
-**外部（HTTP）:**
-```bash
-curl -I http://yusuke-kim.com/
-```
-
-**期待される出力:**
-```
-HTTP/1.1 301 Moved Permanently
-Server: nginx/1.18.0
-Location: https://yusuke-kim.com/
-```
-
-**外部（HTTPS）:**
-```bash
-curl -I https://yusuke-kim.com/
-```
-
-**期待される出力:**
-```
-HTTP/1.1 200 OK
-Server: nginx/1.18.0
-...
-```
-
-### 8.3 ブラウザでの確認
-
-ブラウザで `https://yusuke-kim.com` にアクセスして、サイトが正常に表示されることを確認してください.
-
----
-
-## 9. トラブルシューティング
-
-### 9.1 外部からアクセスできない
-
-**確認手順:**
-
-1. **PM2の状態確認**
-   ```bash
-   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 status"
-   ```
-   - `cms-api` が `online` であることを確認 (Rust バイナリ, interpreter `none`)
-
-2. **ローカルでの動作確認 (Rust CMS API)**
-   ```bash
-   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "curl -I http://localhost:3001/health"
-   ```
-   - HTTP 200が返ることを確認
-
-3. **nginxの状態確認**
-   ```bash
-   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "sudo systemctl status nginx"
-   ```
-   - `Active: active (running)` であることを確認
-
-4. **nginx設定確認**
-   ```bash
-   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "sudo nginx -t"
-   ```
-   - `syntax is ok` と `test is successful` が表示されることを確認
-
-5. **ファイアウォール確認**
-   ```bash
-   ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "sudo ufw status"
-   ```
-   - ポート80と443が `ALLOW` になっていることを確認
-
-6. **GCPファイアウォール確認**
-   - GCP Console → VPC network → Firewall rules
-   - `default-allow-http` (ポート80) と `default-allow-https` (ポート443) が存在することを確認
-
-### 9.2 PM2が起動しない
-
-**ログ確認:**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "pm2 logs yusuke-kim --lines 50"
-```
-
-**再起動:**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "cd /var/www/yusuke-kim && pm2 restart cms-api"
-```
-
-### 9.3 nginxエラー
-
-**エラーログ確認:**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "sudo tail -f /var/log/nginx/yusuke-kim-error.log"
-```
-
-**設定ファイル確認:**
-```bash
-ssh -i ~/.ssh/gcp_deploy deploy@34.146.209.224 "sudo cat /etc/nginx/sites-available/yusuke-kim"
-```
-
-### 9.4 証明書取得失敗
-
-**DNS確認:**
-```bash
-nslookup yusuke-kim.com
-```
-
-**期待される出力:**
-```
-Name:   yusuke-kim.com
-Address: 34.146.209.224
-```
-
-**手動で証明書取得を再試行:**
-```bash
-sudo certbot --nginx -d yusuke-kim.com --force-renewal
-```
-
-### 9.5 サブドメインが動作しない
-
-**確認手順:**
-
-1. **DNS設定確認**
-   ```bash
-   nslookup links.yusuke-kim.com
-   nslookup portfolio.yusuke-kim.com
-   nslookup pomodoro.yusuke-kim.com
-   ```
-   - IPアドレスが正しく返ることを確認
-   - `NXDOMAIN`エラーが表示される場合は、DNS設定が未完了または未反映です
-
-2. **nginx設定確認**
-   ```bash
-   sudo cat /etc/nginx/sites-available/yusuke-kim | grep server_name
-   ```
-   - `*.yusuke-kim.com`が含まれていることを確認
-
-3. **nginx `map` 定義の確認**
-   ```bash
-   sudo cat /etc/nginx/sites-available/yusuke-kim | sed -n '/map \$host \$subdomain_redirect/,/^}/p'
-   ```
-   - 期待するサブドメイン→パスの組がすべて含まれていることを確認
-   - 反映を忘れた場合は `sudo nginx -t && sudo systemctl reload nginx` を実行
-
-4. **証明書確認（HTTPSの場合）**
-   ```bash
-   sudo certbot certificates
-   ```
-   - サブドメインが証明書に含まれていることを確認
-
-### 9.6 certbotで証明書のインストールに失敗する
-
-**エラーメッセージ例:**
-```
-Could not automatically find a matching server block for www.yusuke-kim.com. Set the `server_name` directive to use the Nginx installer.
-Could not install certificate
-```
-
-**エラーメッセージ例（数字で始まるサブドメイン）:**
-```
-Could not automatically find a matching server block for 361do.yusuke-kim.com. Set the `server_name` directive to use the Nginx installer.
-```
-
-**原因:**
-- certbotが`www.yusuke-kim.com`や`361do.yusuke-kim.com`などの特定のドメインのserver blockを見つけられない
-- ワイルドカード`*.yusuke-kim.com`がcertbotに正しく認識されない
-- 特に数字で始まるサブドメイン（`361do.yusuke-kim.com`）はcertbotが認識しにくい
-
-**解決方法:**
-
-1. **証明書を手動でインストール（推奨）**
-   ```bash
-   sudo certbot install --cert-name yusuke-kim.com
-   ```
-
-2. **それでも失敗する場合、nginx設定を手動で更新**
-   
-   セクション7.4の「方法2」を参照して、nginx設定ファイルを手動で更新してください.
-
-3. **証明書が正常に取得できているか確認**
-   ```bash
-   sudo certbot certificates
-   ```
-   
-   **期待される出力:**
-   ```
-   Found the following certificates:
-     Certificate Name: yusuke-kim.com
-       Domains: yusuke-kim.com www.yusuke-kim.com portfolio.yusuke-kim.com ...
-       Expiry Date: 2026-03-11 ...
-       Certificate Path: /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem
-       Private Key Path: /etc/letsencrypt/live/yusuke-kim.com/privkey.pem
-   ```
-
-   証明書が正常に取得できていれば、nginx設定を手動で更新することでHTTPSを有効化できます.
-
-### 9.7 certbotでDNSエラー（NXDOMAIN）が発生する
-
-**エラーメッセージ例:**
-```
-Domain: 361do.yusuke-kim.com
-Type:   dns
-Detail: DNS problem: NXDOMAIN looking up A for 361do.yusuke-kim.com
-```
-
-**原因:**
-- DNSレコードが設定されていない
-- DNS設定が反映されていない（反映には数分から数時間かかる場合があります）
-
-**解決方法:**
-
-1. **DNS設定を確認**
-   - ドメイン管理画面で、セクション7.1の手順に従ってAレコードを追加
-   - すべてのサブドメインのAレコードが`34.146.209.224`を指していることを確認
-
-2. **DNS反映を待つ**
-   ```bash
-   # 反映を確認（数回実行して確認）
-   nslookup 361do.yusuke-kim.com
-   ```
-   - `Address: 34.146.209.224`が表示されるまで待つ
-
-3. **段階的に証明書を取得**
-   - すべてのサブドメインのDNSが反映されるまで待てない場合、まず設定済みのサブドメインのみで証明書を取得
-   ```bash
-   # まず設定済みのサブドメインのみで証明書を取得
-   sudo certbot --nginx -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com
-   
-   # 後から他のサブドメインを追加（DNS反映後）
-   sudo certbot --nginx --expand -d yusuke-kim.com -d www.yusuke-kim.com -d links.yusuke-kim.com -d portfolio.yusuke-kim.com
-   ```
-
-4. **証明書の確認**
-   ```bash
-   sudo certbot certificates
-   ```
-   - 取得済みの証明書に含まれるドメインを確認
-
-### 9.8 よくあるエラーと解決方法
-
-| エラー                       | 原因                              | 解決方法                   |
-| ---------------------------- | --------------------------------- | -------------------------- |
-| `502 Bad Gateway`            | PM2 (cms-api) が起動していない    | `pm2 restart cms-api`      |
-| `Connection refused`         | ポートが開いていない              | ファイアウォール設定を確認 |
-| `nginx: command not found`   | nginxがインストールされていない   | セクション5.1を実行        |
-| `certbot: command not found` | certbotがインストールされていない | セクション6.2を実行        |
-| `bun --bun next build` exit 132 (SIGILL) | Bun 1.3.14 + Next 16.3.0 既知 teardown バグ | `deploy.yml` で `out/index.html` 存在を条件に許容. ローカル再現時は同じフラグで確認. |
-
----
-
-## 📝 チェックリスト
-
-### 初回セットアップ
-- [ ] システム更新と基本ツールインストール
-- [ ] デプロイユーザー作成
-- [ ] SSH鍵登録
-- [ ] ファイアウォール設定
-- [ ] Node.js / bun / PM2 インストール
-- [ ] ディレクトリ準備
-
-### GitHub設定
-- [ ] SSH鍵生成
-- [ ] GitHub Secrets登録（GCP_SSH_KEY, GCP_HOST, GCP_USER, NEXT_PUBLIC_SITE_URL）
-
-### デプロイ後
-- [ ] nginxインストール
-- [ ] nginx設定ファイル作成
-- [ ] nginx設定有効化
-- [ ] nginx動作確認
-- [ ] 外部アクセステスト
-
-### HTTPS化（任意）
-- [ ] DNS設定確認
-- [ ] certbotインストール
-- [ ] 証明書取得
-- [ ] 自動更新確認
-
----
-
-## 🔄 更新履歴
-
-- 2025-12-11: 初版作成.nginx設定を必須手順として追加.各コマンドの期待される出力を追記.
-
-
-```
-# links.yusuke-kim.com
-server {
-        listen 443 ssl;
-        server_name links.yusuke-kim.com;
-
-        location = / {
-                return 301 https://$host/about/links/;
-        }
-
-        location / {
-                proxy_pass http://127.0.0.1:3000;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection 'upgrade';
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_cache_bypass $http_upgrade;
-        }
-
-        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf;
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-}
-# portfolio.yusuke-kim.com
-server {
-        listen 443 ssl;
-        server_name portfolio.yusuke-kim.com;
-
-        location = / {
-                return 301 https://$host/portfolio/;
-        }
-
-        location / {
-                proxy_pass http://127.0.0.1:3000;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection 'upgrade';
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_cache_bypass $http_upgrade;
-        }
-
-        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf;
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-}
-
-# pomodoro.yusuke-kim.com
-server {
-        listen 443 ssl;
-        server_name pomodoro.yusuke-kim.com;
-
-        location = / {
-                return 301 https://$host/tools/pomodoro/;
-        }
-
-        location / {
-                proxy_pass http://127.0.0.1:3000;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection 'upgrade';
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_cache_bypass $http_upgrade;
-        }
-
-        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf;
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-}
-# prototype.yusuke-kim.com
-server {
-        listen 443 ssl;
-        server_name prototype.yusuke-kim.com;
-
-        location = / {
-                return 301 https://$host/tools/ProtoType/;
-        }
-
-        location / {
-                proxy_pass http://127.0.0.1:3000;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection 'upgrade';
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_cache_bypass $http_upgrade;
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_cache_bypass $http_upgrade;
-        }
-
-        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf;
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-}
-server {
-        listen 443 ssl;
-        server_name yusuke-kim.com www.yusuke-kim.com *.yusuke-kim.com;  # または IPアドレス
-
-        location / {
-                proxy_pass http://127.0.0.1:3000;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection 'upgrade';
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_cache_bypass $http_upgrade;
-        }
-
-        ssl_certificate /etc/letsencrypt/live/yusuke-kim.com/fullchain.pem; # managed by Certbot
-        ssl_certificate_key /etc/letsencrypt/live/yusuke-kim.com/privkey.pem; # managed by Certbot
-        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-}
-server {
-        if ($host = yusuke-kim.com) {
-                return 301 https://$host$request_uri;
-        } # managed by Certbot
-
-        listen 80;
-        server_name yusuke-kim.com www.yusuke-kim.com *.yusuke-kim.com;
-        return 404; # managed by Certbot
-}
-```
+## 6. トラブルシューティング
+
+### 「Dump CMS index + markdown pages from Container」が失敗する
+- `continue-on-error: true` を設定済みなので deploy 自体は止まらない。
+- `cms-index.json` が空の場合、Static Assets は build 時に空 index を使い、リクエスト時に live Container へ fallback する。
+
+### `/api/entries` が 404 を返す
+- Worker → Container binding (`CMS_API`) の namespace を確認: `wrangler deployments list`
+- Container cold-start 中の可能性 → 60s 待って retry
+- 旧 `CmsApiContainer` (lowercase m/s) の stale namespace が残っていないか `wrangler delete --force yusuke-kim-router` で再 deploy (歴史的事案、`workers/router/wrangler.toml` 参照)
+
+### write endpoint が 401 を返す
+- `CMS_API_ADMIN_JWT_SECRET` が GitHub Secrets に入っているか確認 (`gh secret list`)
+- Cloudflare 側に secret が push されているか確認: `wrangler secret list`
+- JWT の `exp` が現在時刻より未来か (`validation.leeway = 0` なので 1 秒でも過去なら 401)
+- workflow の「Push Workers Secrets」step ログで `::warning::CMS_API_ADMIN_JWT_SECRET is empty` が出ていないか確認
+
+### preview GET も認証を要求するようになった (commit 8 で追加)
+- 想定動作。`/api/preview/routes/:path` と `/api/preview/entries/:id` は admin-only by contract。有効な JWT を `Authorization: Bearer` で送る (実 ID が必要。`/api/preview/draft-slug` のような bare path は router にマッチせず 404 を返す点に注意)。
+
+### draft/private の個別 GET が 404 を返すようになった (commit B7-B11 で追加)
+- 想定動作。`GET /api/entries/:id`, `GET /api/markdown`, `GET /api/cms/og/:id`, `GET /api/cms/media?contentId=...` は `status = 'published' AND visibility IN ('public', 'unlisted')` を満たす行のみ返す。admin でも個別 GET は 404 (admin は `list_index_admin` view 経由か、admin tools の write 応答で取得)。
+
+### `out/index.html missing after build`
+- Bun SIGILL 132 以外の本物のビルド失敗。`bun run build` をローカルで再現 (`bun --version` が 1.4.2 か確認)。
+- `.github/workflows/deploy-cloudflare.yml` の `Build Next.js static export (Workers Static Assets source)` step ログを確認。
+
+### Container image build が wrangler deploy 内で失敗する
+- Docker Buildx step が完走しているか確認 (daemon が無いと wrangler が image を build できない)。
+- `apps/cms-api/Dockerfile` のローカル build を再現: `docker build -f apps/cms-api/Dockerfile apps/cms-api`

@@ -109,6 +109,9 @@ pub fn router(pool: DbPool) -> Router {
     Router::new()
         .route("/", get(list_or_get_markdown).post(create_markdown))
         .route("/:id", patch(update_markdown).delete(delete_markdown))
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .with_state(pool)
 }
 
@@ -145,6 +148,15 @@ fn normalize_visibility(value: Option<&str>) -> &str {
     }
 }
 
+// Public GET handler for `/markdown` and `/api/markdown`. The previous
+// implementation read directly from `markdown_pages` with no
+// status/visibility filter — the list view (`list_index`) already filters,
+// but the individual read fell through to the base table, so anonymous
+// callers could scrape draft / private bodies by guessing slugs. Sprint
+// 2.2.0 close-out tightens the boundary to match `list_index`:
+// `status = 'published' AND visibility IN ('public', 'unlisted')`.
+// Internal callers (`create_markdown`, `update_markdown` after a write)
+// still use the unfiltered `get_markdown_by_id`.
 async fn list_or_get_markdown(
     pool: State<DbPool>,
     Query(query): Query<MarkdownQuery>,
@@ -170,6 +182,8 @@ async fn list_or_get_markdown(
             FROM markdown_pages
             WHERE (id = ? OR slug = ?)
               AND (? IS NULL OR entry_id = ?)
+              AND status = 'published'
+              AND visibility IN ('public', 'unlisted')
             LIMIT 1
             "#,
         )
@@ -206,6 +220,8 @@ async fn list_or_get_markdown(
             published_at
         FROM markdown_pages
         WHERE (? IS NULL OR entry_id = ?)
+          AND status = 'published'
+          AND visibility IN ('public', 'unlisted')
         ORDER BY updated_at DESC
         "#,
     )
