@@ -94,7 +94,9 @@ curl -sf -H "Authorization: Bearer $ADMIN_JWT" \
 # 4. Read 境界 (commit B7-B11 で draft/private GET は 404 を返す)
 curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/entries/<draft-id>" -w "\nstatus=%{http_code}\n"           # 期待: 404
 curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/markdown?id=<draft-slug>" -w "\nstatus=%{http_code}\n"      # 期待: 404
-curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/cms/og/<draft-id>.png" -w "\nstatus=%{http_code}\n"        # 期待: 404
+# Rust route は `/:id` で `.png` suffix を strip しないので、`<id>.png` を付けると
+# boundary に関係なく id mismatch で 404 になる (偽陰性)。suffix なしで叩くこと。
+curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/cms/og/<draft-id>" -w "\nstatus=%{http_code}\n"         # 期待: 404
 curl -s "$CLOUDFLARE_WORKER_STAGING_URL/api/cms/media?contentId=<draft-id>" -w "\nstatus=%{http_code}\n"  # 期待: 404
 ```
 
