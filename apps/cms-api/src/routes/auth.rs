@@ -9,17 +9,15 @@
 //! surfaces unpublished drafts to admins and must never be reachable
 //! anonymously.
 //!
-//! Other read endpoints (`GET /api/entries/:id`, `/api/markdown`, media) are
-//! intentionally left open in Sprint 2.2.0; draft/private boundary enforcement
-//! for those is tracked as a follow-up (list_index already restricts the
-//! default list views to `status = 'published' AND visibility IN
-//! ('public','unlisted')`, but individual GETs fall through to the base DB).
-//!
-//! TODO(follow-up): extend the `is_preview_path` carve-out (or add a parallel
-//! `is_draft_or_private_path` check) so that every handler returning
-//! `status != 'published'` or `visibility NOT IN ('public','unlisted')` rows
-//! demands a valid JWT, mirroring this preview contract. Tracked separately
-//! from PR #433 — Sprint 2.2.0 closes with the preview-only carve-out only.
+//! Other read endpoints (`GET /api/entries/:id`, `/api/markdown`,
+//! `/api/cms/og/:id`, `/api/cms/media`) are still served unauthenticated
+//! here, but each handler now applies its own
+//! `status = 'published' AND visibility IN ('public', 'unlisted')` filter
+//! in the SQL `WHERE` clause (or via a `contents` lookup before serving).
+//! Anonymous callers therefore receive 404 for draft / private rows instead
+//! of the row's full payload. This matches the boundary the `list_index`
+//! view enforces on the list endpoints; the per-row endpoints no longer
+//! fall through to the base DB.
 //!
 //! Failure modes:
 //! - Missing Authorization header → 401 `{ "error": "unauthorized" }`

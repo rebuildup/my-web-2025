@@ -303,12 +303,24 @@ fn build_entry_detail_with_metadata(base: EntryDetailRow, metadata: EntryMetadat
 
 // ============ Routes ============
 
+// The GET handler on `/entries/:id` reads individual entries directly from
+// the base `entries` table, bypassing the public-only `list_index` view.
+// Before Sprint 2.2.0 close-out, an anonymous caller could read draft /
+// private content by guessing or scraping entry IDs. The public HTTP
+// handler is now `get_entry_public`, which adds the same
+// `status = 'published' AND visibility IN ('public', 'unlisted')` filter
+// that `list_index` applies to the list view. Internal callers
+// (`create_entry`, `update_entry` after a write) still use the unfiltered
+// `get_entry` so they can fetch the row they just wrote regardless of
+// status.
 pub fn router(pool: DbPool) -> Router {
     Router::new()
         .route("/", get(list_entries).post(create_entry))
         .route(
             "/:id",
-            get(get_entry).patch(update_entry).delete(delete_entry),
+            get(get_entry_public)
+                .patch(update_entry)
+                .delete(delete_entry),
         )
         .route_layer(axum::middleware::from_fn(
             crate::routes::auth::require_admin,
@@ -470,6 +482,41 @@ async fn get_entry(
     .await?
     .ok_or(EntryError::NotFound)?;
 
+    fetch_metadata_and_render(pool, id, entry).await
+}
+
+/// Public GET handler: applies the same `status = 'published' AND visibility
+/// IN ('public', 'unlisted')` filter as the `list_index` view, so anonymous
+/// callers cannot read draft or private entries. Internal callers
+/// (`create_entry`, `update_entry`) keep using `get_entry` so the
+/// post-write return value is the row they just wrote regardless of status.
+async fn get_entry_public(
+    pool: State<DbPool>,
+    Path(id): Path<String>,
+) -> Result<Json<EntryDetail>, EntryError> {
+    let entry = sqlx::query_as::<_, EntryDetailRow>(
+        r#"
+        SELECT id, type, status, visibility, title, summary, lang, path, depth, "order",
+               parent_id, published_at, created_at, updated_at, slug
+        FROM entries
+        WHERE id = ? AND deleted_at IS NULL
+          AND status = 'published'
+          AND visibility IN ('public', 'unlisted')
+        "#,
+    )
+    .bind(&id)
+    .fetch_optional(&*pool)
+    .await?
+    .ok_or(EntryError::NotFound)?;
+
+    fetch_metadata_and_render(pool, id, entry).await
+}
+
+async fn fetch_metadata_and_render(
+    pool: State<DbPool>,
+    id: String,
+    entry: EntryDetailRow,
+) -> Result<Json<EntryDetail>, EntryError> {
     let metadata = sqlx::query_scalar::<_, String>(
         r#"
         SELECT metadata_json
