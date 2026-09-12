@@ -61,10 +61,19 @@ pub struct EntryPreview {
 
 // ============ Routes ============
 
+// Preview surfaces unpublished drafts to admins only. The Sprint 2.2.0
+// `f0f6aae2` commit added an `is_preview_path` carve-out inside
+// `require_admin`, but the carve-out was never reached because this router
+// was mounted without `require_admin` in `main.rs`. PR #433 review caught
+// that gap; the middleware is now applied here so every preview GET (and
+// any future preview write) demands a valid JWT.
 pub fn router(pool: DbPool) -> Router {
     Router::new()
         .route("/routes/:path", get(preview_route))
         .route("/entries/:id", get(preview_entry))
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .with_state(pool)
 }
 
