@@ -2,15 +2,30 @@
 //!
 //! All write endpoints (POST/PATCH/PUT/DELETE) require a valid HS256 JWT
 //! signed with `CMS_API_ADMIN_JWT_SECRET`, presented as
-//! `Authorization: Bearer <token>`. Read endpoints (GET/HEAD/OPTIONS) are
-//! served unauthenticated so the public site continues to work without
-//! tokens.
+//! `Authorization: Bearer <token>`.
+//!
+//! Read endpoints (GET/HEAD/OPTIONS) are served unauthenticated EXCEPT when
+//! the request path is under `/api/preview/` or `/preview/` — preview
+//! surfaces unpublished drafts to admins and must never be reachable
+//! anonymously.
+//!
+//! Other read endpoints (`GET /api/entries/:id`, `/api/markdown`, media) are
+//! intentionally left open in Sprint 2.2.0; draft/private boundary enforcement
+//! for those is tracked as a follow-up (list_index already restricts the
+//! default list views to `status = 'published' AND visibility IN
+//! ('public','unlisted')`, but individual GETs fall through to the base DB).
+//!
+//! TODO(follow-up): extend the `is_preview_path` carve-out (or add a parallel
+//! `is_draft_or_private_path` check) so that every handler returning
+//! `status != 'published'` or `visibility NOT IN ('public','unlisted')` rows
+//! demands a valid JWT, mirroring this preview contract. Tracked separately
+//! from PR #433 — Sprint 2.2.0 closes with the preview-only carve-out only.
 //!
 //! Failure modes:
 //! - Missing Authorization header → 401 `{ "error": "unauthorized" }`
 //! - Malformed `Bearer …` value → 401
 //! - Signature / expiry failure → 401
-//! - Read endpoints: skipped entirely (no header required)
+//! - Safe methods on non-preview paths: skipped (no header required)
 //!
 //! The secret is read from the `CMS_API_ADMIN_JWT_SECRET` env var on every
 //! request — the Container is restarted when the secret rotates, so an
@@ -55,7 +70,13 @@ pub struct AdminUser {
 /// without re-thinking auth.
 pub async fn require_admin(req: Request, next: Next) -> Response {
     let method = req.method().clone();
-    if matches!(method, Method::GET | Method::HEAD | Method::OPTIONS) {
+    let path = req.uri().path();
+    let is_safe = matches!(method, Method::GET | Method::HEAD | Method::OPTIONS);
+    let is_preview = is_preview_path(path);
+
+    // Safe methods skip auth UNLESS the path is under /preview/, which is
+    // admin-only by contract (preview surfaces unpublished drafts).
+    if is_safe && !is_preview {
         return next.run(req).await;
     }
 
@@ -111,6 +132,15 @@ fn unauthorized() -> Response {
         .into_response()
 }
 
+/// Returns true when the request path targets a preview-only endpoint.
+/// Preview surfaces are admin-only by contract and must not be reachable
+/// anonymously regardless of HTTP method.
+fn is_preview_path(path: &str) -> bool {
+    let normalized = path.trim_start_matches('/');
+    let lower = normalized.to_ascii_lowercase();
+    lower.starts_with("api/preview/") || lower.starts_with("preview/")
+}
+
 /// Extract the validated admin user from a request. Used by write handlers
 /// that want to record `created_by` / `updated_by` columns.
 #[allow(dead_code)]
@@ -155,6 +185,8 @@ mod tests {
                 "/ping",
                 get(|| async { "pong" }).post(|| async { "pong-post" }),
             )
+            .route("/api/preview/x", get(|| async { "preview-pong" }))
+            .route("/preview/x", get(|| async { "top-preview-pong" }))
             .route_layer(from_fn(require_admin))
     }
 
@@ -245,6 +277,48 @@ mod tests {
         std::env::remove_var("CMS_API_ADMIN_JWT_SECRET");
         let resp = test_router()
             .oneshot(HttpRequest::post("/ping").body(Body::empty()).unwrap())
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), AxStatus::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
+    async fn preview_get_requires_jwt() {
+        std::env::set_var("CMS_API_ADMIN_JWT_SECRET", TEST_SECRET);
+        let resp = test_router()
+            .oneshot(
+                HttpRequest::get("/api/preview/x")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), AxStatus::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
+    async fn preview_get_with_jwt_passes() {
+        std::env::set_var("CMS_API_ADMIN_JWT_SECRET", TEST_SECRET);
+        let token = mint_token(60);
+        let resp = test_router()
+            .oneshot(
+                HttpRequest::get("/api/preview/x")
+                    .header(header::AUTHORIZATION, format!("Bearer {token}"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), AxStatus::OK);
+    }
+
+    #[tokio::test]
+    async fn preview_top_level_path_also_requires_jwt() {
+        std::env::set_var("CMS_API_ADMIN_JWT_SECRET", TEST_SECRET);
+        // /preview/x (no /api prefix) must also require auth — the carve-out
+        // applies regardless of whether /api is present in the path.
+        let resp = test_router()
+            .oneshot(HttpRequest::get("/preview/x").body(Body::empty()).unwrap())
             .await
             .unwrap();
         assert_eq!(resp.status(), AxStatus::UNAUTHORIZED);
