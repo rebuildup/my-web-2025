@@ -178,6 +178,8 @@ async fn fetch_entry(pool: &SqlitePool, id: &str) -> Option<EntryData> {
                  WHERE ct.content_id = c.id) AS tags
         FROM contents c
         WHERE c.id = ?
+          AND c.status = 'published'
+          AND c.visibility IN ('public', 'unlisted')
         "#,
     )
     .bind(id)
