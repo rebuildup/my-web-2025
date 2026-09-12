@@ -1,11 +1,11 @@
-# Cloudflare 移行ステータス (2026-08 in progress)
+# Cloudflare 移行ステータス (2026-09 Sprint 2.2.0 close — completed)
 
 > **目的**: yusuke-kim.com の GCP VM + nginx + PM2 構成から Cloudflare への移行の **現在の状態 / 人間が行うべき作業 / 次フェーズで自動化される作業** の一覧.
 >
 > **canonical 仕様**: [`docs/superpowers/specs/2026-08-26-cloudflare-deploy-design.md`](superpowers/specs/2026-08-26-cloudflare-deploy-design.md)
-> **decision**: [ADR-0014](adr/0014-cloudflare-deploy.md) (Accepted, supersedes [ADR-0006](adr/0006-static-export-nginx-deploy.md) once Phase D completes)
-> **plan**: [`docs/superpowers/plans/2026-08-26-cloudflare-deploy.md`](superpowers/plans/2026-08-26-cloudflare-deploy.md) (35 tasks across 4 phases)
-> **branch**: `develop`
+> **decision**: [ADR-0014](adr/0014-cloudflare-deploy.md) (Accepted; supersedes [ADR-0006](adr/0006-static-export-nginx-deploy.md) — VM 構成は historical)
+> **plan**: [`docs/superpowers/plans/2026-08-26-cloudflare-deploy.md`](superpowers/plans/2026-08-26-cloudflare-deploy.md) (35 tasks across 4 phases — Phase A〜C completed in 2.2.0)
+> **branch**: `release-2-2-0` (Sprint 2.2.0 close で main へ squash-merge 予定)
 
 ## 1. 目標 (再掲)
 
@@ -28,14 +28,14 @@ Workers Router の `wrangler.toml` で `max_instances = 1` を構造的に強制
 
 ## 3. 現状のタスク進捗
 
-進捗は SDD ledger にある: [`.superpowers/sdd/2026-08-26-cloudflare-deploy/progress.md`](../.superpowers/sdd/2026-08-26-cloudflare-deploy/progress.md). Phase A のうち、AI エージェントが実行可能な 4 タスクは green.
+進捗は SDD ledger にある: [`.superpowers/sdd/2026-08-26-cloudflare-deploy/progress.md`](../.superpowers/sdd/2026-08-26-cloudflare-deploy/progress.md). Sprint 2.2.0 close 時点 (2026-09-12) のステータス:
 
 | Phase | 内容 | 進捗 |
 |---|---|---|
-| A | foundation (ADR, AGENTS.md, env 整備) | 4/8 完了 (Tasks 5-8 は手動) |
-| B | implementation (Rust sync, Workers, Dockerfile, build script) | 0/13 (Tasks 9-21) |
-| C | cutover (deploy + DNS switch) | 0/8 (Tasks 22-29) |
-| D | decommission (GCP 撤去) | 0/6 (Tasks 30-35) |
+| A | foundation (ADR, AGENTS.md, env 整備) | **8/8 完了** (Tasks 5-8 は手動運用で消化) |
+| B | implementation (Rust sync, Workers, Dockerfile, build script) | **13/13 完了** (Sprint 2.1.0 で実装) |
+| C | cutover (deploy + DNS switch) | **8/8 完了** (Sprint 2.2.0 で Cloudflare-only deploy 確定) |
+| D | decommission (GCP 撤去) | **historical / deferred**: サイトは Sprint 2.2.0 で公開終了予定のため GCP VM 撤去は別 follow-up チケットで扱う |
 
 ### 完了 (コミット済)
 
@@ -108,7 +108,7 @@ aws s3 ls "s3://cms-data/contents/" --endpoint-url "$AWS_ENDPOINT_URL" --recursi
    - Build command: `bun run build` (Task 21 で `bun run build:cloudflare` に切替)
    - Build output directory: `out`
    - Root directory: `/`
-   - Env var: `BUN_VERSION=1.3.14`
+   - Env var: `BUN_VERSION=1.4.2`
 3. Save and Deploy. Bun が見つからない等のエラーが出たら build command の先頭に下記を足して再 deploy:
    ```bash
    echo "=== Installing Bun ===" && curl -fsSL https://bun.sh/install | bash && export PATH="$HOME/.bun/bin:$PATH" && bun --version && \

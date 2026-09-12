@@ -8,14 +8,14 @@ WSL や Docker を使わず、ホスト OS (Linux / macOS / WSL 内のディス�
 
 | 項目 | 推奨バージョン | 補足 |
 | --- | --- | --- |
-| Bun | `1.3.14` (`package.json#packageManager` 固定) | CI / wslc container と同一. |
+| Bun | `1.4.2` (`package.json#packageManager` 固定) | CI / wslc container と同一. |
 | Rust | stable toolchain (`rustup` 由来) | `apps/cms-api/rust-toolchain.toml` は stable 指定. |
 | SQLite | 不要 (Rust バイナリが `rusqlite` / `sqlx` を内包) | `data/contents/*.db` は Rust 側が読み書き. |
 | `OPENSSL` 等のシステムライブラリ | 既定で OK | macOS は Command Line Tools, Debian 系は `build-essential` があれば十分. |
 
 ### Rust ツールチェーンのインストール
 
-`docs/06_deploy.md` §2.5 のコマンドをローカル用にそのまま使う:
+`docs/archive/deploy-vm.md` §2.5 (旧 VM デプロイ手順) の Rust toolchain install コマンドをローカル用にそのまま使う:
 
 ```bash
 # Linux / macOS / WSL 共通
@@ -132,7 +132,7 @@ cargo の target triplet が host OS に固定されるため不可. macOS ↔ L
 
 - **Windows host + WSL container でコンテナ型開発が好み** → 従来通り `wslc:pull` / `wslc:run`.
 - **ネイティブ Linux / macOS / WSL dist で直接 cargo** → このドキュメントの `cms-api:build` + `dev:cms-api`.
-- **本番 VM (Linux) で systemd / PM2 から cargo バイナリを実行** → `docs/06_deploy.md` §2.5 経由の rustup + release バイナリ運用, これは本ドキュメントと同一.
+- **本番 VM (Linux) で systemd / PM2 から cargo バイナリを実行** → `docs/archive/deploy-vm.md` §2.5 経由の rustup + release バイナリ運用 (historical), これは本ドキュメントと同一.
 
 両者は共存可能で, チームが混在していても README と `package.json#scripts` を見ればどちらかを選べる.
 
@@ -140,7 +140,7 @@ cargo の target triplet が host OS に固定されるため不可. macOS ↔ L
 
 - `docs/agent/onboarding.md` — 最短セットアップ (Bun 導入 → `bun run dev`).
 - `docs/agent/env-management.md` — `.env*` の扱い (clone 方法によらず `cp .env.example .env` が必要).
-- `docs/06_deploy.md` §2.5 — Rust toolchain install の本番 VM 用レシピ (ローカル流用可).
-- `docs/06_deploy.md` — 本番デプロイ全体.
+- `docs/archive/deploy-vm.md` §2.5 — Rust toolchain install の本番 VM 用レシピ (ローカル流用可, historical).
+- `docs/06_deploy.md` — 現行の Cloudflare デプロイ手順 (canonical).
 - `.claude/skills/deploy-check/SKILL.md` — リリース前検証 gate.
 - `AGENTS.md` — プロジェクト全体の境界 / SoT.
