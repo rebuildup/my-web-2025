@@ -164,14 +164,23 @@ async function cachedProxy(
 	env: Env,
 	ctx: ExecutionContext,
 ): Promise<Response> {
+	const url = new URL(req.url);
+	// Health checks must never be cached: load balancers and Cloudflare's
+	// own synthetic monitors hit this endpoint on every probe and would
+	// otherwise see a stale `OK-v4` for up to 60 s after the Container
+	// had already crashed. Skipping `caches.default` keeps the response
+	// real-time without giving up the 60 s caching for `/api/entries`
+	// and friends.
+	const cacheable = req.method === "GET" && url.pathname !== "/api/health";
+
 	const cache = caches.default;
-	if (req.method === "GET") {
+	if (cacheable) {
 		const cached = await cache.match(req);
 		if (cached) return cached;
 	}
 	const container = getContainerStub(env.CMS_API, CMS_API_INSTANCE);
 	const resp = await container.fetch(req);
-	if (resp.status === 200 && req.method === "GET") {
+	if (cacheable && resp.status === 200) {
 		// `Response.headers` is immutable in the Workers runtime; `.clone()`
 		// duplicates the body stream but the headers stay frozen. To rewrite
 		// `Cache-Control` we have to build a fresh Response from the cloned

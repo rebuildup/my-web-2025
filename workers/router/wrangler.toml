@@ -15,6 +15,19 @@ R2_ENDPOINT = "https://c6ab6651a5d4d6d0d07686bbd3c3d56f.r2.cloudflarestorage.com
 [assets]
 directory = "../../out"
 binding = "STATIC_ASSETS"
+# Workers Static Assets is asset-first by default — a matching `out/api/*`
+# file would be served before the Worker script runs. With `force-static`
+# legacy route handlers in the static export (notably `src/app/api/health/
+# route.ts`, which embeds the build-time `package.json#version`), that
+# means `/api/health` was returning the cached 2.1.1 JSON instead of
+# reaching `cachedProxy` → Container → `OK-v4`. Routing every `/api/*`
+# through the Worker first guarantees the documented contract — "every
+# CMS / monitoring / health request goes to the Rust Container" — holds
+# at the CDN-routing layer, not just in our handler.
+# Static surface (`/`, `/about`, `/portfolio`, …) keeps asset-first
+# behaviour so HTML/CSS/JS/images keep streaming from the bundle.
+# Docs: https://developers.cloudflare.com/workers/static-assets/routing/worker-script/
+run_worker_first = ["/api/*"]
 
 [[r2_buckets]]
 binding = "CMS_DATA"
