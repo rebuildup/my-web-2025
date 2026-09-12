@@ -323,13 +323,10 @@ function initPerContentDb(target: string): void {
  * Inspect the column set of a table in `db`. Returns the column names in the
  * order SQLite reports them (insertion order in the CREATE TABLE statement).
  */
-function tableColumns(
-	db: Database,
-	table: string,
-): string[] {
-	const info = db
-		.query(`PRAGMA table_info(${table})`)
-		.all() as Array<{ name: string }>;
+function tableColumns(db: Database, table: string): string[] {
+	const info = db.query(`PRAGMA table_info(${table})`).all() as Array<{
+		name: string;
+	}>;
 	return info.map((row) => row.name);
 }
 
@@ -378,9 +375,7 @@ function copySideRows(
 			// Build a parameterized query that selects rows where any FK column
 			// matches contentId. content_relations spans source_id/target_id; the
 			// others are just content_id.
-			const fkClause = spec.fkColumns
-				.map((c) => `${c} = ?`)
-				.join(" OR ");
+			const fkClause = spec.fkColumns.map((c) => `${c} = ?`).join(" OR ");
 			const selectSql = `SELECT * FROM ${table} WHERE ${fkClause}`;
 
 			let rows: Record<string, unknown>[];
