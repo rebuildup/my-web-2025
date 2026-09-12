@@ -17,11 +17,13 @@
  *    `data/db/*.db` and any file matching `data/contents/legacy*.db`).
  * 2. For each legacy DB, reads the `contents` table and splits every row into
  *    its own per-content DB at `data/contents/content-{id}.db` using the schema
- *    defined by `src/cms/lib/content-db-manager.ts`.
- * 3. Triggers FTS5 rebuild on each new per-content DB (the triggers in the
- *    schema init keep the FTS5 index aligned with the content rows; this script
- *    also issues a manual `INSERT INTO contents_fts(contents_fts) VALUES('rebuild')`
- *    as a belt-and-suspenders safety pass).
+ *    defined by `src/cms/lib/content-db-manager.ts:initializeContentDbSchema`.
+ * 3. Triggers FTS5 rebuild on each new per-content DB. The application code
+ *    refreshes the FTS row from `saveFullContent` / `saveMarkdownPage`; we do
+ *    NOT issue `INSERT INTO contents_fts(contents_fts) VALUES('rebuild')` here
+ *    because Bun SQLite FTS5 external-content xUpdate raises SQLITE_CORRUPT_VTAB
+ *    when a single statement issues both DELETE and INSERT against the same
+ *    virtual table (see comment in `content-db-manager.ts` line 251-255).
  * 4. After successful migration, moves the legacy DB (and `-shm`/`-wal` siblings)
  *    to `data/contents/_legacy/` so the original is preserved in git history
  *    rather than destroyed.
@@ -44,6 +46,20 @@
  * - [x] FTS5 index regenerated
  * - [x] Script lives at `scripts/migrate-legacy-cms-db.ts`
  * - [x] Original DBs moved to `data/contents/_legacy/` on success
+ *
+ * Schema notes
+ * ------------
+ * Per-content side tables use a mix of FK column names that this script must
+ * respect:
+ *   - content_tags    : `content_id`
+ *   - content_relations: `source_id` OR `target_id` (bidirectional)
+ *   - content_assets  : `content_id`
+ *   - content_links   : `content_id`
+ * Each table also carries an AUTOINCREMENT `id` (except `content_tags` which
+ * has a composite PK on `(content_id, tag)`). The INSERT statement built by
+ * this script only writes columns that exist in BOTH the source legacy row
+ * AND the target per-content schema; AUTOINCREMENT `id` columns are skipped so
+ * SQLite assigns fresh rowids.
  */
 
 import { Database } from "bun:sqlite";
@@ -74,87 +90,155 @@ interface MigrationReport {
 	errors: string[];
 }
 
-/** Per-content DB schema, kept in sync with src/cms/lib/content-db-manager.ts. */
+/**
+ * Per-content DB schema, kept in sync with
+ * `src/cms/lib/content-db-manager.ts:initializeContentDbSchema`.
+ *
+ * This MUST stay byte-identical to the production schema initializer — any
+ * mismatch risks runtime errors when the per-content DB is later opened by
+ * `content-db-manager.ts`.
+ */
 const SCHEMA_STATEMENTS = [
 	`CREATE TABLE IF NOT EXISTS contents (
 		id TEXT PRIMARY KEY,
-		slug TEXT,
-		lang TEXT,
-		path TEXT,
-		depth INTEGER,
-		"order" INTEGER,
-		parent_id TEXT,
-		type TEXT,
-		status TEXT,
-		visibility TEXT,
-		title TEXT,
+		title TEXT NOT NULL,
+		public_url TEXT,
 		summary TEXT,
-		body TEXT,
-		thumbnail TEXT,
+		lang TEXT DEFAULT 'ja',
+		parent_id TEXT,
+		ancestor_ids TEXT,
+		path TEXT,
+		depth INTEGER DEFAULT 0,
+		"order" INTEGER DEFAULT 0,
+		child_count INTEGER DEFAULT 0,
+		visibility TEXT DEFAULT 'draft' CHECK(visibility IN ('public', 'unlisted', 'private', 'draft')),
+		status TEXT DEFAULT 'draft' CHECK(status IN ('draft', 'published', 'archived')),
 		published_at TEXT,
-		updated_at TEXT,
-		metadata TEXT,
+		unpublished_at TEXT,
+		search_full_text TEXT,
+		search_tokens TEXT,
+		version INTEGER DEFAULT 1,
+		version_latest_id TEXT,
+		version_previous_id TEXT,
+		version_history_ref TEXT,
+		permissions_readers TEXT,
+		permissions_editors TEXT,
+		permissions_owner TEXT,
+		thumbnails TEXT,
+		searchable TEXT,
+		i18n TEXT,
+		seo TEXT,
+		cache TEXT,
+		private_data TEXT,
 		ext TEXT,
-		version INTEGER NOT NULL DEFAULT 1
+		created_at TEXT NOT NULL,
+		updated_at TEXT NOT NULL,
+		last_accessed_at TEXT
 	)`,
 	`CREATE INDEX IF NOT EXISTS idx_contents_status ON contents(status)`,
 	`CREATE INDEX IF NOT EXISTS idx_contents_visibility ON contents(visibility)`,
 	`CREATE INDEX IF NOT EXISTS idx_contents_published_at ON contents(published_at)`,
+	`CREATE INDEX IF NOT EXISTS idx_contents_parent ON contents(parent_id)`,
+	`CREATE INDEX IF NOT EXISTS idx_contents_path ON contents(path)`,
 	`CREATE TABLE IF NOT EXISTS content_tags (
 		content_id TEXT NOT NULL,
 		tag TEXT NOT NULL,
-		PRIMARY KEY (content_id, tag)
+		PRIMARY KEY (content_id, tag),
+		FOREIGN KEY (content_id) REFERENCES contents(id) ON DELETE CASCADE
 	)`,
 	`CREATE INDEX IF NOT EXISTS idx_content_tags_tag ON content_tags(tag)`,
 	`CREATE TABLE IF NOT EXISTS content_relations (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		source_id TEXT NOT NULL,
 		target_id TEXT NOT NULL,
-		relation TEXT NOT NULL,
-		PRIMARY KEY (source_id, target_id, relation)
+		type TEXT NOT NULL,
+		bidirectional INTEGER DEFAULT 0,
+		weight REAL DEFAULT 1.0,
+		meta TEXT,
+		FOREIGN KEY (source_id) REFERENCES contents(id) ON DELETE CASCADE,
+		FOREIGN KEY (target_id) REFERENCES contents(id) ON DELETE CASCADE
 	)`,
 	`CREATE INDEX IF NOT EXISTS idx_content_relations_source ON content_relations(source_id)`,
 	`CREATE INDEX IF NOT EXISTS idx_content_relations_target ON content_relations(target_id)`,
 	`CREATE TABLE IF NOT EXISTS content_assets (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		content_id TEXT NOT NULL,
-		asset_id TEXT NOT NULL,
-		src TEXT,
-		kind TEXT,
-		role TEXT,
-		order_index INTEGER,
-		metadata TEXT,
-		PRIMARY KEY (content_id, asset_id)
+		src TEXT NOT NULL,
+		type TEXT,
+		width INTEGER,
+		height INTEGER,
+		alt TEXT,
+		meta TEXT,
+		"order" INTEGER DEFAULT 0,
+		FOREIGN KEY (content_id) REFERENCES contents(id) ON DELETE CASCADE
 	)`,
 	`CREATE INDEX IF NOT EXISTS idx_content_assets_content ON content_assets(content_id)`,
 	`CREATE TABLE IF NOT EXISTS content_links (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		content_id TEXT NOT NULL,
 		href TEXT NOT NULL,
 		label TEXT,
-		kind TEXT,
-		order_index INTEGER,
-		PRIMARY KEY (content_id, href)
+		rel TEXT,
+		is_primary INTEGER DEFAULT 0,
+		description TEXT,
+		"order" INTEGER DEFAULT 0,
+		FOREIGN KEY (content_id) REFERENCES contents(id) ON DELETE CASCADE
 	)`,
 	`CREATE INDEX IF NOT EXISTS idx_content_links_content ON content_links(content_id)`,
 	`CREATE VIRTUAL TABLE IF NOT EXISTS contents_fts USING fts5(
-		title, summary, body, tags, ext,
-		content='contents', content_rowid='rowid'
+		id UNINDEXED,
+		title,
+		summary,
+		search_full_text,
+		content='contents',
+		content_rowid=rowid
 	)`,
 	`CREATE TRIGGER IF NOT EXISTS contents_fts_insert AFTER INSERT ON contents BEGIN
-		INSERT INTO contents_fts(rowid, title, summary, body, tags, ext)
-		VALUES (new.rowid, new.title, new.summary, new.body, '', new.ext);
+		INSERT INTO contents_fts(rowid, id, title, summary, search_full_text)
+		VALUES (new.rowid, new.id, new.title, new.summary, new.search_full_text);
 	END`,
 	`CREATE TRIGGER IF NOT EXISTS contents_fts_delete AFTER DELETE ON contents BEGIN
-		INSERT INTO contents_fts(contents_fts, rowid, title, summary, body, tags, ext)
-		VALUES('delete', old.rowid, old.title, old.summary, old.body, '', old.ext);
+		DELETE FROM contents_fts WHERE rowid = old.rowid;
 	END`,
+	// NOTE: there is intentionally NO contents_fts_update trigger — see header.
 ];
 
-/** Tables in the legacy DB to copy as side-tables for each per-content DB. */
-const SIDE_TABLES = [
-	"content_tags",
-	"content_relations",
-	"content_assets",
-	"content_links",
-];
+/**
+ * Side tables that hold N rows per content_id. Schema must match the CREATE
+ * TABLE statements above.
+ *
+ * `pk`        — primary key column list (used as the upsert conflict target).
+ * `fkColumns` — WHERE-clause columns that reference `contents.id`. For
+ *               content_relations we must scan BOTH sides because the table is
+ *               bidirectional. For the rest it is just `content_id`.
+ * `skipCols`  — columns to omit from the INSERT (AUTOINCREMENT ids; the rowid
+ *               is reassigned by SQLite on insert).
+ */
+const SIDE_TABLES: Record<
+	string,
+	{ pk: string[]; fkColumns: string[]; skipCols: string[] }
+> = {
+	content_tags: {
+		pk: ["content_id", "tag"],
+		fkColumns: ["content_id"],
+		skipCols: [],
+	},
+	content_relations: {
+		pk: ["id"],
+		fkColumns: ["source_id", "target_id"],
+		skipCols: ["id"],
+	},
+	content_assets: {
+		pk: ["id"],
+		fkColumns: ["content_id"],
+		skipCols: ["id"],
+	},
+	content_links: {
+		pk: ["id"],
+		fkColumns: ["content_id"],
+		skipCols: ["id"],
+	},
+};
 
 function log(msg: string): void {
 	console.log(`[migrate-legacy] ${msg}`);
@@ -235,39 +319,106 @@ function initPerContentDb(target: string): void {
 	}
 }
 
+/**
+ * Inspect the column set of a table in `db`. Returns the column names in the
+ * order SQLite reports them (insertion order in the CREATE TABLE statement).
+ */
+function tableColumns(
+	db: Database,
+	table: string,
+): string[] {
+	const info = db
+		.query(`PRAGMA table_info(${table})`)
+		.all() as Array<{ name: string }>;
+	return info.map((row) => row.name);
+}
+
+/**
+ * Intersect the column lists of source.legacy.{table} and target.perContent.{table},
+ * preserve the target's column order, and drop any column listed in `skipCols`.
+ * If the source table does not exist or no overlapping columns remain, returns
+ * an empty list and the caller skips the migration for that table.
+ */
+function commonColumns(
+	source: Database,
+	target: Database,
+	table: string,
+	skipCols: string[],
+): string[] {
+	let sourceCols: string[];
+	try {
+		sourceCols = tableColumns(source, table);
+	} catch {
+		return [];
+	}
+	let targetCols: string[];
+	try {
+		targetCols = tableColumns(target, table);
+	} catch {
+		return [];
+	}
+	const sourceSet = new Set(sourceCols);
+	const skip = new Set(skipCols);
+	return targetCols.filter((c) => sourceSet.has(c) && !skip.has(c));
+}
+
 function copySideRows(
 	legacy: Database,
 	contentId: string,
 	target: string,
-): void {
+): { copied: Record<string, number>; errors: string[] } {
+	const summary: Record<string, number> = {};
+	const errors: string[] = [];
 	const db = new Database(target);
 	try {
-		for (const table of SIDE_TABLES) {
-			const rows = legacy
-				.query(`SELECT * FROM ${table} WHERE content_id = ?`)
-				.all(contentId) as Record<string, unknown>[];
-			if (rows.length === 0) continue;
-			const cols = Object.keys(rows[0]);
-			const placeholders = cols.map(() => "?").join(",");
-			const stmt = db.prepare(
-				`INSERT OR REPLACE INTO ${table} (${cols.join(",")}) VALUES (${placeholders})`,
-			);
-			for (const row of rows) {
-				stmt.run(...cols.map((c) => row[c] as never));
+		for (const [table, spec] of Object.entries(SIDE_TABLES)) {
+			const cols = commonColumns(legacy, db, table, spec.skipCols);
+			if (cols.length === 0) continue;
+
+			// Build a parameterized query that selects rows where any FK column
+			// matches contentId. content_relations spans source_id/target_id; the
+			// others are just content_id.
+			const fkClause = spec.fkColumns
+				.map((c) => `${c} = ?`)
+				.join(" OR ");
+			const selectSql = `SELECT * FROM ${table} WHERE ${fkClause}`;
+
+			let rows: Record<string, unknown>[];
+			try {
+				rows = legacy
+					.query(selectSql)
+					.all(...spec.fkColumns.map(() => contentId)) as Record<
+					string,
+					unknown
+				>[];
+			} catch (e) {
+				errors.push(`${table} select: ${(e as Error).message}`);
+				continue;
 			}
+
+			if (rows.length === 0) {
+				summary[table] = 0;
+				continue;
+			}
+
+			const placeholders = cols.map(() => "?").join(",");
+			const insertSql = `INSERT INTO ${table} (${cols.join(",")}) VALUES (${placeholders})`;
+			const stmt = db.prepare(insertSql);
+			let inserted = 0;
+			for (const row of rows) {
+				try {
+					stmt.run(...cols.map((c) => row[c] as never));
+					inserted++;
+				} catch (e) {
+					errors.push(`${table} row: ${(e as Error).message}`);
+				}
+			}
+			summary[table] = inserted;
 		}
 	} finally {
 		db.close();
 	}
-}
-
-function rebuildFts(target: string): void {
-	const db = new Database(target);
-	try {
-		db.exec("INSERT INTO contents_fts(contents_fts) VALUES('rebuild')");
-	} finally {
-		db.close();
-	}
+	return { copied: summary, errors };
 }
 
 function migrateLegacyDb(legacyPath: string): MigrationReport {
@@ -325,20 +476,46 @@ function migrateLegacyDb(legacyPath: string): MigrationReport {
 
 		try {
 			initPerContentDb(target);
-			const targetDb = new Database(target);
-			try {
-				const cols = Object.keys(row).filter((c) => c !== "rowid");
-				const placeholders = cols.map(() => "?").join(",");
-				targetDb
-					.prepare(
-						`INSERT OR REPLACE INTO contents (${cols.join(",")}) VALUES (${placeholders})`,
-					)
-					.run(...cols.map((c) => row[c] as never));
-			} finally {
-				targetDb.close();
+
+			const targetCols = (() => {
+				const tmp = new Database(target);
+				try {
+					return tableColumns(tmp, "contents");
+				} finally {
+					tmp.close();
+				}
+			})();
+
+			// Insert the contents row. Intersect row keys with the target schema
+			// so legacy rows with extra columns do not break the insert.
+			const contentsCols = Object.keys(row).filter(
+				(c) => c !== "rowid" && targetCols.includes(c),
+			);
+			if (!contentsCols.includes("id")) {
+				throw new Error("legacy row is missing required 'id' column");
 			}
-			copySideRows(legacy, id, target);
-			rebuildFts(target);
+			const placeholders = contentsCols.map(() => "?").join(",");
+			{
+				const targetDb = new Database(target);
+				try {
+					targetDb
+						.prepare(
+							`INSERT OR REPLACE INTO contents (${contentsCols.join(",")}) VALUES (${placeholders})`,
+						)
+						.run(...contentsCols.map((c) => row[c] as never));
+				} finally {
+					targetDb.close();
+				}
+			}
+
+			const { errors: sideErrors } = copySideRows(legacy, id, target);
+			if (sideErrors.length > 0) {
+				report.errors.push(
+					`${id}: side-table errors: ${sideErrors.join("; ")}`,
+				);
+				// Continue — partial side data is better than losing the row.
+			}
+
 			report.migratedIds.push(id);
 		} catch (e) {
 			report.errors.push(`${id}: ${(e as Error).message}`);
