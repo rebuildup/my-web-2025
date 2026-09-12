@@ -37,11 +37,20 @@ jobs:
           VERSION="${RELEASE_BRANCH#release-}"
           VERSION="${VERSION//-/.}"
           MERGE_DATE="$(date -u -d "${{ github.event.pull_request.merged_at }}" +%F)"
-          ISO_WEEK="$(date -u -d "$MERGE_DATE" +%G-W%V)"
-          ISO_YEAR="${ISO_WEEK%-*}"
-          WEEK="${ISO_WEEK#*-}"
-          WEEK_START_DATE="$(date -u -d "${ISO_YEAR}-W${WEEK}-1 +0 days" +%F)"
-          WEEK_END_DATE="$(date -u -d "${ISO_YEAR}-W${WEEK}-1 +5 days" +%F)"
+          ISO_YEAR="$(date -u -d "$MERGE_DATE" +%G)"
+          WEEK="$(date -u -d "$MERGE_DATE" +%V)"
+          # Compute Monday (weekday 1) and Saturday (+5 days) of the ISO week.
+          # GNU date on ubuntu-latest does not parse ISO week-date strings like
+          # '2026-W37-1', so we delegate ISO week → calendar date to python3
+          # (preinstalled on ubuntu-latest) via date.fromisocalendar().
+          read -r WEEK_START_DATE WEEK_END_DATE < <(python3 -c "
+          import sys
+          from datetime import date, timedelta
+          y, w = int(sys.argv[1]), int(sys.argv[2])
+          monday = date.fromisocalendar(y, w, 1)
+          saturday = monday + timedelta(days=5)
+          print(monday.strftime('%Y-%m-%d'), saturday.strftime('%Y-%m-%d'))
+          " "$ISO_YEAR" "$WEEK")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "iso_year=$ISO_YEAR" >> "$GITHUB_OUTPUT"
           echo "week=$WEEK" >> "$GITHUB_OUTPUT"
