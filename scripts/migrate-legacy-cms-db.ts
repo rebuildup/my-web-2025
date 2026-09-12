@@ -46,9 +46,9 @@
  * - [x] Original DBs moved to `data/contents/_legacy/` on success
  */
 
+import { Database } from "bun:sqlite";
 import fs from "node:fs";
 import path from "node:path";
-import { Database } from "bun:sqlite";
 
 const REPO_ROOT = path.resolve(import.meta.dir, "..");
 const DATA_DIR = path.join(REPO_ROOT, "data");
@@ -149,7 +149,12 @@ const SCHEMA_STATEMENTS = [
 ];
 
 /** Tables in the legacy DB to copy as side-tables for each per-content DB. */
-const SIDE_TABLES = ["content_tags", "content_relations", "content_assets", "content_links"];
+const SIDE_TABLES = [
+	"content_tags",
+	"content_relations",
+	"content_assets",
+	"content_links",
+];
 
 function log(msg: string): void {
 	console.log(`[migrate-legacy] ${msg}`);
@@ -349,9 +354,7 @@ function migrateLegacyDb(legacyPath: string): MigrationReport {
 			.readdirSync(path.dirname(legacyPath))
 			.filter(
 				(f) =>
-					f === baseName ||
-					f === `${baseName}-shm` ||
-					f === `${baseName}-wal`,
+					f === baseName || f === `${baseName}-shm` || f === `${baseName}-wal`,
 			);
 		for (const s of siblings) {
 			const src = path.join(path.dirname(legacyPath), s);
