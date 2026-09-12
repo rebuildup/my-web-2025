@@ -74,14 +74,26 @@ jobs:
       # `src/lib/cms-api/server-data.ts:170-176`) used to bake an empty
       # portfolio page even when the Container held 137 entries.
       - name: Dump CMS index + markdown pages from Container
+        # Best-effort: if the existing staging Container is 404/broken, we
+        # still want to deploy the new Container image. The dump is just a
+        # warm-cache hint for the static build — failing this step should
+        # never block a deploy that fixes the underlying routing issue.
+        # See PR #433 review for the chicken-and-egg analysis.
+        continue-on-error: true
         env:
           CMS_USE_RUST_API: "1"
           CMS_API_BASE_URL: ${{ secrets.CLOUDFLARE_WORKER_STAGING_URL }}
         run: |
-          set -euo pipefail
-          bun scripts/dump-cms-index.ts
-          test -s node_modules/.cache/cms-build/cms-index.json \
-            || { echo "cms-index.json missing or empty after dump"; exit 1; }
+          set +euo pipefail  # tolerate failure (continue-on-error: true)
+          bun scripts/dump-cms-index.ts || {
+            rc=$?
+            echo "::warning::CMS index dump failed (exit=$rc); proceeding with empty cache. Static export will fall back to live Container fetches at request time."
+            exit 0
+          }
+          if [ ! -s node_modules/.cache/cms-build/cms-index.json ]; then
+            echo "::warning::cms-index.json missing or empty after dump; proceeding with empty cache"
+            exit 0
+          fi
           ENTRIES=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("node_modules/.cache/cms-build/cms-index.json","utf8")).length)')
           echo "Dumped $ENTRIES index entries from Container"
 
@@ -136,10 +148,15 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          # CMS API admin JWT secret — bound into the Container's envVars
+          # so `require_admin` middleware (apps/cms-api/src/routes/auth.rs)
+          # can verify HS256 tokens on write requests. If empty, the Container
+          # returns 401 for every write even with a valid JWT.
+          CMS_API_ADMIN_JWT_SECRET: ${{ secrets.CMS_API_ADMIN_JWT_SECRET }}
         run: |
           set -euo pipefail
           cd workers/router
-          for SECRET_NAME in RESEND_API_KEY RECAPTCHA_SECRET_KEY X_BEARER_TOKEN R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY SENTRY_DSN; do
+          for SECRET_NAME in RESEND_API_KEY RECAPTCHA_SECRET_KEY X_BEARER_TOKEN R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY SENTRY_DSN CMS_API_ADMIN_JWT_SECRET; do
             VAL="${!SECRET_NAME:-}"
             if [ -z "$VAL" ]; then
               echo "::warning::$SECRET_NAME is empty in GitHub Secrets, skipping"
