@@ -62,7 +62,9 @@ jobs:
             exit 0
           fi
           exit "$ec"
-          test -f out/index.html || { echo "out/index.html missing after build"; exit 1; }
+
+      - name: Verify out/index.html exists
+        run: test -f out/index.html || { echo "::error::out/index.html missing after build"; exit 1; }
 
   rust:
     name: Rust CMS API gate
