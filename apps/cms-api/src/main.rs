@@ -9,7 +9,10 @@ mod sync;
 
 use anyhow::{Context, Result};
 use db::create_pool;
-use routes::{content_compat, entries, markdown, media as media_route, og, preview, search, tags};
+use routes::{
+    auth::require_admin, content_compat, entries, markdown, media as media_route, og, preview,
+    search, tags,
+};
 
 /// Build an S3 client targeting Cloudflare R2 from the standard secret env
 /// vars (`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`). The
@@ -227,7 +230,20 @@ async fn main() {
         )
         .nest("/tags", tags::router(pool.clone()))
         .nest("/search", search::router(pool.clone()))
-        .nest("/preview", preview::router(pool.clone()))
+        // Preview surfaces unpublished drafts to admins only. The
+        // `require_admin` middleware is applied to the *outer* sub-app (not
+        // the inner preview router) so that `req.uri().path()` still carries
+        // the `/preview/` or `/api/preview/` prefix when the carve-out in
+        // `require_admin` runs; axum's `nest` strips the prefix before
+        // handing the request to the inner router, so attaching the layer
+        // there would see `/entries/:id` and `/routes/:path` instead and
+        // bypass the boundary.
+        .merge(
+            axum::Router::new()
+                .nest("/preview", preview::router(pool.clone()))
+                .nest("/api/preview", preview::router(pool.clone()))
+                .route_layer(axum::middleware::from_fn(require_admin)),
+        )
         // Dynamically rendered OG (1200x630) PNGs served by the Rust API.
         // Mounted under both the canonical prefix and the `/api/cms/og` alias
         // so the static-exported portfolio can link to it without a Node route.
@@ -248,7 +264,9 @@ async fn main() {
         )
         .nest("/api/tags", tags::router(pool.clone()))
         .nest("/api/search", search::router(pool.clone()))
-        .nest("/api/preview", preview::router(pool.clone()))
+        // `/api/preview` is mounted inside the outer `.merge(...)` block
+        // above so that `require_admin` sees the full path before `nest`
+        // strips the prefix.
         .route("/api/health", axum::routing::get(health))
         .route("/api/github/activity", axum::routing::get(dummy_json))
         .route("/api/youtube/activity", axum::routing::get(dummy_json))

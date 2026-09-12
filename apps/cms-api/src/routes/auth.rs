@@ -321,4 +321,56 @@ mod tests {
             .unwrap();
         assert_eq!(resp.status(), AxStatus::UNAUTHORIZED);
     }
+
+    /// Regression test for the Sprint 2.2.0 PR #433 follow-up: when the
+    /// preview router is mounted via `nest("/api/preview", …)`, the
+    /// `require_admin` middleware MUST live on the outer sub-app, not the
+    /// inner preview router, otherwise axum's `nest` strips the prefix and
+    /// `is_preview_path` sees only `/entries/:id` / `/routes/:path`.
+    fn nested_preview_router() -> Router {
+        Router::new()
+            .route("/x", get(|| async { "preview-pong" }))
+            .route_layer(from_fn(require_admin))
+    }
+
+    #[tokio::test]
+    async fn nested_preview_router_does_not_enforce_auth_when_layer_on_inner() {
+        std::env::set_var("CMS_API_ADMIN_JWT_SECRET", TEST_SECRET);
+        // Layer on inner Router — the buggy Sprint 2.2.0 placement that
+        // PR #433 review originally approved. Confirms the regression: this
+        // shape does NOT see `/api/preview` in `req.uri().path()` and so
+        // skips auth.
+        let buggy = Router::new().nest("/api/preview", nested_preview_router());
+        let resp = buggy
+            .oneshot(
+                HttpRequest::get("/api/preview/x")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), AxStatus::OK);
+    }
+
+    #[tokio::test]
+    async fn outer_subapp_layer_enforces_auth_on_nested_preview() {
+        std::env::set_var("CMS_API_ADMIN_JWT_SECRET", TEST_SECRET);
+        // Layer on outer sub-app — the corrected placement used by
+        // `main.rs`. Confirms `req.uri().path()` still carries the
+        // `/api/preview/` prefix at the time `require_admin` runs.
+        let fixed = Router::new().merge(
+            Router::new()
+                .nest("/api/preview", nested_preview_router())
+                .route_layer(from_fn(require_admin)),
+        );
+        let resp = fixed
+            .oneshot(
+                HttpRequest::get("/api/preview/x")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), AxStatus::UNAUTHORIZED);
+    }
 }
