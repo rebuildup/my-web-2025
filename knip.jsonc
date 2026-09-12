@@ -7,8 +7,12 @@
   "ignoreDependencies": [
     "chrome-launcher",
     "lighthouse",
+    "@testing-library/react",
+    "@types/youtube",
     "baseline-browser-mapping",
-    "playwright"
+    "jsdom",
+    "playwright",
+    "tsx"
   ],
   "ignoreBinaries": ["wslc", "wrangler"],
   "treatConfigHintsAsErrors": true,

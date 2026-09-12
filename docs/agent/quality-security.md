@@ -30,13 +30,3 @@ Rust変更は `apps/cms-api` でfmt/clippy/testを追加する。UI変更はPlay
 Next.js、React、TypeScript、Bun、Rust、axum/sqlx、Cloudflare、直接依存のofficial advisoryをversionに紐付けて定期確認する。severityだけでなくexploitability、外部露出、権限、影響、fix availability、regression risk、release timingで優先度を決め、meaningful advisoryはIssue化してTarget Versionを付ける。critical exposed vulnerabilityは通常のsprintよりpatch releaseを優先する。
 
 既存のGitHub Actions権限、secret、dependency alertを確認し、必要なcode/dependency/container scanningは既存workflowと重複しない最小構成で追加する。security toolの未設定をgreenと解釈しない。
-
-## Delivery-surface 強制 (release-source check)
-
-public repository の `main` への正規 delivery path は `release-x-y-z -> main` の release PR だけとする。branch protection / ruleset だけで PR head branch pattern を制限できない場合は、`.github/workflows/release-source-check.yml` の required check で:
-
-- `base == main`
-- `head.ref` が canonical `release-<major>-<minor>-<patch>` pattern に一致
-- intended target release と一致
-
-を PR open / synchronize / reopened で検証する。check が fail した PR は merge を禁止する。Failed check を "意図的な緊急 patch" として override したい場合は、temporary exception の Issue と target release 一致理由を PR body に明記し、release PR の squash merge 後に retroactive で `main` を保護する。

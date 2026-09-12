@@ -134,71 +134,61 @@ async fn main() {
     // directory from the bucket before serving any traffic. The boot fails
     // hard if hydration errors — Cloudflare Containers restart on crash, so a
     // transient R2 outage will retry hydrate without serving stale state.
-    // `SKIP_R2=1` bypasses hydrate + write-back for local dev. The server
-    // still serves from whatever is already in `CMS_API_CONTENT_DATA_DIR`.
-    let skip_r2 = env::var("SKIP_R2").ok().as_deref() == Some("1");
-    if skip_r2 {
-        tracing::warn!(
-            "SKIP_R2=1 set: skipping R2 hydrate / write-back. Local data in \
-             CMS_API_CONTENT_DATA_DIR will be served as-is."
-        );
-    } else {
-        let r2 = build_r2_client().await.expect("build R2 client");
-        let sync_cfg = sync::R2Config {
-            bucket: env::var("R2_BUCKET").unwrap_or_else(|_| "cms-data".to_string()),
-            local_dir: cms_api_data_dir(),
-        };
+    let r2 = build_r2_client().await.expect("build R2 client");
+    let sync_cfg = sync::R2Config {
+        bucket: env::var("R2_BUCKET").unwrap_or_else(|_| "cms-data".to_string()),
+        local_dir: cms_api_data_dir(),
+    };
 
-        if let Err(e) = sync::hydrate(&r2, &sync_cfg).await {
-            tracing::error!(error = %e, "R2 hydrate failed; exiting");
-            std::process::exit(1);
-        }
-
-        // Periodic write-back (30s). The lite Container sleeps after 5 min of idle;
-        // `max_instances = 1` guarantees no concurrent writers, so a fresh
-        // `SyncState` per tick is safe — shutdown() captures the final flush.
-        let r2_bg = r2.clone();
-        let cfg_bg = sync_cfg.clone();
-        tokio::spawn(async move {
-            let mut ticker = tokio::time::interval(std::time::Duration::from_secs(30));
-            ticker.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
-            loop {
-                ticker.tick().await;
-                let mut state = sync::SyncState::new();
-                if let Err(e) = sync::write_back(&r2_bg, &cfg_bg, &mut state).await {
-                    tracing::warn!(error = %e, "R2 write-back tick failed");
-                }
-            }
-        });
-
-        // Graceful shutdown: flush write-back on SIGTERM (Linux Container) or
-        // Ctrl+C (Windows dev). On Linux Container, `Container.max_instances = 1`
-        // means SIGTERM is the only signal we get during a rolling deploy.
-        let r2_shutdown = r2.clone();
-        let cfg_shutdown = sync_cfg.clone();
-        tokio::spawn(async move {
-            #[cfg(unix)]
-            {
-                use tokio::signal::unix::{signal, SignalKind};
-                let mut sigterm = signal(SignalKind::terminate()).expect("install SIGTERM");
-                tokio::select! {
-                    _ = sigterm.recv() => tracing::info!("SIGTERM received"),
-                    _ = tokio::signal::ctrl_c() => tracing::info!("SIGINT received"),
-                }
-            }
-            #[cfg(not(unix))]
-            {
-                let _ = tokio::signal::ctrl_c().await;
-                tracing::info!("Ctrl+C received");
-            }
-            if let Err(e) =
-                sync::shutdown(&r2_shutdown, &cfg_shutdown, &mut sync::SyncState::new()).await
-            {
-                tracing::error!(error = %e, "shutdown write-back failed");
-            }
-            std::process::exit(0);
-        });
+    if let Err(e) = sync::hydrate(&r2, &sync_cfg).await {
+        tracing::error!(error = %e, "R2 hydrate failed; exiting");
+        std::process::exit(1);
     }
+
+    // Periodic write-back (30s). The lite Container sleeps after 5 min of idle;
+    // `max_instances = 1` guarantees no concurrent writers, so a fresh
+    // `SyncState` per tick is safe — shutdown() captures the final flush.
+    let r2_bg = r2.clone();
+    let cfg_bg = sync_cfg.clone();
+    tokio::spawn(async move {
+        let mut ticker = tokio::time::interval(std::time::Duration::from_secs(30));
+        ticker.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
+        loop {
+            ticker.tick().await;
+            let mut state = sync::SyncState::new();
+            if let Err(e) = sync::write_back(&r2_bg, &cfg_bg, &mut state).await {
+                tracing::warn!(error = %e, "R2 write-back tick failed");
+            }
+        }
+    });
+
+    // Graceful shutdown: flush write-back on SIGTERM (Linux Container) or
+    // Ctrl+C (Windows dev). On Linux Container, `Container.max_instances = 1`
+    // means SIGTERM is the only signal we get during a rolling deploy.
+    let r2_shutdown = r2.clone();
+    let cfg_shutdown = sync_cfg.clone();
+    tokio::spawn(async move {
+        #[cfg(unix)]
+        {
+            use tokio::signal::unix::{signal, SignalKind};
+            let mut sigterm = signal(SignalKind::terminate()).expect("install SIGTERM");
+            tokio::select! {
+                _ = sigterm.recv() => tracing::info!("SIGTERM received"),
+                _ = tokio::signal::ctrl_c() => tracing::info!("SIGINT received"),
+            }
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = tokio::signal::ctrl_c().await;
+            tracing::info!("Ctrl+C received");
+        }
+        if let Err(e) =
+            sync::shutdown(&r2_shutdown, &cfg_shutdown, &mut sync::SyncState::new()).await
+        {
+            tracing::error!(error = %e, "shutdown write-back failed");
+        }
+        std::process::exit(0);
+    });
 
     let pool = create_pool(&database_url)
         .await

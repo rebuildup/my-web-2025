@@ -25,7 +25,7 @@
 ### 構成要素
 - **フロントエンド**: Next.js 16 (`output: "export"` で生成された静的 HTML/JS を nginx から直接配信)
 - **CMS API**: Rust (axum + sqlx + tokio) バイナリを port 3001 で起動
-- **ランタイム**: Bun 1.3.14 (packageManager / CI / native dev / WSL helper)
+- **ランタイム**: Bun 1.3.14 (packageManager / CI / WSL)
 - **パッケージマネージャー**: Bun (`bun install --frozen-lockfile`)
 - **プロセス管理**: PM2 (systemd 自動起動, `interpreter: "none"` で Rust バイナリを直接実行)
 - **リバースプロキシ**: nginx (`/api/` と `/entries|markdown|media|tags|search|preview|health` を Rust API にプロキシ, それ以外は静的ファイルを配信)

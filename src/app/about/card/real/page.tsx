@@ -15,13 +15,13 @@ export default function RealCardPage() {
 					</div>
 				</main>
 				<MeishiPhiCard baseColor="#ffffff" mainColor="#000000" />
-				<div className="relative w-full max-w-[910px] aspect-[910/550] mx-auto mt-16 bg-black shadow-[0_10px_36px_rgba(0,0,0,0.5)]">
+				<div className="w-[910px] h-[550px] left-16 right-auto absolute mt-16 bg-black shadow-[0_10px_36px_rgba(0,0,0,0.5)]">
 					<div
 						style={{
-							width: "53%",
-							height: "47.2%",
-							top: "14.6%",
-							left: "8.8%",
+							width: "482.1218px",
+							height: "259.6418px",
+							top: " 80.2582px",
+							left: "80.2582px",
 							backgroundColor: "red",
 							position: "absolute",
 							opacity: 0.5,
@@ -29,7 +29,7 @@ export default function RealCardPage() {
 					/>
 					<div
 						style={{
-							width: "8.8%",
+							width: "80.2582px",
 							height: "100%",
 							top: "0",
 							left: "0",
@@ -39,8 +39,8 @@ export default function RealCardPage() {
 					>
 						<div
 							style={{
-								width: "8.8%",
-								height: "61.8%",
+								width: "80.2582px",
+								height: "339.9px",
 								top: "0",
 								left: "0",
 								backgroundColor: "green",
@@ -49,8 +49,8 @@ export default function RealCardPage() {
 						>
 							<div
 								style={{
-									width: "8.8%",
-									height: "23.6%",
+									width: "80.2582px",
+									height: "129.8418px",
 									top: "0",
 									left: "0",
 									backgroundColor: "white",
@@ -59,8 +59,8 @@ export default function RealCardPage() {
 							></div>
 							<div
 								style={{
-									width: "8.8%",
-									height: "14.6%",
+									width: "80.2582px",
+									height: "80.2422324px",
 									bottom: "0",
 									left: "0",
 									backgroundColor: "yellow",

@@ -7,37 +7,11 @@
 
 use std::path::PathBuf;
 
-use crate::sync::{rel_path_from_key, R2Config, SyncState, R2_KEY_PREFIX};
+use crate::sync::{R2Config, SyncState, R2_KEY_PREFIX};
 
 #[test]
 fn r2_key_prefix_matches_spec() {
     assert_eq!(R2_KEY_PREFIX, "contents/");
-}
-
-#[test]
-fn rel_path_from_key_strips_prefix() {
-    assert_eq!(
-        rel_path_from_key("contents/content-foo.db"),
-        Some("content-foo.db")
-    );
-    assert_eq!(
-        rel_path_from_key("contents/content-foo.db-wal"),
-        Some("content-foo.db-wal")
-    );
-}
-
-#[test]
-fn rel_path_from_key_rejects_unprefixed() {
-    assert_eq!(rel_path_from_key("other-prefix/foo.db"), None);
-    assert_eq!(rel_path_from_key("content/foo.db"), None);
-}
-
-#[test]
-fn rel_path_from_key_rejects_directory_marker() {
-    // The `contents/` zero-byte key (R2's "directory marker") would resolve
-    // to an empty relative path and crash `hydrate` on the `fs::write` step.
-    // We must skip it.
-    assert_eq!(rel_path_from_key("contents/"), None);
 }
 
 #[test]

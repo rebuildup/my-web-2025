@@ -50,7 +50,3 @@
 	path = external/ae-expression
 	url = https://github.com/rebuildup/tool-ae-expression.git
 	branch = main
-[submodule "external/mic-level"]
-	path = external/mic-level
-	url = https://github.com/rebuildup/tool-mic-level.git
-	branch = main

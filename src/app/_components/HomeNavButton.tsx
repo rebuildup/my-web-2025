@@ -13,7 +13,7 @@ export default function HomeNavButton({
 		<a
 			href={href}
 			style={{ animationDelay: `${animationDelay}ms` }}
-			className="flex items-center w-full sm:w-[190px] h-11 sm:h-10 animate-fade-in-up cursor-pointer"
+			className="flex items-center w-full sm:w-[190px] h-10 animate-fade-in-up cursor-pointer"
 		>
 			<span className="flex-1 text-sm font-medium">{label}</span>
 		</a>

@@ -169,7 +169,7 @@ function repairOne(contentId: string): RepairResult {
 function main() {
 	const contentIds = process.argv.slice(2).filter(Boolean);
 	if (contentIds.length === 0) {
-		console.error("Usage: bun scripts/repair-cms-thumbnails.ts <contentId...>");
+		console.error("Usage: tsx scripts/repair-cms-thumbnails.ts <contentId...>");
 		process.exitCode = 2;
 		return;
 	}

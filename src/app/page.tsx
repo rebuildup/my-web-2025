@@ -25,7 +25,7 @@ export default async function Home() {
 			>
 				<div className="container mx-auto px-4">
 					<div className="max-w-3xl mx-auto flex flex-col items-center">
-						<div className="flex items-start w-full justify-between sm:w-max sm:justify-normal">
+						<div className="flex items-start w-full justify-between sm:w-max sm:min-w-[410px] sm:justify-normal">
 							<div className="flex flex-col items-start animate-fade-in-up">
 								<h1 className="text-4xl font-bold italic tracking-tight ">
 									yusuke-kim.com
@@ -41,7 +41,7 @@ export default async function Home() {
 							</div>
 						</div>
 
-						<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full sm:w-max sm:max-w-md">
+						<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full sm:w-max sm:min-w-[400px]">
 							{navItems.map((item, index) => (
 								<HomeNavButton
 									key={item.href}
@@ -52,7 +52,7 @@ export default async function Home() {
 							))}
 						</div>
 
-						<footer className="mt-16 pt-6 flex items-center justify-center gap-4 w-full sm:w-max sm:max-w-md animate-fade-in animation-delay-400">
+						<footer className="mt-16 pt-6 flex items-center justify-center gap-4 w-full sm:w-max sm:min-w-[400px] animate-fade-in animation-delay-400">
 							<span className="text-xs">© 2025 361do_sleep</span>
 							<Link
 								href="/privacy-policy"

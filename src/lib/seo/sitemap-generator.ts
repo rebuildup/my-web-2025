@@ -84,7 +84,17 @@ export const staticRoutes: SitemapEntry[] = [
 		changeFrequency: "monthly",
 	},
 	{
+		url: "/about/profile/AI",
+		priority: 0.6,
+		changeFrequency: "monthly",
+	},
+	{
 		url: "/about/card/real",
+		priority: 0.5,
+		changeFrequency: "yearly",
+	},
+	{
+		url: "/about/card/handle",
 		priority: 0.5,
 		changeFrequency: "yearly",
 	},
@@ -219,12 +229,22 @@ export const staticRoutes: SitemapEntry[] = [
 		changeFrequency: "monthly",
 	},
 	{
+		url: "/tools/ae-expression",
+		priority: 0.7,
+		changeFrequency: "monthly",
+	},
+	{
 		url: "/tools/ProtoType",
 		priority: 0.6,
 		changeFrequency: "monthly",
 	},
 	{
 		url: "/tools/fillgen",
+		priority: 0.6,
+		changeFrequency: "monthly",
+	},
+	{
+		url: "/tools/history-quiz",
 		priority: 0.6,
 		changeFrequency: "monthly",
 	},

@@ -26,7 +26,7 @@
 - Bun `1.3.x`、Next.js 16 App Router/static export、React 19、TypeScript 7、Biome 2.5、Jest/Bun test、Knip、Rust axum/sqlx CMS、Cloudflare Pages/Workers/Containers/R2。
 - `bun install --frozen-lockfile`。通常の起動は `bun run dev` (3010)、CMS API は `bun run dev:cms-api` (3001)。
 - 仕様は `docs/app/`、横断設計は `docs/01_global.md`〜`07_rules.md`、長期判断は `docs/adr/`。
-- 初回/復旧時は `docs/agent/onboarding.md` を読む。release/Issue/PR は `docs/agent/release-workflow.md`、sprint/board/retro/WIP の背後にある前提は `docs/agent/agile-premises.md` (DRAFT, PR #393)、検証とsecurityは `docs/agent/quality-security.md`。
+- 初回/復旧時は `docs/agent/onboarding.md` を読む。release/Issue/PR は `docs/agent/release-workflow.md`、検証とsecurityは `docs/agent/quality-security.md`。
 
 ## 検証
 

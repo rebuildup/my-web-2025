@@ -13,7 +13,7 @@ sops / sealed-secrets / 1Password CLI / dotenv-vault は採用しない。`.env*
 
 | ファイル | git | 役割 | 含むもの |
 |---|---|---|---|
-| `.env` | ignore | ローカル実体 (native / WSL / Windows host) | コードが読む変数だけ |
+| `.env` | ignore | ローカル実体 (WSL / Windows host) | コードが読む変数だけ |
 | `.env.example` | tracked | リファレンス (最小構成の雛形) | 全変数、値は空または `https://yusuke-kim.com` |
 | `.env.development.example` | tracked | dev override 雛形 | localhost 系 + `CMS_USE_RUST_API=0` |
 | `.env.production.example` | tracked | prod override 雛形 | 本番 URL + `CMS_USE_RUST_API=1` |
@@ -48,7 +48,7 @@ cp .env.example .env
 # R2_* / Cloudflare token は .env に書かない (secret store 側で持つ)
 ```
 
-`.env` 自体は `.gitignore` 配下なので、**`git clone` / `git pull` / `git submodule update` のいずれでも降ってこない**. WSL 上に clone し直す場合も、ネイティブ Linux / macOS に clone する場合も、Windows host に clone する場合も、§ 「`.env` 再生成」の手順 (`cp .env.example .env`) を手作業で必ず実行する.
+WSL 上に clone し直す場合は、`.env` だけは手作業で再作成する。**git ignore なので push しないし、pull で降ってこない**。
 
 ## 削除時の注意
 
