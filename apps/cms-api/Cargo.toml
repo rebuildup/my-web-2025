@@ -30,5 +30,7 @@ anyhow = "1"
 aws-sdk-s3 = "1"
 aws-config = "1"
 aws-credential-types = "1"
+jsonwebtoken = "9"
 
 [dev-dependencies]
+tower = { version = "0.4", features = ["util"] }

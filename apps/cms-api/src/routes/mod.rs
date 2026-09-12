@@ -1,3 +1,4 @@
+pub mod auth;
 pub mod content_compat;
 pub mod entries;
 pub mod markdown;

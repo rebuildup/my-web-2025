@@ -310,6 +310,9 @@ pub fn router(pool: DbPool) -> Router {
             "/:id",
             get(get_entry).patch(update_entry).delete(delete_entry),
         )
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .with_state(pool)
 }
 

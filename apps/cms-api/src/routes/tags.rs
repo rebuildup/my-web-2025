@@ -50,6 +50,9 @@ pub struct CreateTagRequest {
 pub fn router(pool: DbPool) -> Router {
     Router::new()
         .route("/", get(list_tags).post(create_tag))
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .with_state(pool)
 }
 

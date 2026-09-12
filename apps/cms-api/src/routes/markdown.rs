@@ -109,6 +109,9 @@ pub fn router(pool: DbPool) -> Router {
     Router::new()
         .route("/", get(list_or_get_markdown).post(create_markdown))
         .route("/:id", patch(update_markdown).delete(delete_markdown))
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .with_state(pool)
 }
 

@@ -161,6 +161,9 @@ pub fn router(content_data_dir: PathBuf) -> Router {
                 .post(create_media)
                 .delete(delete_media),
         )
+        .route_layer(axum::middleware::from_fn(
+            crate::routes::auth::require_admin,
+        ))
         .layer(DefaultBodyLimit::max(64 * 1024 * 1024))
         .with_state(MediaState {
             content_data_dir: Arc::new(content_data_dir),
