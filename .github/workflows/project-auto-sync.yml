@@ -118,12 +118,37 @@ jobs:
               headers: { authorization: `bearer ${process.env.APP_TOKEN}` },
             });
 
+            // Retry helper for transient (5xx, network, rate-limit) GraphQL errors.
+            // Permanent errors (auth, schema, validation) propagate immediately so
+            // they surface as clear failures instead of being masked by retries.
+            const RETRYABLE = /5\d\d|rate limit|ETIMEDOUT|ECONNRESET|ENOTFOUND/i;
+            async function withRetry(label, fn, attempts = 3) {
+              let lastErr;
+              for (let i = 1; i <= attempts; i++) {
+                try {
+                  return await fn();
+                } catch (e) {
+                  lastErr = e;
+                  const msg = String(e?.message ?? e);
+                  if (!RETRYABLE.test(msg) || i === attempts) throw e;
+                  const delayMs = 500 * 2 ** (i - 1); // 0.5s, 1s, 2s
+                  core.warning(`${label}: transient error (attempt ${i}/${attempts}): ${msg}; retrying in ${delayMs}ms`);
+                  await new Promise((r) => setTimeout(r, delayMs));
+                }
+              }
+              throw lastErr;
+            }
+
             // 1. Resolve the Status field options to find the option ID for TARGET_STATUS.
-            const fieldQuery = await graphql(`
+            //    Validate the field type is the expected SingleSelect — otherwise the
+            //    workflow is misconfigured (e.g. STATUS_FIELD_ID points at a text field)
+            //    and we should fail loudly instead of silently dropping the update.
+            const fieldQuery = await withRetry('Status field query', () => graphql(`
               query($projectId: ID!, $fieldId: ID!) {
                 node(id: $projectId) {
                   ... on ProjectV2 {
                     field(id: $fieldId) {
+                      __typename
                       ... on ProjectV2SingleSelectField {
                         options { id name }
                       }
@@ -134,9 +159,19 @@ jobs:
             `, {
               projectId: process.env.PROJECT_NODE_ID,
               fieldId: process.env.STATUS_FIELD_ID,
-            });
+            }));
 
-            const options = fieldQuery.node?.field?.options ?? [];
+            const field = fieldQuery.node?.field;
+            if (!field) {
+              core.setFailed(`STATUS_FIELD_ID ${process.env.STATUS_FIELD_ID} does not exist on project ${process.env.PROJECT_NODE_ID}.`);
+              return;
+            }
+            if (field.__typename !== 'ProjectV2SingleSelectField') {
+              core.setFailed(`STATUS_FIELD_ID points to ${field.__typename}, expected ProjectV2SingleSelectField. Re-check the field id at repo Settings → Projects.`);
+              return;
+            }
+
+            const options = field.options ?? [];
             const match = options.find((o) => o.name === target);
             if (!match) {
               core.setFailed(`Status field has no option named '${target}'. Available: ${options.map((o) => o.name).join(', ')}`);
@@ -144,34 +179,56 @@ jobs:
             }
 
             // 2. Find any existing project item (PR or DraftIssue) for this PR.
-            const itemQuery = await graphql(`
-              query($projectId: ID!) {
-                node(id: $projectId) {
-                  ... on ProjectV2 {
-                    items(first: 50) {
-                      nodes {
-                        id
-                        content {
-                          ... on PullRequest { id number }
-                          ... on DraftIssue { id }
+            //    Paginate via pageInfo.hasNextPage / endCursor — large projects have
+            //    far more than 50 items and a single page could miss the PR.
+            let cursor = null;
+            let item = null;
+            let pageCount = 0;
+            outer: while (pageCount < 50) { // hard cap so a runaway loop can't hang the run
+              pageCount++;
+              const itemQuery = await withRetry(`Items query (page ${pageCount})`, () => graphql(`
+                query($projectId: ID!, $after: String) {
+                  node(id: $projectId) {
+                    ... on ProjectV2 {
+                      items(first: 50, after: $after) {
+                        pageInfo { hasNextPage endCursor }
+                        nodes {
+                          id
+                          content {
+                            ... on PullRequest { id number }
+                            ... on DraftIssue { id }
+                          }
                         }
                       }
                     }
                   }
                 }
-              }
-            `, { projectId: process.env.PROJECT_NODE_ID });
+              `, {
+                projectId: process.env.PROJECT_NODE_ID,
+                after: cursor,
+              }));
 
-            const items = itemQuery.node?.items?.nodes ?? [];
-            const item = items.find((i) => i.content?.id === prNodeId);
+              const items = itemQuery.node?.items?.nodes ?? [];
+              const hit = items.find((i) => i.content?.id === prNodeId);
+              if (hit) {
+                item = hit;
+                break outer;
+              }
+              const pageInfo = itemQuery.node?.items?.pageInfo;
+              if (!pageInfo?.hasNextPage) break outer;
+              cursor = pageInfo.endCursor;
+            }
+
             if (!item) {
-              // PR is not on the project board — log and skip. The maintainer may add it later.
-              core.info(`PR ${prNodeId} is not yet tracked on the project board. Skipping Status update.`);
+              // PR is not on the project board — warn (visible in run summary) so a
+              // missing ticket doesn't look like a silent success. The maintainer may
+              // add it later.
+              core.warning(`PR ${prNodeId} is not yet tracked on the project board (searched ${pageCount} page(s)). Skipping Status update.`);
               return;
             }
 
             // 3. Update the Status field on the matched project item.
-            await graphql(`
+            await withRetry('Status update mutation', () => graphql(`
               mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
                 updateProjectV2ItemFieldValue(
                   input: {
@@ -189,6 +246,6 @@ jobs:
               itemId: item.id,
               fieldId: process.env.STATUS_FIELD_ID,
               optionId: match.id,
-            });
+            }));
 
-            core.info(`Updated PR ${prNodeId} → Status '${target}' on project ${process.env.PROJECT_NODE_ID}.`);
+            core.info(`Updated PR ${prNodeId} → Status '${target}' on project ${process.env.PROJECT_NODE_ID} (page ${pageCount}).`);
