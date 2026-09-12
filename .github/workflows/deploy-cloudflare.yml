@@ -21,7 +21,8 @@ name: Deploy Cloudflare (Workers + Container)
 # Missing / empty values are skipped (the corresponding API surface stays
 # inert rather than failing the deploy).
 #
-# SIGILL 132 note: `bun --bun next build` segfaults at teardown under Bun 1.3.14
+# SIGILL 132 note: `bun --bun next build` segfaulted at teardown under Bun 1.3.14.
+# Kept as a comment for historical reference; tracked behavior under 1.4.2 unknown — verify on first deploy.
 # + Next.js 16.3.0 (`bun:sqlite` cleanup). The static export writes to `out/`
 # before the crash, so the workflow tolerates a 132 exit iff `out/index.html`
 # is present. See AGENTS.md §14 for the documented workaround.
@@ -54,7 +55,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.3.14"
+          bun-version: "1.4.2"
 
       - name: Install root dependencies
         run: bun install --frozen-lockfile
