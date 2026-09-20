@@ -3,6 +3,7 @@ import UnifiedFloatingCards from "@/components/UnifiedFloatingCards";
 import XProfileImage from "@/components/XProfileImage";
 import { getStaticPortfolioItems } from "@/lib/portfolio/static-portfolio";
 import HomeNavButton from "./_components/HomeNavButton";
+import SiteClosureBanner from "./_components/SiteClosureBanner";
 
 const navItems = [
 	{ href: "/about", label: "About" },
@@ -15,55 +16,58 @@ export default async function Home() {
 	const portfolioItems = await getStaticPortfolioItems(50);
 
 	return (
-		<div className="h-dvh overflow-hidden relative">
-			<UnifiedFloatingCards initialPortfolio={portfolioItems} />
+		<>
+			<SiteClosureBanner />
+			<div className="h-dvh overflow-hidden relative">
+				<UnifiedFloatingCards initialPortfolio={portfolioItems} />
 
-			<main
-				id="main-content"
-				className="relative z-10 flex min-h-dvh items-center justify-center"
-				tabIndex={-1}
-			>
-				<div className="container mx-auto px-4">
-					<div className="max-w-3xl mx-auto flex flex-col items-center">
-						<div className="flex items-start w-full justify-between sm:w-max sm:justify-normal">
-							<div className="flex flex-col items-start animate-fade-in-up">
-								<h1 className="text-4xl font-bold italic tracking-tight ">
-									yusuke-kim.com
-								</h1>
-								<p className="mt-3 text-xs leading-relaxed animate-fade-in-up animation-delay-100">
-									高専生 木村友亮のウェブサイト
-									<br />
-									普段はsamuidoという名前で活動しています
-								</p>
+				<main
+					id="main-content"
+					className="relative z-10 flex min-h-dvh items-center justify-center"
+					tabIndex={-1}
+				>
+					<div className="container mx-auto px-4">
+						<div className="max-w-3xl mx-auto flex flex-col items-center">
+							<div className="flex items-start w-full justify-between sm:w-max sm:justify-normal">
+								<div className="flex flex-col items-start animate-fade-in-up">
+									<h1 className="text-4xl font-bold italic tracking-tight ">
+										yusuke-kim.com
+									</h1>
+									<p className="mt-3 text-xs leading-relaxed animate-fade-in-up animation-delay-100">
+										高専生 木村友亮のウェブサイト
+										<br />
+										普段はsamuidoという名前で活動しています
+									</p>
+								</div>
+								<div className="sm:ml-auto animate-scale-in animation-delay-200">
+									<XProfileImage href="https://x.com/361do_sleep" size={100} />
+								</div>
 							</div>
-							<div className="sm:ml-auto animate-scale-in animation-delay-200">
-								<XProfileImage href="https://x.com/361do_sleep" size={100} />
+
+							<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full sm:w-max sm:max-w-md">
+								{navItems.map((item, index) => (
+									<HomeNavButton
+										key={item.href}
+										href={item.href}
+										label={item.label}
+										animationDelay={150 + index * 50}
+									/>
+								))}
 							</div>
-						</div>
 
-						<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full sm:w-max sm:max-w-md">
-							{navItems.map((item, index) => (
-								<HomeNavButton
-									key={item.href}
-									href={item.href}
-									label={item.label}
-									animationDelay={150 + index * 50}
-								/>
-							))}
+							<footer className="mt-16 pt-6 flex items-center justify-center gap-4 w-full sm:w-max sm:max-w-md animate-fade-in animation-delay-400">
+								<span className="text-xs">© 2025 361do_sleep</span>
+								<Link
+									href="/privacy-policy"
+									className="text-xs underline underline-offset-4"
+								>
+									Privacy Policy
+								</Link>
+							</footer>
 						</div>
-
-						<footer className="mt-16 pt-6 flex items-center justify-center gap-4 w-full sm:w-max sm:max-w-md animate-fade-in animation-delay-400">
-							<span className="text-xs">© 2025 361do_sleep</span>
-							<Link
-								href="/privacy-policy"
-								className="text-xs underline underline-offset-4"
-							>
-								Privacy Policy
-							</Link>
-						</footer>
 					</div>
-				</div>
-			</main>
-		</div>
+				</main>
+			</div>
+		</>
 	);
 }
