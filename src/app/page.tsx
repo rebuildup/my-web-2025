@@ -3,6 +3,7 @@ import UnifiedFloatingCards from "@/components/UnifiedFloatingCards";
 import XProfileImage from "@/components/XProfileImage";
 import { getStaticPortfolioItems } from "@/lib/portfolio/static-portfolio";
 import HomeNavButton from "./_components/HomeNavButton";
+import SiteClosureBanner from "./_components/SiteClosureBanner";
 
 const navItems = [
 	{ href: "/about", label: "About" },
@@ -23,6 +24,7 @@ export default async function Home() {
 				className="relative z-10 flex min-h-dvh items-center justify-center"
 				tabIndex={-1}
 			>
+				<SiteClosureBanner />
 				<div className="container mx-auto px-4">
 					<div className="max-w-3xl mx-auto flex flex-col items-center">
 						<div className="flex items-start w-full justify-between sm:w-max sm:justify-normal">
