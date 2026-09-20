@@ -12,6 +12,18 @@ const navItems = [
 	{ href: "/tools", label: "Tools" },
 ];
 
+/**
+ * ホームページ。
+ *
+ * 中央寄せのヒーローカード (h1 + プロフィール + ナビ + フッター) と背景の
+ * `UnifiedFloatingCards` キャンバスを描画する。サイト閉鎖バナー
+ * (`SiteClosureBanner`) は `h-dvh overflow-hidden` ラッパーの外、フラグメント直下に
+ * `fixed top-0` で積まれる。これは Issue #439 の受入条件「`<main>` 内に配置」と
+ * 異なるが、レビュアー指示で明示的に変更された配置 (Sprint 2.3.0)。
+ *
+ * main 要素には `scroll-mt-9 sm:scroll-mt-10` を付与し、SkipLink (#main-content) で
+ * 飛んできた際にバナー裏に隠れないよう、バナー高さぶん下から表示を開始する。
+ */
 export default async function Home() {
 	const portfolioItems = await getStaticPortfolioItems(50);
 
@@ -23,7 +35,7 @@ export default async function Home() {
 
 				<main
 					id="main-content"
-					className="relative z-10 flex min-h-dvh items-center justify-center"
+					className="relative z-10 flex min-h-dvh items-center justify-center scroll-mt-9 sm:scroll-mt-10"
 					tabIndex={-1}
 				>
 					<div className="container mx-auto px-4">

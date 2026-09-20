@@ -7,8 +7,8 @@
  * - localStorage に dismiss 時刻を保存 (TTL 90 日)。
  *   key は release-versioned: 新リリースで上書きすると新規ユーザーが再表示される。
  * - page.tsx で `h-dvh overflow-hidden` のラッパーの **外** に置かれ、`fixed top-0` で
- *   画面上部に固定される。ヒーローカードの上部とは重ならないよう、ヒーローカード側
- *   を押し下げる役目を site-outer が取る)。
+ *   画面上部に固定される。ヒーローカードは `items-center` で dvh の中央に配置されて
+ *   おり、ドキュメント済みのビューポート (300x600, 1024x768) ではバナーと重ならない。
  * - `role="region"` + `aria-label` のみ。`aria-live` は付与しない (静的告知のため)。
  */
 
@@ -19,6 +19,11 @@ import { useEffect, useState } from "react";
 const STORAGE_KEY = "site-closure-banner:2.3.0:dismissed-at";
 const TTL_DAYS = 90;
 
+/**
+ * TTL 内の未失効 dismiss かどうかを返す。
+ * SSR 中 (`window === undefined`) や localStorage アクセス失敗時は false (=未 dismiss) を返し、
+ * バナーを表示する方向に倒す。CookieConsent.tsx:28 と同パターン。
+ */
 function isDismissed(): boolean {
 	if (typeof window === "undefined") return false;
 	try {
@@ -33,6 +38,10 @@ function isDismissed(): boolean {
 	}
 }
 
+/**
+ * dismiss 時刻 (ISO 8601) を localStorage に保存する。
+ * Safari private / 埋め込み WebView 等で localStorage が無効な場合は握り潰す。
+ */
 function persistDismiss(): void {
 	if (typeof window === "undefined") return;
 	try {
@@ -43,6 +52,11 @@ function persistDismiss(): void {
 	}
 }
 
+/**
+ * ホームページ上部に固定表示する移管告知バナー。
+ * 初回マウント時に localStorage を確認し、未 dismiss の場合のみ表示する。
+ * 閉じるボタンを押すと `persistDismiss()` で TTL 90 日の dismiss 状態を保存する。
+ */
 export default function SiteClosureBanner() {
 	const [visible, setVisible] = useState(false);
 
