@@ -63,3 +63,18 @@ Rust変更は `cargo fmt --all -- --check`、`cargo clippy --all-targets -- -D w
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
 <!-- END:nextjs-agent-rules -->
+
+
+## Constitution / operating profile
+
+- [`constitution/CONSTITUTION.md`](constitution/CONSTITUTION.md)
+- [`organization/profiles/release-driven-solo.md`](organization/profiles/release-driven-solo.md)
+
+
+## Agent Skills lifecycle
+
+- install/reconcile: `bunx skills add rebuildup/project-init --skill '*' --agent claude-code opencode codex -y`
+- fresh clone: `bunx skills install`
+- continuous update: `bunx skills update -p -y`
+- global install is not canonical; commit CLI-generated `skills-lock.json`
+- do not hand-edit upstream-managed project-init Skills
