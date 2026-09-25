@@ -63,3 +63,10 @@ Rust変更は `cargo fmt --all -- --check`、`cargo clippy --all-targets -- -D w
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
 <!-- END:nextjs-agent-rules -->
+
+
+## Constitution / operating profile
+
+- 最上位 contract: [`constitution/CONSTITUTION.md`](constitution/CONSTITUTION.md)
+- current Operating Model: [`organization/profiles/release-driven-solo.md`](organization/profiles/release-driven-solo.md)
+- repository / workspace 固有の architecture・quality・release decision は、Constitution と両立する限り generic Practice より具体的な authority として維持する。
